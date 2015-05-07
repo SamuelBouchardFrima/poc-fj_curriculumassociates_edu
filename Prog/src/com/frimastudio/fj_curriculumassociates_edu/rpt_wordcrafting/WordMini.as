@@ -10,7 +10,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 	{
 		private var mAsset:Sprite;
 		private var mTimer:Timer;
-		private var mCurrentWord:String;
 		private var mDecomposedPiece:Dictionary;
 		
 		public function WordMini()
@@ -22,20 +21,17 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			mAsset.graphics.lineStyle(2);
 			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawCircle(0, 0, 50);
+			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
 			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-20, -15);
-			mAsset.graphics.lineTo(-10, -15);
-			mAsset.graphics.moveTo(10, -15);
-			mAsset.graphics.lineTo(20, -15);
 			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawCircle(-15, -5, 5);
-			mAsset.graphics.drawCircle(15, -5, 5);
+			mAsset.graphics.drawCircle(-30, -25, 20);
+			mAsset.graphics.drawCircle(30, -25, 20);
 			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-35, 10);
-			mAsset.graphics.lineTo(35, 10);
+			mAsset.graphics.moveTo(-60, 0);
+			mAsset.graphics.curveTo(-50, 30, 0, 30);
+			mAsset.graphics.curveTo(50, 30, 60, 0);
 			
-			mTimer = new Timer(1000, 1);
+			mTimer = new Timer(1500, 1);
 			mTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
 			
 			mDecomposedPiece = new Dictionary();
@@ -48,29 +44,32 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mDecomposedPiece["honk"] = new <Vector.<String>>[new <String>["ho", "n", "k"], new <String>["h", "o", "nk"], new <String>["h", "on", "k"]];
 		}
 		
-		public function EatWord(aWord:String):void
+		public function EatWord(aWord:String):Vector.<String>
 		{
-			mCurrentWord = aWord;
-			
 			mAsset.graphics.clear();
 			mAsset.graphics.lineStyle(2);
 			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawCircle(0, 0, 50);
+			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
 			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-20, -15);
-			mAsset.graphics.lineTo(-10, -17);
-			mAsset.graphics.moveTo(10, -17);
-			mAsset.graphics.lineTo(20, -15);
-			mAsset.graphics.moveTo(-20, -5);
-			mAsset.graphics.lineTo(-10, -5);
-			mAsset.graphics.moveTo(10, -5);
-			mAsset.graphics.lineTo(20, -5);
+			mAsset.graphics.moveTo(-50, -25);
+			mAsset.graphics.lineTo(-10, -25);
+			mAsset.graphics.moveTo(10, -25);
+			mAsset.graphics.lineTo(50, -25);
 			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawCircle(0, 15, 15);
+			mAsset.graphics.drawEllipse(-50, -10, 100, 50);
 			mAsset.graphics.endFill();
 			
 			mTimer.reset();
 			mTimer.start();
+			
+			var decomposedPossibility:Vector.<Vector.<String>> = mDecomposedPiece[aWord] as Vector.<Vector.<String>>;
+			if (!decomposedPossibility)
+			{
+				throw new Error("Word " + aWord + " is not implemented!");
+				return null;
+			}
+			
+			return Random.FromList(decomposedPossibility) as Vector.<String>;
 		}
 		
 		private function OnTimerComplete(aEvent:TimerEvent):void
@@ -78,27 +77,15 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mAsset.graphics.clear();
 			mAsset.graphics.lineStyle(2);
 			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawCircle(0, 0, 50);
+			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
 			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-20, -15);
-			mAsset.graphics.lineTo(-10, -15);
-			mAsset.graphics.moveTo(10, -15);
-			mAsset.graphics.lineTo(20, -15);
 			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawCircle(-15, -5, 5);
-			mAsset.graphics.drawCircle(15, -5, 5);
+			mAsset.graphics.drawCircle(-30, -25, 20);
+			mAsset.graphics.drawCircle(30, -25, 20);
 			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-35, 10);
-			mAsset.graphics.lineTo(35, 10);
-			
-			var decomposedPossibility:Vector.<Vector.<String>> = mDecomposedPiece[mCurrentWord] as Vector.<Vector.<String>>;
-			if (!decomposedPossibility)
-			{
-				throw new Error("Word " + mCurrentWord + " is not implemented!");
-				return;
-			}
-			
-			dispatchEvent(new WordMiniEvent(WordMiniEvent.BURP_PIECE, Random.FromList(decomposedPossibility) as Vector.<String>));
+			mAsset.graphics.moveTo(-60, 0);
+			mAsset.graphics.curveTo(-50, 30, 0, 30);
+			mAsset.graphics.curveTo(50, 30, 60, 0);
 		}
 	}
 }

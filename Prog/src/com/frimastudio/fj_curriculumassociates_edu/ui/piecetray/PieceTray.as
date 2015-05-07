@@ -4,6 +4,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 	public class PieceTray extends Sprite
 	{
 		private static const OFFSET:Number = 10;
+		private static const DEADZONE:Number = 50;
 		
 		private var mEnablePieceDelete:Boolean;
 		private var mFirstPiece:Piece;
@@ -100,7 +101,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			var relativePosition:Number = aPiece.Position - x;
 			while (piece)
 			{
-				if (relativePosition <= piece.Position && ((!mEnablePieceDelete && piece == mFirstPiece) ||
+				if (relativePosition <= piece.Position && ((piece == mFirstPiece && (!mEnablePieceDelete ||
+					relativePosition >= piece.Position - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
 					relativePosition >= piece.Position - ((OFFSET + piece.width) / 2)))
 				{
 					UpdateTemporaryPositionFrom(piece, OFFSET + aPiece.width);
@@ -112,7 +114,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 					break;
 				}
 				
-				if (relativePosition >= piece.Position && ((!mEnablePieceDelete && piece == mLastPiece) ||
+				if (relativePosition >= piece.Position && ((piece == mLastPiece && (!mEnablePieceDelete ||
+					relativePosition <= piece.Position + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
 					relativePosition <= piece.Position + ((OFFSET + piece.width) / 2)))
 				{
 					UpdateTemporaryPositionFrom(piece.NextPiece, aPiece.width + OFFSET);
@@ -131,19 +134,22 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				return;
 			}
 			
+			var relativePosition:Number = aPiece.Position - x;
 			if (mFirstPiece)
 			{
 				var piece:Piece = mFirstPiece;
-				var relativePosition:Number = aPiece.Position - x;
 				while (piece)
 				{
-					if (relativePosition <= piece.Position && ((!mEnablePieceDelete && piece == mFirstPiece) ||
+					if (relativePosition <= piece.Position && ((piece == mFirstPiece && (!mEnablePieceDelete ||
+						relativePosition >= piece.Position - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
 						relativePosition >= piece.Position - ((OFFSET + piece.width) / 2)))
 					{
 						InsertBefore(piece, aPiece.Content, aPiece.Position - x);
 						break;
 					}
-					if (relativePosition >= piece.Position && ((!mEnablePieceDelete && piece == mLastPiece) ||
+					
+					if (relativePosition >= piece.Position && ((piece == mLastPiece && (!mEnablePieceDelete ||
+						relativePosition <= piece.Position + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
 						relativePosition <= piece.Position + ((OFFSET + piece.width) / 2)))
 					{
 						InsertAfter(piece, aPiece.Content, aPiece.Position - x);
@@ -155,7 +161,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			else
 			{
-				InsertFirst(aPiece.Content);
+				if (relativePosition >= -DEADZONE - (aPiece.width / 2) && relativePosition <= DEADZONE + (aPiece.width / 2))
+				{
+					InsertFirst(aPiece.Content);
+				}
 			}
 			
 			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_CAPTURED, aPiece));
