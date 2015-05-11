@@ -1,5 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 	import flash.display.Sprite;
+	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.utils.Timer;
 	
 	public class PieceTray extends Sprite
 	{
@@ -9,14 +12,26 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		private var mEnablePieceDelete:Boolean;
 		private var mFirstPiece:Piece;
 		private var mLastPiece:Piece;
+		private var mAttentionPiece:Piece;
+		private var mAttentionCallingTimer:Timer;
 		
 		public function get Center():Number
 		{
 			if (mFirstPiece)
 			{
-				return x + (((mFirstPiece.x - (mFirstPiece.width / 2)) + (mLastPiece.x + (mLastPiece.width / 2))) / 2);
+				return x + (((mFirstPiece.Position.x - (mFirstPiece.width / 2)) +
+					(mLastPiece.Position.x + (mLastPiece.width / 2))) / 2);
 			}
 			return x;
+		}
+		
+		public function get NextSlotPosition():Number
+		{
+			if (mLastPiece)
+			{
+				return x + mLastPiece.Position.x + (mLastPiece.width / 2) + OFFSET;
+			}
+			return x + OFFSET;
 		}
 		
 		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
@@ -29,14 +44,38 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			{
 				for (var i:int = 0, endi:int = aContentList.length; i < endi; ++i)
 				{
-					InsertLast(aContentList[i]);
+					InsertLast(aContentList[i], (mLastPiece ? mLastPiece.x + (mLastPiece.width / 2) + (2 * OFFSET) : 2 * OFFSET));
 				}
+			}
+			
+			mAttentionCallingTimer = new Timer(150, 1);
+			mAttentionCallingTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnAttentionCallingTimerComplete);
+		}
+		
+		public function CallAttention():void
+		{
+			mAttentionCallingTimer.reset();
+			
+			if (mAttentionPiece)
+			{
+				mAttentionPiece = mAttentionPiece.NextPiece;
+			}
+			else
+			{
+				mAttentionPiece = mFirstPiece;
+			}
+			
+			if (mAttentionPiece)
+			{
+				mAttentionPiece.CallAttention();
+				
+				mAttentionCallingTimer.start();
 			}
 		}
 		
-		public function Add(aContent:String):void
+		public function Add(aContent:String, aStartPosition:Number):void
 		{
-			InsertLast(aContent);
+			InsertLast(aContent, aStartPosition);
 		}
 		
 		public function Clear():void
@@ -98,12 +137,15 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			UpdatePositionFrom(mFirstPiece);
 			
 			var piece:Piece = mFirstPiece;
-			var relativePosition:Number = aPiece.Position - x;
+			var relativePosition:Point = aPiece.Position.clone();
+			relativePosition.x -= x;
+			relativePosition.y -= y;
 			while (piece)
 			{
-				if (relativePosition <= piece.Position && ((piece == mFirstPiece && (!mEnablePieceDelete ||
-					relativePosition >= piece.Position - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
-					relativePosition >= piece.Position - ((OFFSET + piece.width) / 2)))
+				if (relativePosition.x <= piece.Position.x && ((piece == mFirstPiece && (!mEnablePieceDelete ||
+					relativePosition.x >= piece.Position.x - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
+					relativePosition.x >= piece.Position.x - ((OFFSET + piece.width) / 2)) &&
+					relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 				{
 					UpdateTemporaryPositionFrom(piece, OFFSET + aPiece.width);
 					break;
@@ -114,9 +156,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 					break;
 				}
 				
-				if (relativePosition >= piece.Position && ((piece == mLastPiece && (!mEnablePieceDelete ||
-					relativePosition <= piece.Position + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
-					relativePosition <= piece.Position + ((OFFSET + piece.width) / 2)))
+				if (relativePosition.x >= piece.Position.x && ((piece == mLastPiece && (!mEnablePieceDelete ||
+					relativePosition.x <= piece.Position.x + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
+					relativePosition.x <= piece.Position.x + ((OFFSET + piece.width) / 2)) &&
+					relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 				{
 					UpdateTemporaryPositionFrom(piece.NextPiece, aPiece.width + OFFSET);
 					break;
@@ -134,25 +177,29 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				return;
 			}
 			
-			var relativePosition:Number = aPiece.Position - x;
+			var relativePosition:Point = aPiece.Position.clone();
+			relativePosition.x -= x;
+			relativePosition.y -= y;
 			if (mFirstPiece)
 			{
 				var piece:Piece = mFirstPiece;
 				while (piece)
 				{
-					if (relativePosition <= piece.Position && ((piece == mFirstPiece && (!mEnablePieceDelete ||
-						relativePosition >= piece.Position - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
-						relativePosition >= piece.Position - ((OFFSET + piece.width) / 2)))
+					if (relativePosition.x <= piece.Position.x && ((piece == mFirstPiece && (!mEnablePieceDelete ||
+						relativePosition.x >= piece.Position.x - ((OFFSET + piece.width) / 2) - DEADZONE)) ||
+						relativePosition.x >= piece.Position.x - ((OFFSET + piece.width) / 2)) &&
+						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
-						InsertBefore(piece, aPiece.Content, aPiece.Position - x);
+						InsertBefore(piece, aPiece.Content, relativePosition);
 						break;
 					}
 					
-					if (relativePosition >= piece.Position && ((piece == mLastPiece && (!mEnablePieceDelete ||
-						relativePosition <= piece.Position + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
-						relativePosition <= piece.Position + ((OFFSET + piece.width) / 2)))
+					if (relativePosition.x >= piece.Position.x && ((piece == mLastPiece && (!mEnablePieceDelete ||
+						relativePosition.x <= piece.Position.x + ((OFFSET + piece.width) / 2) + (DEADZONE * 2))) ||
+						relativePosition.x <= piece.Position.x + ((OFFSET + piece.width) / 2)) &&
+						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
-						InsertAfter(piece, aPiece.Content, aPiece.Position - x);
+						InsertAfter(piece, aPiece.Content, relativePosition);
 						break;
 					}
 					
@@ -161,7 +208,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			else
 			{
-				if (relativePosition >= -DEADZONE - (aPiece.width / 2) && relativePosition <= DEADZONE + (aPiece.width / 2))
+				if (relativePosition.x >= -DEADZONE - (aPiece.width / 2) && relativePosition.x <= DEADZONE + (aPiece.width / 2) &&
+					relativePosition.y >= -((2 * OFFSET) + aPiece.height) && relativePosition.y <= (2 * OFFSET) + aPiece.height)
 				{
 					InsertFirst(aPiece.Content);
 				}
@@ -185,9 +233,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			UpdatePositionFrom(mFirstPiece);
 		}
 		
-		private function InsertLast(aContent:String):void
+		private function InsertLast(aContent:String, aStartPosition:Number):void
 		{
-			mLastPiece = new Piece(mLastPiece, null, aContent);
+			mLastPiece = new Piece(mLastPiece, null, aContent, new Point(aStartPosition));
 			if (!mFirstPiece)
 			{
 				mFirstPiece = mLastPiece;
@@ -200,7 +248,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			UpdatePositionFrom(mLastPiece);
 		}
 		
-		private function InsertBefore(aPiece:Piece, aContent:String, aDefaultPosition:Number = 0):void
+		private function InsertBefore(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -208,7 +256,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				return;
 			}
 			
-			var piece:Piece = new Piece(aPiece.PreviousPiece, aPiece, aContent, aDefaultPosition);
+			var piece:Piece = new Piece(aPiece.PreviousPiece, aPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
 			aPiece.PreviousPiece = piece;
 			if (mFirstPiece == aPiece)
 			{
@@ -222,7 +270,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			UpdatePositionFrom(piece);
 		}
 		
-		private function InsertAfter(aPiece:Piece, aContent:String, aDefaultPosition:Number = 0):void
+		private function InsertAfter(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -230,7 +278,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				return;
 			}
 			
-			var piece:Piece = new Piece(aPiece, aPiece.NextPiece, aContent, aDefaultPosition);
+			var piece:Piece = new Piece(aPiece, aPiece.NextPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
 			aPiece.NextPiece = piece;
 			if (mLastPiece == aPiece)
 			{
@@ -277,7 +325,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			aPiece.NextPiece = null;
 		}
 		
-		private function RemoveFirst():void
+		public function RemoveFirst():void
 		{
 			if (!mFirstPiece)
 			{
@@ -338,11 +386,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			
 			var piece:Piece = aPiece;
-			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position + (piece.PreviousPiece.width / 2) : 0);
+			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position.x + (piece.PreviousPiece.width / 2) : 0);
 			while (piece)
 			{
 				position += OFFSET + (piece.width / 2);
-				piece.Position = position;
+				piece.Position = new Point(position, 0);
 				position += piece.width / 2;
 				piece = piece.NextPiece;
 			}
@@ -357,12 +405,12 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			
 			var piece:Piece = aPiece;
-			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position + (piece.PreviousPiece.width / 2) : 0);
+			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position.x + (piece.PreviousPiece.width / 2) : 0);
 			position += aTemporaryOffset;
 			while (piece)
 			{
 				position += OFFSET + (piece.width / 2);
-				piece.TemporaryPosition = position;
+				piece.TemporaryPosition = new Point(position, 0);
 				position += piece.width / 2;
 				piece = piece.NextPiece;
 			}
@@ -381,6 +429,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				piece = piece.NextPiece;
 			}
 			return false;
+		}
+		
+		private function OnAttentionCallingTimerComplete(aEvent:TimerEvent):void
+		{
+			CallAttention();
 		}
 		
 		private function OnRemovePiece(aEvent:PieceEvent):void

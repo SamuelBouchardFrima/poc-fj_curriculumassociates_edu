@@ -1,9 +1,13 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui
 {
+	import com.greensock.easing.Strong;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
+	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	public class UIButton extends Sprite
 	{
@@ -13,6 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		protected var mContent:String;
 		protected var mAsset:Sprite;
 		protected var mLabel:TextField;
+		protected var mCallAttentionTimer:Timer;
 		
 		public function get Content():String	{	return mContent;	}
 		
@@ -56,6 +61,40 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 			mAsset.graphics.lineTo(mLabel.x - MARGIN, mLabel.y + mLabel.height);
 			mAsset.graphics.lineTo(mLabel.x - MARGIN, mLabel.y);
 			mAsset.graphics.endFill();
+			
+			mCallAttentionTimer = new Timer(100, 10);
+			mCallAttentionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCallAttentionTimerComplete);
+		}
+		
+		public function Dispose():void
+		{
+			mCallAttentionTimer.reset();
+			mCallAttentionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnCallAttentionTimerComplete);
+		}
+		
+		public function CallAttention():void
+		{
+			mCallAttentionTimer.reset();
+			mCallAttentionTimer.start();
+			
+			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenVibrateUp, y:-2 });
+		}
+		
+		private function OnTweenVibrateUp():void
+		{
+			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenVibrateDown, y:2 });
+		}
+		
+		private function OnTweenVibrateDown():void
+		{
+			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenVibrateUp, y:-2 });
+		}
+		
+		private function OnCallAttentionTimerComplete(aEvent:TimerEvent):void
+		{
+			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, y:0 } );
+			
+			mCallAttentionTimer.reset();
 		}
 	}
 }

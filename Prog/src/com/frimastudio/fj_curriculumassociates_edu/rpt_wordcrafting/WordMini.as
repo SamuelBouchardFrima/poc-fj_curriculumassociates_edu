@@ -35,13 +35,20 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
 			
 			mDecomposedPiece = new Dictionary();
-			mDecomposedPiece["hill"] = new <Vector.<String>>[new <String>["h", "ill"], new <String>["hi", "l", "l"], new <String>["h", "il", "l"]];
-			mDecomposedPiece["felt"] = new <Vector.<String>>[new <String>["fe", "l", "t"], new <String>["f", "e", "lt"], new <String>["f", "el", "t"]];
-			mDecomposedPiece["hall"] = new <Vector.<String>>[new <String>["ha", "ll"], new <String>["hal", "l"], new <String>["h", "all"]];
-			mDecomposedPiece["spin"] = new <Vector.<String>>[new <String>["s", "pin"], new <String>["sp", "i", "n"], new <String>["s", "p", "in"]];
-			mDecomposedPiece["trap"] = new <Vector.<String>>[new <String>["t", "ra", "p"], new <String>["tr", "ap"], new <String>["tra", "p"]];
-			mDecomposedPiece["damp"] = new <Vector.<String>>[new <String>["dam", "p"], new <String>["d", "amp"], new <String>["da", "m", "p"]];
-			mDecomposedPiece["honk"] = new <Vector.<String>>[new <String>["ho", "n", "k"], new <String>["h", "o", "nk"], new <String>["h", "on", "k"]];
+			mDecomposedPiece["hill"] = new <Vector.<String>>[new <String>["h", "ill"], new <String>["h", "i", "ll"],
+				new <String>["h", "i", "l", "l"], new <String>["h", "il", "l"]];
+			mDecomposedPiece["felt"] = new <Vector.<String>>[new <String>["f", "e", "lt"], new <String>["f", "elt"],
+				new <String>["f", "e", "l", "t"], new <String>["f", "el", "t"]];
+			mDecomposedPiece["hall"] = new <Vector.<String>>[new <String>["h", "all"], new <String>["h", "a", "ll"],
+				new <String>["h", "a", "l", "l"], new <String>["h", "al", "l"]];
+			mDecomposedPiece["spin"] = new <Vector.<String>>[new <String>["sp", "i", "n"], new <String>["sp", "in"],
+				new <String>["s", "p", "i", "n"], new <String>["s", "p", "in"]];
+			mDecomposedPiece["trap"] = new <Vector.<String>>[new <String>["tr", "a", "p"], new <String>["tr", "ap"],
+				new <String>["t", "r", "a", "p"], new <String>["t", "r", "ap"]];
+			mDecomposedPiece["damp"] = new <Vector.<String>>[new <String>["d", "a", "mp"], new <String>["d", "amp"],
+				new <String>["d", "a", "m", "p"], new <String>["d", "am", "p"]];
+			mDecomposedPiece["honk"] = new <Vector.<String>>[new <String>["h", "o", "nk"], new <String>["h", "onk"],
+				new <String>["h", "o", "n", "k"], new <String>["h", "on", "k"]];
 		}
 		
 		public function EatWord(aWord:String):Vector.<String>

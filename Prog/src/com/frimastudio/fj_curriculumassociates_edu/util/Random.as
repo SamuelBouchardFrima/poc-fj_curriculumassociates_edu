@@ -14,7 +14,7 @@ package com.frimastudio.fj_curriculumassociates_edu.util
 		
 		public static function Bool():Boolean
 		{
-			return RangeInt(0, 1) as Boolean;
+			return (RangeInt(0, 1) == 1);
 		}
 		
 		public static function Sign():int

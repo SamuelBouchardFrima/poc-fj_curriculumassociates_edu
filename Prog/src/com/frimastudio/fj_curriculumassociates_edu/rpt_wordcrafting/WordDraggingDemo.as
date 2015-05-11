@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.PieceTrayEvent;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	public class WordDraggingDemo extends Sprite
 	{
@@ -24,7 +25,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		
 		private function OnPieceFreed(aEvent:PieceTrayEvent):void
 		{
-			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Content, mouseX);
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Content, new Point(mouseX, mouseY));
 			mDraggedPiece.y = mTray.y;
 			addChild(mDraggedPiece);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);

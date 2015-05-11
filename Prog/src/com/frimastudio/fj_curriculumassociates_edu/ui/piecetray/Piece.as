@@ -4,13 +4,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	public class Piece extends UIButton
 	{
 		private var mPrevious:Piece;
 		private var mNext:Piece;
-		private var mPosition:Number;
-		private var mTemporaryPosition:Number;
+		private var mPosition:Point;
+		private var mTemporaryPosition:Point;
 		private var mActive:Boolean;
 		
 		public function get PreviousPiece():Piece				{	return mPrevious;	}
@@ -19,29 +20,30 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		public function get NextPiece():Piece					{	return mNext;		}
 		public function set NextPiece(aValue:Piece):void		{	mNext = aValue;		}
 		
-		public function get Position():Number					{	return mPosition;	}
-		public function set Position(aValue:Number):void
+		public function get Position():Point					{	return mPosition;	}
+		public function set Position(aValue:Point):void
 		{
 			mTemporaryPosition = mPosition = aValue;
-			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mPosition });
+			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mPosition.x, y:mPosition.y });
 		}
 		
-		public function get TemporaryPosition():Number			{	return mTemporaryPosition;	}
-		public function set TemporaryPosition(aValue:Number):void
+		public function get TemporaryPosition():Point			{	return mTemporaryPosition;	}
+		public function set TemporaryPosition(aValue:Point):void
 		{
 			mTemporaryPosition = aValue;
-			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mTemporaryPosition });
+			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mTemporaryPosition.x, y:mTemporaryPosition.y });
 		}
 		
-		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Number = 0)
+		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Point = null)
 		{
 			super(aContent, 0x99EEFF);
 			
 			mPrevious = aPrevious;
 			mNext = aNext;
-			mPosition = aPosition;
+			mPosition = (aPosition ? aPosition : new Point());
 			
-			x = mPosition;
+			x = mPosition.x;
+			y = mPosition.y;
 			
 			if (mPrevious)
 			{
