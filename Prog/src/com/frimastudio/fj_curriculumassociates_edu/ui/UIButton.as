@@ -20,6 +20,15 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		protected var mCallAttentionTimer:Timer;
 		
 		public function get Content():String	{	return mContent;	}
+		public function set Content(aValue:String):void
+		{
+			mContent = aValue;
+			
+			mLabel.text = mContent;
+			mLabel.setTextFormat(FORMAT);
+			mLabel.x = -(mLabel.textWidth / 2);
+			mLabel.y = -(mLabel.height / 2);
+		}
 		
 		public function set Color(aValue:int):void
 		{
@@ -46,7 +55,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 			mLabel = new TextField();
 			mLabel.autoSize = TextFieldAutoSize.CENTER;
 			mLabel.selectable = false;
-			mLabel.text = aContent;
+			mLabel.text = mContent;
 			mLabel.setTextFormat(FORMAT);
 			mLabel.height = 50;
 			mLabel.x = -(mLabel.textWidth / 2);

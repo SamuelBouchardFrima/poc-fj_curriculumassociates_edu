@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 {
+	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.Piece;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.PieceTray;
@@ -17,6 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -62,9 +64,9 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mLayout = new Sprite();
 			mLayout.graphics.lineStyle(1, 0xCCCCCC);
 			mLayout.graphics.drawRect(5, 5, 790, 60);
-			mLayout.graphics.drawRect(545, 100, 250, 195);
-			mLayout.graphics.drawRect(545, 300, 250, 195);
-			mLayout.graphics.drawRect(5, 500, 790, 95);
+			mLayout.graphics.drawRect(5, 175, 110, 420);
+			mLayout.graphics.drawRect(545, 200, 250, 195);
+			mLayout.graphics.drawRect(545, 400, 250, 195);
 			addChild(mLayout);
 			
 			mWordLabel = new TextField();
@@ -72,8 +74,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mWordLabel.text = "Words";
 			mWordLabel.setTextFormat(FORMAT);
 			mWordLabel.selectable = false;
-			mWordLabel.x = 50;
-			mWordLabel.y = 500;
+			mWordLabel.x = 10;
+			mWordLabel.y = 175;
 			addChild(mWordLabel);
 			
 			mLetterLabel = new TextField();
@@ -82,7 +84,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mLetterLabel.setTextFormat(FORMAT);
 			mLetterLabel.selectable = false;
 			mLetterLabel.x = 550;
-			mLetterLabel.y = 100;
+			mLetterLabel.y = 200;
 			addChild(mLetterLabel);
 			
 			mChunkLabel = new TextField();
@@ -91,10 +93,10 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mChunkLabel.setTextFormat(FORMAT);
 			mChunkLabel.selectable = false;
 			mChunkLabel.x = 550;
-			mChunkLabel.y = 300;
+			mChunkLabel.y = 400;
 			addChild(mChunkLabel);
 			
-			mInstructionDisplayTimer = new Timer(20, INSTRUCTION.length);
+			mInstructionDisplayTimer = new Timer(42, INSTRUCTION.length);
 			mInstructionDisplayTimer.addEventListener(TimerEvent.TIMER, OnInstructionDisplayTimer);
 			mInstructionDisplayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionDisplayTimerComplete);
 			
@@ -130,12 +132,12 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			TweenLite.to(mCup, 1, { ease:Bounce.easeOut, onComplete:OnTweenPopCup, scaleX:1, scaleY:1 });
 			
 			mMini = new WordMini();
-			mMini.x = 240;
-			mMini.y = 400;
+			mMini.x = 340;
+			mMini.y = 500;
 			mMini.rotation = -5;
 			addChild(mMini);
 			
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:260, rotation:5 });
+			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
 			
 			mWordButtonList = new Vector.<UIButton>();
 			CreateWordButton("hill");
@@ -207,13 +209,13 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		private function CreateWordButton(aWord:String):void
 		{
 			var button:UIButton = new UIButton(aWord, 0xCC99FF);
-			button.x = 120;
+			button.x = 60;
+			button.y = 225;
 			if (mWordButtonList.length)
 			{
-				button.x = mWordButtonList[mWordButtonList.length - 1].x +
-					(mWordButtonList[mWordButtonList.length - 1].width / 2) + OFFSET + (button.width / 2);
+				button.y = mWordButtonList[mWordButtonList.length - 1].y +
+					(mWordButtonList[mWordButtonList.length - 1].height / 2) + OFFSET + (button.height / 2);
 			}
-			button.y = 550;
 			button.addEventListener(MouseEvent.CLICK, OnClickWordButton);
 			addChild(button);
 			mWordButtonList.push(button);
@@ -379,16 +381,18 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		private function OnTweenPopCup():void
 		{
 			mInstructionDisplayTimer.start();
+			
+			(new Asset.InstructionSound() as Sound).play();
 		}
 		
 		private function OnTweenMoveMiniBack():void
 		{
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniForward, x:240, rotation:-5 });
+			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniForward, x:340, rotation:-5 });
 		}
 		
 		private function OnTweenMoveMiniForward():void
 		{
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:260, rotation:5 });
+			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
 		}
 		
 		private function OnClickWordButton(aEvent:MouseEvent):void
@@ -403,7 +407,9 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			ClearPieceList();
 			
-			TweenLite.to(mEatenWord, 0.6, { ease:Strong.easeOut, onComplete:OnTweenFeedWord, x:mMini.x, y:mMini.y + 15 });
+			TweenLite.to(mEatenWord, 0.6, { ease:Strong.easeOut, onComplete:OnTweenFeedWord, x:mMini.x, y:mMini.y + 15 } );
+			
+			(new Asset.SlideSound() as Sound).play();
 			
 			mPieceStringList = mMini.EatWord(mEatenWord.Content);			
 		}
@@ -419,17 +425,17 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			TweenLite.to(mEatenWord, 0.6, { ease:Strong.easeOut, delay:1, onComplete:OnTweenSpawnWord, alpha:1 } );
 			
-			mEatenWord.x = 120;
+			mEatenWord.x = 60;
+			mEatenWord.y = 225;
 			var index:int = mWordButtonList.indexOf(mEatenWord);
-			if (index > 0)
+			if (index)
 			{
-				mEatenWord.x = mWordButtonList[index - 1].x + (mWordButtonList[index - 1].width / 2) +
-					OFFSET + (mEatenWord.width / 2);
+				mEatenWord.y = mWordButtonList[index - 1].y + (mWordButtonList[index - 1].height / 2) +
+					OFFSET + (mEatenWord.height / 2);
 			}
-			mEatenWord.y = 550;
 			
 			var button:UIButton;
-			var target:Point = new Point(250, 150);;
+			var target:Point = new Point(350, 200);;
 			for (var i:int = 0, endi:int = mPieceStringList.length; i < endi; ++i)
 			{
 				button = new UIButton(mPieceStringList[i], 0xFFFFFF);
@@ -477,20 +483,20 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			var limitReached:Boolean;
 			if (piece.length == 1)
 			{
-				target.y = 150;
+				target.y = 250;
 				targetList = mLetterPieceList;
 				button.addEventListener(MouseEvent.CLICK, OnClickLetterButton);
 				limitReached = (targetList.length >= 8);
 			}
 			else
 			{
-				target.y = 350;
+				target.y = 450;
 				targetList = mChunkPieceList;
 				button.addEventListener(MouseEvent.CLICK, OnClickChunkButton);
 				limitReached = (targetList.length >= 6);
 			}
 			
-			var slideTarget:Point = new Point(600, piece.length == 1 ? 150 : 350);
+			var slideTarget:Point = new Point(600, piece.length == 1 ? 250 : 450);
 			if (limitReached)
 			{
 				targetList[0].removeEventListener(MouseEvent.CLICK, (piece.length == 1 ? OnClickLetterButton : OnClickChunkButton));
@@ -544,7 +550,9 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			targetList.push(button);
 			
-			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y });
+			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y } );
+			
+			(new Asset.SlideSound() as Sound).play();
 			
 			addChild(button);
 		}
@@ -572,9 +580,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mLetterPieceList.splice(mLetterPieceList.indexOf(button), 1);
 			button.removeEventListener(MouseEvent.CLICK, OnClickLetterButton);
 			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendLetter,
-				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y });
+				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
 			
-			var slideTarget:Point = new Point(600, 150);
+			(new Asset.SlideSound() as Sound).play();
+			
+			var slideTarget:Point = new Point(600, 250);
 			for (var i:int = 0, endi:int = mLetterPieceList.length; i < endi; ++i)
 			{
 				if (i > 0)
@@ -603,9 +613,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mChunkPieceList.splice(mChunkPieceList.indexOf(button), 1);
 			button.removeEventListener(MouseEvent.CLICK, OnClickChunkButton);
 			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendChunk,
-				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y });
+				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
 			
-			var slideTarget:Point = new Point(600, 350);
+			(new Asset.SlideSound() as Sound).play();
+			
+			var slideTarget:Point = new Point(600, 450);
 			for (var i:int = 0, endi:int = mChunkPieceList.length; i < endi; ++i)
 			{
 				if (i > 0)
@@ -741,6 +753,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				mRedBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
 				mRedBulb.graphics.endFill();
 				
+				(new Asset.ErrorSound() as Sound).play();
+				
 				mSubmitedWord.Color = 0xFF99AA;
 				TweenLite.to(mSubmitedWord, 1, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedWord, alpha:0 });
 				
@@ -761,7 +775,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				successLabel.y = 300 - (successLabel.height / 2);
 				mSuccessFeedback.addChild(successLabel);
 				
-				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 });
+				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 } );
 			}
 		}
 		
@@ -774,6 +788,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			target.y += (Math.min(leftBound.top, rightBound.top) + Math.max(leftBound.bottom, rightBound.bottom)) / 2;
 			
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord, x:target.x, y:target.y, scaleX:1, scaleY:1 } );
+			
+			(new Asset.SlideSound() as Sound).play();
 		}
 		
 		private function OnTweenSendSubmitedWord():void
@@ -798,6 +814,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				mBlueBulb.graphics.drawCircle(-7.5, -7.5, 15);
 				mBlueBulb.graphics.endFill();
 				
+				(new Asset.CrescendoSound() as Sound).play();
+				
 				mInstruction.text = INSTRUCTION.split(ANSWER_SPACE).join(mSubmitedWord.Content);
 				mInstruction.setTextFormat(FORMAT);
 				
@@ -813,6 +831,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				mYellowBulb.graphics.beginFill(0xFFEE99);
 				mYellowBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
 				mYellowBulb.graphics.endFill();
+				
+				(new Asset.ValidationSound() as Sound).play();
 				
 				successLabel.text = "NICE WORD!\n\nCLICK TO\nCONTINUE";
 				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));

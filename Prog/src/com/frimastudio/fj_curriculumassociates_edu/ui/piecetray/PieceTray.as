@@ -1,19 +1,21 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
+	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	import flash.utils.Timer;
 	
 	public class PieceTray extends Sprite
 	{
-		private static const OFFSET:Number = 10;
-		private static const DEADZONE:Number = 50;
+		protected static const OFFSET:Number = 10;
+		protected static const DEADZONE:Number = 50;
 		
-		private var mEnablePieceDelete:Boolean;
-		private var mFirstPiece:Piece;
-		private var mLastPiece:Piece;
-		private var mAttentionPiece:Piece;
-		private var mAttentionCallingTimer:Timer;
+		protected var mEnablePieceDelete:Boolean;
+		protected var mFirstPiece:Piece;
+		protected var mLastPiece:Piece;
+		protected var mAttentionPiece:Piece;
+		protected var mAttentionCallingTimer:Timer;
 		
 		public function get Center():Number
 		{
@@ -44,7 +46,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			{
 				for (var i:int = 0, endi:int = aContentList.length; i < endi; ++i)
 				{
-					InsertLast(aContentList[i], (mLastPiece ? mLastPiece.x + (mLastPiece.width / 2) + (2 * OFFSET) : 2 * OFFSET));
+					InsertLast(aContentList[i], new Point((mLastPiece ? mLastPiece.x + (mLastPiece.width / 2) + (2 * OFFSET) : 2 * OFFSET)), true);
 				}
 			}
 			
@@ -75,7 +77,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		public function Add(aContent:String, aStartPosition:Number):void
 		{
-			InsertLast(aContent, aStartPosition);
+			InsertLast(aContent, new Point(aStartPosition));
 		}
 		
 		public function Clear():void
@@ -169,13 +171,15 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 		}
 		
-		public function Insert(aPiece:Piece):void
+		public function Insert(aPiece:Piece, aPreviousPosition:Piece = null):void
 		{
 			if (Contain(aPiece))
 			{
 				throw new Error("Piece " + aPiece.Content + " already inserted!");
 				return;
 			}
+			
+			var newPosition:Boolean;
 			
 			var relativePosition:Point = aPiece.Position.clone();
 			relativePosition.x -= x;
@@ -191,6 +195,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
 						InsertBefore(piece, aPiece.Content, relativePosition);
+						newPosition = true;
 						break;
 					}
 					
@@ -200,6 +205,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
 						InsertAfter(piece, aPiece.Content, relativePosition);
+						newPosition = true;
 						break;
 					}
 					
@@ -212,13 +218,26 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 					relativePosition.y >= -((2 * OFFSET) + aPiece.height) && relativePosition.y <= (2 * OFFSET) + aPiece.height)
 				{
 					InsertFirst(aPiece.Content);
+					newPosition = true;
+				}
+			}
+			
+			if (!newPosition && !mEnablePieceDelete)
+			{
+				if (aPreviousPosition)
+				{
+					InsertBefore(aPreviousPosition, aPiece.Content, relativePosition);
+				}
+				else
+				{
+					InsertLast(aPiece.Content, relativePosition);
 				}
 			}
 			
 			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_CAPTURED, aPiece));
 		}
 		
-		private function InsertFirst(aContent:String):void
+		public function InsertFirst(aContent:String):void
 		{
 			mFirstPiece = new Piece(null, mFirstPiece, aContent);
 			if (!mLastPiece)
@@ -231,11 +250,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			mFirstPiece.Activate();
 			
 			UpdatePositionFrom(mFirstPiece);
+			
+			(new Asset.ClickSound() as Sound).play();
 		}
 		
-		private function InsertLast(aContent:String, aStartPosition:Number):void
+		public function InsertLast(aContent:String, aStartPosition:Point, aSkipSound:Boolean = false):void
 		{
-			mLastPiece = new Piece(mLastPiece, null, aContent, new Point(aStartPosition));
+			mLastPiece = new Piece(mLastPiece, null, aContent, aStartPosition);
 			if (!mFirstPiece)
 			{
 				mFirstPiece = mLastPiece;
@@ -246,9 +267,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			mLastPiece.Activate();
 			
 			UpdatePositionFrom(mLastPiece);
+			
+			if (!aSkipSound)
+			{
+				(new Asset.ClickSound() as Sound).play();
+			}
 		}
 		
-		private function InsertBefore(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
+		public function InsertBefore(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -268,9 +294,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			piece.Activate();
 			
 			UpdatePositionFrom(piece);
+			
+			(new Asset.ClickSound() as Sound).play();
 		}
 		
-		private function InsertAfter(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
+		public function InsertAfter(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -290,6 +318,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			piece.Activate();
 			
 			UpdatePositionFrom(piece);
+			
+			(new Asset.ClickSound() as Sound).play();
 		}
 		
 		public function Remove(aPiece:Piece):void
@@ -323,6 +353,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			
 			aPiece.PreviousPiece = null;
 			aPiece.NextPiece = null;
+			
+			(new Asset.SlideSound() as Sound).play();
 		}
 		
 		public function RemoveFirst():void
@@ -350,9 +382,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				
 				UpdatePositionFrom(mFirstPiece);
 			}
+			
+			(new Asset.SlideSound() as Sound).play();
 		}
 		
-		private function RemoveLast():void
+		public function RemoveLast():void
 		{
 			if (!mLastPiece)
 			{
@@ -375,9 +409,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				mLastPiece = piece.PreviousPiece;
 				mLastPiece.NextPiece = null;
 			}
+			
+			(new Asset.SlideSound() as Sound).play();
 		}
 		
-		private function UpdatePositionFrom(aPiece:Piece):void
+		protected function UpdatePositionFrom(aPiece:Piece):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -396,7 +432,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 		}
 		
-		private function UpdateTemporaryPositionFrom(aPiece:Piece, aTemporaryOffset:Number):void
+		protected function UpdateTemporaryPositionFrom(aPiece:Piece, aTemporaryOffset:Number):void
 		{
 			if (!Contain(aPiece))
 			{
@@ -416,7 +452,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 		}
 		
-		private function Contain(aPiece:Piece):Boolean
+		protected function Contain(aPiece:Piece):Boolean
 		{
 			var piece:Piece = mFirstPiece;
 			while (piece)
@@ -431,12 +467,12 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			return false;
 		}
 		
-		private function OnAttentionCallingTimerComplete(aEvent:TimerEvent):void
+		protected function OnAttentionCallingTimerComplete(aEvent:TimerEvent):void
 		{
 			CallAttention();
 		}
 		
-		private function OnRemovePiece(aEvent:PieceEvent):void
+		protected function OnRemovePiece(aEvent:PieceEvent):void
 		{
 			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_FREED, aEvent.currentTarget as Piece));
 		}
