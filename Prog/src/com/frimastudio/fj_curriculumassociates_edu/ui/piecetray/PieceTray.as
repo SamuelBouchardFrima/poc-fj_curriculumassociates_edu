@@ -36,6 +36,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			return x + OFFSET;
 		}
 		
+		public function get MoreThanOne():Boolean
+		{
+			return mFirstPiece != mLastPiece;
+		}
+		
 		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
 		{
 			super();

@@ -6,23 +6,27 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.PieceTrayEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.SentenceTray;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.UIButton;
+	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.globalization.StringTools;
 	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	public class WordDraggingDemo extends Sprite
 	{
 		private static const FORMAT:TextFormat = new TextFormat(null, 24);
 		private static const OFFSET:Number = 10;
 		
+		private var mState:WordDraggingDemoState;
 		private var mLayout:Sprite;
 		private var mChallengePicture:Sprite;
 		private var mBlueBulb:Sprite;
@@ -33,9 +37,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 		private var mDraggedPiece:Piece;
 		private var mPreviousPosition:Piece;
 		private var mSubmit:UIButton;
+		private var mBlocker:Sprite;
 		private var mSubmitedSentence:UIButton;
 		private var mSuccessFeedback:Sprite;
 		private var mWin:Boolean;
+		private var mProgressFeedbackTimer:Timer;
 		
 		public function WordDraggingDemo()
 		{
@@ -88,6 +94,36 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mSubmit.y = 405;
 			mSubmit.addEventListener(MouseEvent.CLICK, OnClickSubmit);
 			addChild(mSubmit);
+			
+			mBlocker = new Sprite();
+			mBlocker.addEventListener(MouseEvent.CLICK, OnClickBlocker);
+			mBlocker.graphics.beginFill(0x000000, 0);
+			mBlocker.graphics.drawRect(0, 0, 800, 600);
+			mBlocker.graphics.endFill();
+			
+			mProgressFeedbackTimer = new Timer(4000, 0);
+			mProgressFeedbackTimer.addEventListener(TimerEvent.TIMER, OnProgressFeedbackTimer);
+			
+			ProgressState();
+		}
+		
+		private function ProgressState(aState:WordDraggingDemoState = null):void
+		{
+			if (aState)
+			{
+				mState = aState;
+			}
+			else if (mState)
+			{
+				mState = mState.NextState;
+			}
+			else
+			{
+				mState = WordDraggingDemoState.WORD_SELECTING;
+			}
+			
+			mProgressFeedbackTimer.reset();
+			mProgressFeedbackTimer.start();
 		}
 		
 		private function ResetBulb():void
@@ -103,6 +139,29 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mBlueBulb.graphics.clear();
 			mBlueBulb.graphics.lineStyle(2, 0x99EEFF);
 			mBlueBulb.graphics.drawCircle(-7.5, -7.5, 15);
+		}
+		
+		private function OnProgressFeedbackTimer(aEvent:TimerEvent):void
+		{
+			switch (mState)
+			{
+				case WordDraggingDemoState.WORD_SELECTING:
+					mPieceTray.CallAttention();
+					break;
+				case WordDraggingDemoState.WORD_SORTING:
+					mSentenceTray.CallAttention();
+					ProgressState(WordDraggingDemoState.SENTENCE_SUBMITTING);
+					break;
+				case WordDraggingDemoState.SENTENCE_SUBMITTING:
+					mSubmit.CallAttention();
+					break;
+				case null:
+					throw new Error("State is null!");
+					return;
+				default:
+					throw new Error("State " + mState.Description + " is not handled.");
+					return;
+			}
 		}
 		
 		private function OnPieceFreedSentenceTray(aEvent:PieceTrayEvent):void
@@ -127,6 +186,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			}
 			
 			mSentenceTray.Remove(aEvent.EventPiece);
+			
+			if (!mSentenceTray.MoreThanOne)
+			{
+				ProgressState(WordDraggingDemoState.WORD_SELECTING);
+			}
 		}
 		
 		private function OnPieceFreedPieceTray(aEvent:PieceTrayEvent):void
@@ -146,6 +210,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				mSentenceTray.InsertLast(aEvent.EventPiece.Content, new Point(mouseX - mSentenceTray.x, mouseY - mSentenceTray.y));
 				
 				mSubmit.Color = 0xAAFF99;
+				
+				if (mSentenceTray.MoreThanOne)
+				{
+					ProgressState(WordDraggingDemoState.WORD_SORTING);
+				}
 			}
 			
 			mPieceTray.Remove(aEvent.EventPiece);
@@ -178,6 +247,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				mSentenceTray.Insert(mDraggedPiece, mPreviousPosition);
 				
 				mSubmit.Color = 0xAAFF99;
+				
+				if (mSentenceTray.MoreThanOne)
+				{
+					ProgressState(WordDraggingDemoState.WORD_SORTING);
+				}
 			}
 			else
 			{
@@ -195,6 +269,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			{
 				mDraggedPiece = null;
 			}
+			
+			ProgressState(WordDraggingDemoState.WORD_SORTING);
 		}
 		
 		private function OnPieceCapturedPieceTray(aEvent:PieceTrayEvent):void
@@ -224,9 +300,25 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedSentence, scaleX:1 } );
 			
 			mSentenceTray.visible = false;
+			
+			addChild(mBlocker);
+		}
+		
+		private function OnClickBlocker(aEvent:MouseEvent):void
+		{
 		}
 		
 		private function OnTweenSquashSubmitedSentence():void
+		{
+			TweenLite.to(mSubmitedSentence, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenCenterSubmitedSentence, x:400, y:349 } );
+		}
+		
+		private function OnTweenCenterSubmitedSentence():void
+		{
+			TweenLite.to(mSubmitedSentence, 1, { ease:Elastic.easeOut, onComplete:OnTweenStretchSubmitedSentence, scaleX:2, scaleY:2 } );
+		}
+		
+		private function OnTweenStretchSubmitedSentence():void
 		{
 			mSuccessFeedback = new Sprite();
 			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
@@ -244,8 +336,10 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			{
 				case "The field is on a hill.":
 				case "A field is on the hill.":
+				case "On a hill is the field.":
+				case "On the hill is a field.":
 					mWin = true;
-					successLabel.text = "YOU WIN!\n\nCLICK TO\nCONTINUE";
+					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nYOU WIN!\n\nCLICK TO\nCONTINUE";
 					successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, "center"));
 					
 					(new Asset.CrescendoSound() as Sound).play();
@@ -268,6 +362,16 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				case "A field is on the sun.":
 				case "The hill is on a sun.":
 				case "A hill is on the sun.":
+				case "On the field is a hill.":
+				case "On a field is the hill.":
+				case "On the sun is a hill.":
+				case "On a sun is the hill.":
+				case "On the sun is a field.":
+				case "On a sun is the field.":
+				case "On the field is a sun.":
+				case "On a field is the sun.":
+				case "On the hill is a sun.":
+				case "On a hill is the sun.":
 				case "The hill is a field.":
 				case "A hill is the field.":
 				case "The sun is a hill.":
@@ -278,7 +382,13 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				case "A field is the sun.":
 				case "The hill is a sun.":
 				case "A hill is the sun.":
-					successLabel.text = "NICE SENTENCE!\n\nCLICK TO\nCONTINUE";
+				case "The field is on.":
+				case "A field is on.":
+				case "The hill is on.":
+				case "A hill is on.":
+				case "The sun is on.":
+				case "A sun is on.":
+					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nNICE SENTENCE!\n\nCLICK TO\nCONTINUE";
 					successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
 					
 					(new Asset.ValidationSound() as Sound).play();
@@ -292,7 +402,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 					mSubmitedSentence.Color = 0xFFEE99;
 					break;
 				default:
-					successLabel.text = "TRY AGAIN!\n\nCLICK TO\nCONTINUE";
+					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
 					successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
 					
 					(new Asset.ErrorSound() as Sound).play();
@@ -312,6 +422,16 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mSuccessFeedback.addChild(successLabel);
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 } );
+			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedSentence, alpha:0 });
+		}
+		
+		private function OnTweenDisappearSubmitedSentence():void
+		{
+			mSubmitedSentence.Dispose();
+			removeChild(mSubmitedSentence);
+			mSubmitedSentence = null;
+			
+			removeChild(mBlocker);
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
@@ -330,18 +450,15 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				mSubmit.Color = 0xCCCCCC;
 				
 				mWin = false;
+				
+				ProgressState(WordDraggingDemoState.WORD_SELECTING);
+			}
+			else
+			{
+				ProgressState(WordDraggingDemoState.WORD_SORTING);
 			}
 			
-			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedSentence, alpha:0 });
-			
 			mSentenceTray.visible = true;
-		}
-		
-		private function OnTweenDisappearSubmitedSentence():void
-		{
-			mSubmitedSentence.Dispose();
-			removeChild(mSubmitedSentence);
-			mSubmitedSentence = null;
 		}
 		
 		private function OnTweenHideSuccessFeedback():void
