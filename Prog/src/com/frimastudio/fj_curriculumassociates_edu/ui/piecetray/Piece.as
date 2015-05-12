@@ -83,7 +83,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		private function OnClick(aEvent:MouseEvent):void
 		{
-			dispatchEvent(new PieceEvent(PieceEvent.REMOVE));
+			dispatchEvent(new PieceEvent(PieceEvent.REMOVE, false));
 		}
 		
 		private function OnMouseDown(aEvent:MouseEvent):void

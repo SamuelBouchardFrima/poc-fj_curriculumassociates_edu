@@ -5,14 +5,20 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 	{
 		public static const REMOVE:String	= "com.frimastudio.fj_curriculumassociates_edu.piecetray.PieceEvent::REMOVE";
 		
-		public function PieceEvent(aType:String, aBubbles:Boolean = false, aCancelable:Boolean = false)
+		private var mDragged:Boolean;
+		
+		public function get Dragged():Boolean	{	return mDragged;	}
+		
+		public function PieceEvent(aType:String, aDragged:Boolean = true, aBubbles:Boolean = false, aCancelable:Boolean = false)
 		{
 			super(aType, aBubbles, aCancelable);
+			
+			mDragged = aDragged;
 		}
 		
 		override public function clone():Event
 		{
-			return new PieceEvent(type, bubbles, cancelable);
+			return new PieceEvent(type, mDragged, bubbles, cancelable);
 		}
 		
 		override public function toString():String

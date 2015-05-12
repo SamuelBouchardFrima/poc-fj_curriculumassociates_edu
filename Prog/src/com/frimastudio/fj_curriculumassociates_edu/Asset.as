@@ -2,6 +2,9 @@ package com.frimastudio.fj_curriculumassociates_edu
 {
 	public class Asset
 	{
+		[Embed(source = "../../../../art/TheFieldIsOnAHill.png")]
+		public static var TheFieldIsOnAHillBitmap:Class;
+		
 		[Embed(source = "../../../../audio/click.mp3")]
 		public static var ClickSound:Class;
 		[Embed(source = "../../../../audio/slide.mp3")]

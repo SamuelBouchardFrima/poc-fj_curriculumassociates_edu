@@ -1,6 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 {
-	import com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting.WordDraggingDemo;
+	import com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling.WordDraggingDemo;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;

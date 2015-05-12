@@ -89,26 +89,30 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		
 		private function SetFirstPieceCase():void
 		{
-			mFirstPiece.Content = mFirstPiece.Content.charAt(0).toUpperCase() + mFirstPiece.Content.substr(1);
+			if (mFirstPiece)
+			{
+				mFirstPiece.Content = mFirstPiece.Content.charAt(0).toUpperCase() + mFirstPiece.Content.substr(1);
+			}
 		}
 		
 		private function SetLastPiecePonctuation():void
 		{
-			mLastPiece.Content += ".";
+			if (mLastPiece)
+			{
+				mLastPiece.Content += ".";
+			}
 		}
 		
 		override protected function OnRemovePiece(aEvent:PieceEvent):void
 		{
-			switch (aEvent.currentTarget as Piece)
+			var piece:Piece = aEvent.currentTarget as Piece;
+			if (piece == mFirstPiece)
 			{
-				case mFirstPiece:
-					mFirstPiece.Content = mFirstPiece.Content.toLowerCase();
-					break;
-				case mLastPiece:
-					mLastPiece.Content = mLastPiece.Content.substr(0, mLastPiece.Content.length - 1);
-					break;
-				default:
-					break;
+				piece.Content = piece.Content.toLowerCase();
+			}
+			if (piece == mLastPiece)
+			{
+				piece.Content = piece.Content.substr(0, piece.Content.length - 1);
 			}
 			
 			super.OnRemovePiece(aEvent);

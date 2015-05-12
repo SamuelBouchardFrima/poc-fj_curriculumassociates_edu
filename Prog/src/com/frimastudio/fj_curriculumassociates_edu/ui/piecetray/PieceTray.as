@@ -80,7 +80,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			InsertLast(aContent, new Point(aStartPosition));
 		}
 		
-		public function Clear():void
+		public function Clear(aContentList:Vector.<String> = null):void
 		{
 			var piece:Piece = mFirstPiece;
 			while (piece)
@@ -97,6 +97,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			mFirstPiece = null;
 			mLastPiece = null;
+			
+			if (aContentList)
+			{
+				for (var i:int = 0, endi:int = aContentList.length; i < endi; ++i)
+				{
+					InsertLast(aContentList[i], new Point((mLastPiece ? mLastPiece.x + (mLastPiece.width / 2) + (2 * OFFSET) : 2 * OFFSET)), true);
+				}
+			}
 		}
 		
 		public function AssembleWord():String
@@ -171,6 +179,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 		}
 		
+		public function FreePlace():void
+		{
+			UpdatePositionFrom(mFirstPiece);
+		}
+		
 		public function Insert(aPiece:Piece, aPreviousPosition:Piece = null):void
 		{
 			if (Contain(aPiece))
@@ -224,7 +237,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			
 			if (!newPosition && !mEnablePieceDelete)
 			{
-				if (aPreviousPosition)
+				if (Contain(aPreviousPosition))
 				{
 					InsertBefore(aPreviousPosition, aPiece.Content, relativePosition);
 				}
@@ -415,6 +428,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		protected function UpdatePositionFrom(aPiece:Piece):void
 		{
+			if (!aPiece)
+			{
+				return;
+			}
+			
 			if (!Contain(aPiece))
 			{
 				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
@@ -434,6 +452,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		protected function UpdateTemporaryPositionFrom(aPiece:Piece, aTemporaryOffset:Number):void
 		{
+			if (!aPiece)
+			{
+				return;
+			}
+			
 			if (!Contain(aPiece))
 			{
 				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
@@ -454,6 +477,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		protected function Contain(aPiece:Piece):Boolean
 		{
+			if (!aPiece)
+			{
+				return false;
+			}
+			
 			var piece:Piece = mFirstPiece;
 			while (piece)
 			{
@@ -474,7 +502,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		
 		protected function OnRemovePiece(aEvent:PieceEvent):void
 		{
-			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_FREED, aEvent.currentTarget as Piece));
+			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_FREED, aEvent.currentTarget as Piece, aEvent.Dragged));
 		}
 	}
 }
