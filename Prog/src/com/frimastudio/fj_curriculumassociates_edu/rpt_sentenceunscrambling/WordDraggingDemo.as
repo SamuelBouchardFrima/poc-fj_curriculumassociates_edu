@@ -61,18 +61,18 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			addChild(mChallengePicture);
 			
 			mBlueBulb = new Sprite();
-			mBlueBulb.x = 627.5;
+			mBlueBulb.x = 625;
 			mBlueBulb.y = 125;
 			addChild(mBlueBulb);
 			
 			mYellowBulb = new Sprite();
-			mYellowBulb.x = 625;
-			mYellowBulb.y = 162.5;
+			mYellowBulb.x = 622.5;
+			mYellowBulb.y = 175;
 			addChild(mYellowBulb);
 			
 			mRedBulb = new Sprite();
-			mRedBulb.x = 625;
-			mRedBulb.y = 197.5;
+			mRedBulb.x = 622.5;
+			mRedBulb.y = 225;
 			addChild(mRedBulb);
 			
 			ResetBulb();
@@ -175,17 +175,15 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
-				
-				mSubmit.Color = (mSentenceTray.AssembleSentence().length > 0 ? 0xAAFF99 : 0xCCCCCC);
 			}
 			else
 			{
 				mPieceTray.InsertLast(aEvent.EventPiece.Content, new Point(mouseX - mPieceTray.x, mouseY - mPieceTray.y));
-				
-				mSubmit.Color = (mSentenceTray.AssembleSentence().length > 0 ? 0xAAFF99 : 0xCCCCCC);
 			}
 			
 			mSentenceTray.Remove(aEvent.EventPiece);
+			
+			mSubmit.Color = (mSentenceTray.AssembleSentence().length > 0 ? 0xAAFF99 : 0xCCCCCC);
 			
 			if (!mSentenceTray.MoreThanOne)
 			{
