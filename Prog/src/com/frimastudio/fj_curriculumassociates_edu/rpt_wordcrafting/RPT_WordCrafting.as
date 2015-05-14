@@ -18,7 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			// entry point
 			
 			var version:TextField = new TextField();
-			version.text = "v1.4";
+			version.text = "v1.5";
 			version.selectable = false;
 			version.x = 5;
 			version.y = 5;

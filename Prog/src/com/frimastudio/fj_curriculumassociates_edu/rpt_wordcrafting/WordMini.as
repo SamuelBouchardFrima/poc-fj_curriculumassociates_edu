@@ -1,38 +1,19 @@
 package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 {
+	import com.frimastudio.fj_curriculumassociates_edu.Mini;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
-	internal class WordMini extends Sprite
+	internal class WordMini extends Mini
 	{
-		private var mAsset:Sprite;
-		private var mTimer:Timer;
 		private var mDecomposedPiece:Dictionary;
 		
 		public function WordMini()
 		{
-			super();
-			
-			mAsset = new Sprite();
-			addChild(mAsset);
-			
-			mAsset.graphics.lineStyle(2);
-			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
-			mAsset.graphics.endFill();
-			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawCircle(-30, -25, 20);
-			mAsset.graphics.drawCircle(30, -25, 20);
-			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-60, 0);
-			mAsset.graphics.curveTo(-50, 30, 0, 30);
-			mAsset.graphics.curveTo(50, 30, 60, 0);
-			
-			mTimer = new Timer(1500, 1);
-			mTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
+			super(0x99EEFF);
 			
 			mDecomposedPiece = new Dictionary();
 			mDecomposedPiece["hill"] = new <Vector.<String>>[new <String>["h", "ill"], new <String>["h", "i", "ll"],
@@ -49,23 +30,9 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mDecomposedPiece["fair"] = new <Vector.<String>>[new <String>["f", "a", "ir"], new <String>["f", "a", "i", "r"]];
 		}
 		
-		public function EatWord(aWord:String):Vector.<String>
+		public function CraftWord(aWord:String):Vector.<String>
 		{
-			mAsset.graphics.clear();
-			mAsset.graphics.lineStyle(2);
-			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
-			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-50, -25);
-			mAsset.graphics.lineTo(-10, -25);
-			mAsset.graphics.moveTo(10, -25);
-			mAsset.graphics.lineTo(50, -25);
-			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawEllipse(-50, -10, 100, 50);
-			mAsset.graphics.endFill();
-			
-			mTimer.reset();
-			mTimer.start();
+			EatWord(aWord);
 			
 			var decomposedPossibility:Vector.<Vector.<String>> = mDecomposedPiece[aWord] as Vector.<Vector.<String>>;
 			if (!decomposedPossibility)
@@ -75,22 +42,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			}
 			
 			return Random.FromList(decomposedPossibility) as Vector.<String>;
-		}
-		
-		private function OnTimerComplete(aEvent:TimerEvent):void
-		{
-			mAsset.graphics.clear();
-			mAsset.graphics.lineStyle(2);
-			mAsset.graphics.beginFill(0x99EEFF);
-			mAsset.graphics.drawEllipse(-100, -75, 200, 150);
-			mAsset.graphics.endFill();
-			mAsset.graphics.beginFill(0x000000);
-			mAsset.graphics.drawCircle(-30, -25, 20);
-			mAsset.graphics.drawCircle(30, -25, 20);
-			mAsset.graphics.endFill();
-			mAsset.graphics.moveTo(-60, 0);
-			mAsset.graphics.curveTo(-50, 30, 0, 30);
-			mAsset.graphics.curveTo(50, 30, 60, 0);
 		}
 	}
 }

@@ -2,10 +2,14 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
+	import com.frimastudio.fj_curriculumassociates_edu.Mini;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.DecayingButton;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.DecayingButtonEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.Piece;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.PieceTray;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.piecetray.PieceTrayEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.UIButton;
+	import com.frimastudio.fj_curriculumassociates_edu.util.MathUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Bounce;
 	import com.greensock.easing.Elastic;
@@ -42,8 +46,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		private var mInstruction:TextField;
 		private var mInstructionSlot:UIButton;
 		private var mWordButtonList:Vector.<UIButton>;
-		private var mMini:WordMini;
-		private var mPieceButtonList:Vector.<UIButton>;
+		private var mDraggedWord:UIButton;
+		private var mWordMini:WordMini;
+		private var mSelectedMini:Mini;
+		private var mPieceButtonList:Vector.<DecayingButton>;
+		private var mDraggedPieceButton:DecayingButton;
 		private var mLetterPieceList:Vector.<UIButton>;
 		private var mChunkPieceList:Vector.<UIButton>;
 		private var mTray:PieceTray;
@@ -54,8 +61,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		private var mRedBulb:Sprite;
 		private var mYellowBulb:Sprite;
 		private var mBlueBulb:Sprite;
-		private var mEatenWord:UIButton;
-		private var mPieceStringList:Vector.<String>;
 		private var mSuccessFeedback:Sprite;
 		private var mWin:Boolean;
 		private var mState:MiniFeedingDemoState;
@@ -143,13 +148,14 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mInstruction.y = 20;
 			addChild(mInstruction);
 			
-			mMini = new WordMini();
-			mMini.x = 340;
-			mMini.y = 435;
-			mMini.rotation = -5;
-			addChild(mMini);
+			mWordMini = new WordMini();
+			mWordMini.x = 340;
+			mWordMini.y = 435;
+			mWordMini.rotation = -5;
+			mWordMini.addEventListener(MouseEvent.CLICK, OnClickWordMini);
+			addChild(mWordMini);
 			
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
+			TweenLite.to(mWordMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
 			
 			mWordButtonList = new Vector.<UIButton>();
 			CreateWordButton("hill");
@@ -160,7 +166,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			CreateWordButton("surf");
 			CreateWordButton("fair");
 			
-			mPieceButtonList = new Vector.<UIButton>();
+			mPieceButtonList = new Vector.<DecayingButton>();
 			mLetterPieceList = new Vector.<UIButton>();
 			mChunkPieceList = new Vector.<UIButton>();
 			
@@ -234,6 +240,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				button.y = mWordButtonList[mWordButtonList.length - 1].y +
 					(mWordButtonList[mWordButtonList.length - 1].height / 2) + OFFSET + (button.height / 2);
 			}
+			button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWordButton);
 			button.addEventListener(MouseEvent.CLICK, OnClickWordButton);
 			addChild(button);
 			mWordButtonList.push(button);
@@ -297,7 +304,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				case MiniFeedingDemoState.PIECE_SELECTING:
 					if (mPieceButtonList.length)
 					{
-						(Random.FromList(mPieceButtonList) as UIButton).CallAttention();
+						(Random.FromList(mPieceButtonList) as DecayingButton).CallAttention();
 					}
 					else
 					{
@@ -418,12 +425,12 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		
 		private function OnTweenMoveMiniBack():void
 		{
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniForward, x:340, rotation:-5 });
+			TweenLite.to(mWordMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniForward, x:340, rotation:-5 });
 		}
 		
 		private function OnTweenMoveMiniForward():void
 		{
-			TweenLite.to(mMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
+			TweenLite.to(mWordMini, 6, { ease:Sine.easeInOut, onComplete:OnTweenMoveMiniBack, x:360, rotation:5 });
 		}
 		
 		private function OnClickListenHint(aEvent:MouseEvent):void
@@ -431,52 +438,170 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			(new Asset.InstructionSound() as Sound).play();
 		}
 		
-		private function OnClickWordButton(aEvent:MouseEvent):void
+		private function OnClickWordMini(aEvent:MouseEvent):void
 		{
-			if (mEatenWord)
+			if (mSelectedMini)
+			{
+				mSelectedMini.Unselect();
+			}
+			
+			mSelectedMini = (mSelectedMini == mWordMini ? null : mWordMini);
+			
+			if (mSelectedMini)
+			{
+				mSelectedMini.Select();
+				
+				TweenLite.to(mSelectedMini, 0.5, { ease:Quad.easeOut, onComplete:OnTweenJumpMini,
+					onCompleteParams:[mSelectedMini], y:335 });
+			}
+		}
+		
+		private function OnTweenJumpMini(aMini:Mini):void
+		{
+			TweenLite.to(aMini, 0.7, { ease:Bounce.easeOut, y:435 });
+		}
+		
+		private function OnMouseDownWordButton(aEvent:MouseEvent):void
+		{
+			if (mDraggedWord)
 			{
 				return;
 			}
 			
-			mEatenWord = aEvent.currentTarget as UIButton;
-			addChild(mEatenWord);
+			mDraggedWord = aEvent.currentTarget as UIButton;
+			addChild(mDraggedWord);
 			
-			//ClearPieceList();
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageWord);
+		}
+		
+		private function OnMouseMoveStageWord(aEvent:MouseEvent):void
+		{
+			mDraggedWord.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWordButton);
+			mDraggedWord.removeEventListener(MouseEvent.CLICK, OnClickWordButton);
 			
-			TweenLite.to(mEatenWord, 0.6, { ease:Strong.easeOut, onComplete:OnTweenFeedWord, x:mMini.x, y:mMini.y + 15 } );
+			if (!stage.hasEventListener(MouseEvent.MOUSE_UP))
+			{
+				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageWord);
+			}
+			
+			TweenLite.to(mDraggedWord, 0.5, { ease:Strong.easeOut, overwrite:true, x:mouseX, y:mouseY });
+		}
+		
+		private function OnMouseUpStageWord(aEvent:MouseEvent):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageWord);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageWord);
+			
+			TweenLite.to(mDraggedWord, 0.5, { ease:Strong.easeOut, overwrite:true, x:mouseX, y:mouseY });
+			
+			if (mouseX >= mWordMini.x - (OFFSET + mDraggedWord.width) &&
+				mouseX <= mWordMini.x + (OFFSET + mDraggedWord.width) &&
+				mouseY >= mWordMini.y + 15 - (OFFSET + mDraggedWord.height) &&
+				mouseY <= mWordMini.y + 15 + (OFFSET + mDraggedWord.height))
+			{
+				TweenLite.to(mDraggedWord, 0.6, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenFeedWord,
+					onCompleteParams:[mDraggedWord, mWordMini.CraftWord(mDraggedWord.Content)],
+					x:mWordMini.x, y:mWordMini.y + 15 } );
+				
+				mDraggedWord = null;
+			}
+			else if (mouseX >= mTray.x - (OFFSET + mDraggedWord.width) &&
+				mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedWord.width) &&
+				mouseY >= mTray.y - (OFFSET + mDraggedWord.height) &&
+				mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedWord.height))
+			{
+				while (mTray.width + OFFSET + mDraggedWord.width > 410)
+				{
+					mTray.RemoveFirst();
+				}
+				
+				TweenLite.to(mDraggedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendWord, onCompleteParams:[mDraggedWord],
+					x:mTray.NextSlotPosition + (mDraggedWord.width / 2), y:mTray.y });
+				
+				mDraggedWord = null;
+			}
+			else
+			{
+				var index:int = mWordButtonList.indexOf(mDraggedWord);
+				var target:Point = new Point(60, 160 + (index * (OFFSET + mDraggedWord.height)));
+				
+				TweenLite.to(mDraggedWord, 0.5, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenSpawnWord,
+					onCompleteParams:[mDraggedWord], x:target.x, y:target.y });
+				
+				mDraggedWord = null;
+			}
+		}
+		
+		private function OnClickWordButton(aEvent:MouseEvent):void
+		{
+			if (aEvent.currentTarget as UIButton != mDraggedWord)
+			{
+				return;
+			}
+			
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageWord);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageWord);
+			
+			mDraggedWord.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWordButton);
+			mDraggedWord.removeEventListener(MouseEvent.CLICK, OnClickWordButton);
+			
+			if (mSelectedMini)
+			{
+				switch (mSelectedMini)
+				{
+					case mWordMini:
+						TweenLite.to(mDraggedWord, 0.6, { ease:Strong.easeOut, onComplete:OnTweenFeedWord,
+							onCompleteParams:[mDraggedWord, mWordMini.CraftWord(mDraggedWord.Content)],
+							x:mSelectedMini.x, y:mSelectedMini.y + 15 } );
+						break;
+					default:
+						throw new Error("Mini not handled!");
+						break;
+				}
+				
+				mDraggedWord = null;
+			}
+			else
+			{
+				while (mTray.width + OFFSET + mDraggedWord.width > 410)
+				{
+					mTray.RemoveFirst();
+				}
+				
+				TweenLite.to(mDraggedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendWord, onCompleteParams:[mDraggedWord],
+					x:mTray.NextSlotPosition + (mDraggedWord.width / 2), y:mTray.y });
+				
+				mDraggedWord = null;
+			}
 			
 			(new Asset.SlideSound() as Sound).play();
-			
-			mPieceStringList = mMini.EatWord(mEatenWord.Content);
 		}
 		
-		private function OnTweenFeedWord():void
+		private function OnTweenFeedWord(aDraggedWord:UIButton, aPieceStringList:Vector.<String>):void
 		{
-			TweenLite.to(mEatenWord, 0.2, { ease:Quad.easeOut, onComplete:OnTweenEatWord, alpha:0 });
+			TweenLite.to(aDraggedWord, 0.2, { ease:Quad.easeOut, onComplete:OnTweenEatWord,
+				onCompleteParams:[aDraggedWord, aPieceStringList], alpha:0 });
 		}
 		
-		private function OnTweenEatWord():void
+		private function OnTweenEatWord(aDraggedWord:UIButton, aPieceStringList:Vector.<String>):void
 		{
 			ProgressState(MiniFeedingDemoState.PIECE_SELECTING);
 			
-			TweenLite.to(mEatenWord, 0.6, { ease:Strong.easeOut, delay:1, onComplete:OnTweenSpawnWord, alpha:1 } );
+			var index:int = mWordButtonList.indexOf(aDraggedWord);
+			aDraggedWord.x = 60;
+			aDraggedWord.y = 160 + (index * (OFFSET + aDraggedWord.height));
 			
-			mEatenWord.x = 60;
-			mEatenWord.y = 160;
-			var index:int = mWordButtonList.indexOf(mEatenWord);
-			if (index)
-			{
-				mEatenWord.y = mWordButtonList[index - 1].y + (mWordButtonList[index - 1].height / 2) +
-					OFFSET + (mEatenWord.height / 2);
-			}
+			TweenLite.to(aDraggedWord, 0.5, { ease:Strong.easeOut, delay:1, onComplete:OnTweenSpawnWord,
+				onCompleteParams:[aDraggedWord], alpha:1 });
 			
-			var button:UIButton;
+			var button:DecayingButton;
+			var pieceDecayTimer:Timer;
 			var target:Point = new Point(350, 100);
-			for (var i:int = 0, endi:int = mPieceStringList.length; i < endi; ++i)
+			for (var i:int = 0, endi:int = aPieceStringList.length; i < endi; ++i)
 			{
-				button = new UIButton(mPieceStringList[i], 0xFFFFFF);
-				button.x = mMini.x;
-				button.y = mMini.y;
+				button = new DecayingButton(aPieceStringList[i], 5000, 0xFFFFFF);
+				button.x = mWordMini.x;
+				button.y = mWordMini.y;
 				button.alpha = 0;
 				
 				if (mPieceButtonList.length)
@@ -486,32 +611,141 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				
 				TweenLite.to(button, 0.2, { ease:Strong.easeOut, delay:(i * 0.2), alpha:1 });
 				TweenLite.to(button, 3, { ease:Strong.easeOut, delay:(i * 0.2), x:(target.x + Random.Range(-150, 150)) });
-				TweenLite.to(button, 5, { ease:Strong.easeOut, delay:(i * 0.2), y:target.y });
+				TweenLite.to(button, 5, { ease:Strong.easeOut, delay:(i * 0.2), onComplete:OnTweenSlidePieceUp,
+					onCompleteParams:[button], y:target.y });
 				
+				button.addEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+				button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
 				button.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
 				addChild(button);
 				mPieceButtonList.push(button);
 			}
 		}
 		
-		private function OnTweenSpawnWord():void
+		private function OnTweenSendWord(aDraggedWord:UIButton):void
 		{
-			mEatenWord = null;
+			ProgressState(MiniFeedingDemoState.PIECE_SORTING);
+			
+			mTray.Add(aDraggedWord.Content, aDraggedWord.x - mTray.x);
+			
+			mSubmit.Color = 0xAAFF99;
+			
+			var index:int = mWordButtonList.indexOf(aDraggedWord);
+			
+			aDraggedWord.alpha = 0;
+			aDraggedWord.x = 60;
+			aDraggedWord.y = 160 + (index * (OFFSET + aDraggedWord.height));
+			
+			TweenLite.to(aDraggedWord, 0.5, { ease:Strong.easeOut, delay:1, onComplete:OnTweenSpawnWord,
+				onCompleteParams:[aDraggedWord], alpha:1 } );
+		}
+		
+		private function OnTweenSpawnWord(aDraggedWord:UIButton):void
+		{
+			aDraggedWord.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWordButton);
+			aDraggedWord.addEventListener(MouseEvent.CLICK, OnClickWordButton);
+			
+			if (mDraggedWord == aDraggedWord)
+			{
+				mDraggedWord = null;
+			}
+		}
+		
+		private function OnTweenSlidePieceUp(aButton:DecayingButton):void
+		{
+			aButton.StartDecay();
+		}
+		
+		private function OnDecayCompletePiece(aEvent:DecayingButtonEvent):void
+		{
+			var button:UIButton = aEvent.currentTarget as UIButton;
+			
+			button.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+			button.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			button.Dispose();
+			mPieceButtonList.splice(mPieceButtonList.indexOf(button), 1);
+			
+			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenDisappearDecayedPiece,
+				onCompleteParams:[button], alpha:0 });
+		}
+		
+		private function OnTweenDisappearDecayedPiece(aButton:DecayingButton):void
+		{
+			removeChild(aButton);
+		}
+		
+		private function OnMouseDownPieceButton(aEvent:MouseEvent):void
+		{
+			mDraggedPieceButton = aEvent.currentTarget as DecayingButton;
+			mDraggedPieceButton.StopDecay();
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStagePieceButton);
+		}
+		
+		private function OnMouseMoveStagePieceButton(aEvent:MouseEvent):void
+		{
+			mDraggedPieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+			mDraggedPieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			
+			if (!stage.hasEventListener(MouseEvent.MOUSE_UP))
+			{
+				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStagePieceButton);
+			}
+			
+			TweenLite.to(mDraggedPieceButton, 0.5, { ease:Strong.easeOut, overwrite:true, x:mouseX, y:mouseY });
+		}
+		
+		private function OnMouseUpStagePieceButton(aEvent:MouseEvent):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStagePieceButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStagePieceButton);
+			
+			if (mouseX >= 545 && mouseX <= 795 && mouseY >= 135 && mouseY <= 540)
+			{
+				// send to proper box
+			}
+			else if (mouseX >= mTray.x - (OFFSET + mDraggedPieceButton.width) &&
+				mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedPieceButton.width) &&
+				mouseY >= mTray.y - (OFFSET + mDraggedPieceButton.height) &&
+				mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedPieceButton.height))
+			{
+				// send directly to tray
+			}
+			else
+			{
+				TweenLite.to(mDraggedPieceButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+					onComplete:OnTweenReplaceLoosePieceButton, onCompleteParams:[mDraggedPieceButton],
+					x:MathUtil.MinMax(mDraggedPieceButton.x, 160, 500), y:MathUtil.MinMax(mDraggedPieceButton.y, 100, 320) });
+			}
+			
+			mDraggedPieceButton = null;
+		}
+		
+		private function OnTweenReplaceLoosePieceButton(aDraggedPieceButton:DecayingButton):void
+		{
+			aDraggedPieceButton.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+			aDraggedPieceButton.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			aDraggedPieceButton.StartDecay();
 		}
 		
 		private function OnClickPieceButton(aEvent:MouseEvent):void
 		{
-			var button:UIButton = aEvent.currentTarget as UIButton;
-			var piece:String = button.Content;
-			var position:Point = new Point(button.x, button.y);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStagePieceButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStagePieceButton);
 			
-			button.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
-			button.Dispose();
-			removeChild(button);
-			mPieceButtonList.splice(mPieceButtonList.indexOf(button), 1);
+			var piece:String = mDraggedPieceButton.Content;
+			var position:Point = new Point(mDraggedPieceButton.x, mDraggedPieceButton.y);
+			
+			mDraggedPieceButton.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+			mDraggedPieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+			mDraggedPieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			mDraggedPieceButton.Dispose();
+			removeChild(mDraggedPieceButton);
+			mPieceButtonList.splice(mPieceButtonList.indexOf(mDraggedPieceButton), 1);
+			
+			mDraggedPieceButton = null;
 			
 			var targetList:Vector.<UIButton>;
-			button = new UIButton(piece, 0xCC99FF);
+			var button:UIButton = new UIButton(piece, 0xCC99FF);
 			button.x = position.x;
 			button.y = position.y;
 			
