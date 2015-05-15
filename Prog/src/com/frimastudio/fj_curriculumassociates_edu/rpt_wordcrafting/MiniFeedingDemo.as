@@ -52,9 +52,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		private var mPieceButtonList:Vector.<DecayingButton>;
 		private var mDraggedPieceButton:DecayingButton;
 		private var mLetterPieceList:Vector.<UIButton>;
+		private var mDraggedLetterButton:UIButton;
 		private var mChunkPieceList:Vector.<UIButton>;
+		private var mDraggedChunkButton:UIButton;
 		private var mTray:PieceTray;
-		private var mDraggedPiece:Piece;
+		private var mDraggedTrayPiece:Piece;
 		private var mListenCrafting:UIButton;
 		private var mSubmit:UIButton;
 		private var mSubmitedWord:UIButton;
@@ -170,7 +172,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mLetterPieceList = new Vector.<UIButton>();
 			mChunkPieceList = new Vector.<UIButton>();
 			
-			mTray = new PieceTray(true);
+			mTray = new PieceTray(false);
 			mTray.x = 115;
 			mTray.y = 565;
 			mTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreed);
@@ -471,6 +473,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mDraggedWord = aEvent.currentTarget as UIButton;
 			addChild(mDraggedWord);
 			
+			if (Asset.WordSound[mDraggedWord.Content])
+			{
+				(new Asset.WordSound[mDraggedWord.Content]() as Sound).play();
+			}
+			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageWord);
 		}
 		
@@ -599,7 +606,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			var target:Point = new Point(350, 100);
 			for (var i:int = 0, endi:int = aPieceStringList.length; i < endi; ++i)
 			{
-				button = new DecayingButton(aPieceStringList[i], 5000, 0xFFFFFF);
+				button = new DecayingButton(aPieceStringList[i], 5000);
 				button.x = mWordMini.x;
 				button.y = mWordMini.y;
 				button.alpha = 0;
@@ -678,6 +685,21 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		{
 			mDraggedPieceButton = aEvent.currentTarget as DecayingButton;
 			mDraggedPieceButton.StopDecay();
+			addChild(mDraggedPieceButton);
+			
+			if (Asset.WordSound[mDraggedPieceButton.Content])
+			{
+				(new Asset.WordSound[mDraggedPieceButton.Content]() as Sound).play();
+			}
+			else if (Asset.LetterSound[mDraggedPieceButton.Content])
+			{
+				(new Asset.LetterSound[mDraggedPieceButton.Content]() as Sound).play();
+			}
+			else if (Asset.ChunkSound[mDraggedPieceButton.Content])
+			{
+				(new Asset.ChunkSound[mDraggedPieceButton.Content]() as Sound).play();
+			}
+			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStagePieceButton);
 		}
 		
@@ -701,14 +723,119 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			if (mouseX >= 545 && mouseX <= 795 && mouseY >= 135 && mouseY <= 540)
 			{
-				// send to proper box
+				var piece:String = mDraggedPieceButton.Content;
+				var position:Point = new Point(mDraggedPieceButton.x, mDraggedPieceButton.y);
+				
+				mDraggedPieceButton.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+				mDraggedPieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+				mDraggedPieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+				mDraggedPieceButton.Dispose();
+				removeChild(mDraggedPieceButton);
+				mPieceButtonList.splice(mPieceButtonList.indexOf(mDraggedPieceButton), 1);
+				
+				var targetList:Vector.<UIButton>;
+				var button:UIButton = new UIButton(piece, 0xCC99FF);
+				button.x = position.x;
+				button.y = position.y;
+				
+				var target:Point = new Point(600, 0);
+				var limitReached:Boolean;
+				if (piece.length == 1)
+				{
+					target.y = 185;
+					targetList = mLetterPieceList;
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickLetterButton);
+					limitReached = (targetList.length >= 8);
+				}
+				else
+				{
+					target.y = 385;
+					targetList = mChunkPieceList;
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickChunkButton);
+					limitReached = (targetList.length >= 6);
+				}
+				
+				var slideTarget:Point = new Point(600, piece.length == 1 ? 185 : 385);
+				if (limitReached)
+				{
+					targetList[0].removeEventListener(MouseEvent.CLICK, (piece.length == 1 ? OnClickLetterButton : OnClickChunkButton));
+					TweenLite.to(targetList[0], 0.2, { ease:Strong.easeIn, onComplete:OnTweenEliminatePiece,
+						onCompleteParams:[targetList[0]], alpha:0 } );
+					targetList.shift();
+					
+					for (var i:int = 0, endi:int = targetList.length; i < endi; ++i)
+					{
+						if (i > 0)
+						{
+							slideTarget.x += (targetList[i - 1].width / 2) + OFFSET + (targetList[i].width / 2);
+							if (slideTarget.x + (targetList[i].width / 2) >= 785)
+							{
+								slideTarget.x = 600;
+								slideTarget.y += (targetList[i - 1].height / 2) + OFFSET + (targetList[i].height / 2);
+							}
+						}
+						
+						TweenLite.to(targetList[i], 0.2, { ease:Strong.easeOut, x:slideTarget.x, y:slideTarget.y });
+					}
+				}
+				
+				if (targetList.length)
+				{
+					if (limitReached)
+					{
+						target.x = slideTarget.x + (targetList[targetList.length - 1].width / 2) +
+							OFFSET + (button.width / 2);
+						target.y = slideTarget.y;
+						if (target.x + (button.width / 2) >= 785)
+						{
+							target.x = 600;
+							target.y = slideTarget.y + (targetList[targetList.length - 1].height / 2) +
+								OFFSET + (button.height / 2);
+						}
+					}
+					else
+					{
+						target.x = targetList[targetList.length - 1].x + (targetList[targetList.length - 1].width / 2) +
+							OFFSET + (button.width / 2);
+						target.y = targetList[targetList.length - 1].y;
+						if (target.x + (button.width / 2) >= 785)
+						{
+							target.x = 600;
+							target.y = targetList[targetList.length - 1].y + (targetList[targetList.length - 1].height / 2) +
+								OFFSET + (button.height / 2);
+						}
+					}
+				}
+				
+				targetList.push(button);
+				
+				TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y } );
+				
+				(new Asset.SlideSound() as Sound).play();
+				
+				addChild(button);
 			}
 			else if (mouseX >= mTray.x - (OFFSET + mDraggedPieceButton.width) &&
 				mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedPieceButton.width) &&
 				mouseY >= mTray.y - (OFFSET + mDraggedPieceButton.height) &&
 				mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedPieceButton.height))
 			{
-				// send directly to tray
+				while (mTray.width + OFFSET + mDraggedPieceButton.width > 410)
+				{
+					mTray.RemoveFirst();
+				}
+				
+				mDraggedPieceButton.StopDecay();
+				mDraggedPieceButton.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+				mDraggedPieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+				mDraggedPieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+				mPieceButtonList.splice(mPieceButtonList.indexOf(mDraggedPieceButton), 1);
+				TweenLite.to(mDraggedPieceButton, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendPiece,
+					onCompleteParams:[mDraggedPieceButton], x:mTray.NextSlotPosition + (mDraggedPieceButton.width / 2), y:mTray.y });
+				
+				(new Asset.SlideSound() as Sound).play();
 			}
 			else
 			{
@@ -727,22 +854,32 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			aDraggedPieceButton.StartDecay();
 		}
 		
+		private function OnTweenSendPiece(aDraggedPieceButton:DecayingButton):void
+		{
+			ProgressState(MiniFeedingDemoState.PIECE_SORTING);
+			
+			mTray.Add(aDraggedPieceButton.Content, aDraggedPieceButton.x - mTray.x);
+			aDraggedPieceButton.Dispose();
+			removeChild(aDraggedPieceButton);
+			
+			mSubmit.Color = 0xAAFF99;
+		}
+		
 		private function OnClickPieceButton(aEvent:MouseEvent):void
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStagePieceButton);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStagePieceButton);
 			
-			var piece:String = mDraggedPieceButton.Content;
-			var position:Point = new Point(mDraggedPieceButton.x, mDraggedPieceButton.y);
+			var pieceButton:DecayingButton =  aEvent.currentTarget as DecayingButton;
+			var piece:String = pieceButton.Content;
+			var position:Point = new Point(pieceButton.x, pieceButton.y);
 			
-			mDraggedPieceButton.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
-			mDraggedPieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
-			mDraggedPieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
-			mDraggedPieceButton.Dispose();
-			removeChild(mDraggedPieceButton);
-			mPieceButtonList.splice(mPieceButtonList.indexOf(mDraggedPieceButton), 1);
-			
-			mDraggedPieceButton = null;
+			pieceButton.removeEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+			pieceButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+			pieceButton.removeEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			pieceButton.Dispose();
+			removeChild(pieceButton);
+			mPieceButtonList.splice(mPieceButtonList.indexOf(button), 1);
 			
 			var targetList:Vector.<UIButton>;
 			var button:UIButton = new UIButton(piece, 0xCC99FF);
@@ -755,6 +892,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			{
 				target.y = 185;
 				targetList = mLetterPieceList;
+				button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
 				button.addEventListener(MouseEvent.CLICK, OnClickLetterButton);
 				limitReached = (targetList.length >= 8);
 			}
@@ -762,6 +900,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			{
 				target.y = 385;
 				targetList = mChunkPieceList;
+				button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
 				button.addEventListener(MouseEvent.CLICK, OnClickChunkButton);
 				limitReached = (targetList.length >= 6);
 			}
@@ -820,7 +959,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			targetList.push(button);
 			
-			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y } );
+			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y });
 			
 			(new Asset.SlideSound() as Sound).play();
 			
@@ -838,19 +977,144 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			ProgressState(MiniFeedingDemoState.PIECE_USING);
 		}
 		
+		private function OnMouseDownLetterButton(aEvent:MouseEvent):void
+		{
+			mDraggedLetterButton = aEvent.currentTarget as UIButton;
+			addChild(mDraggedLetterButton);
+			
+			if (Asset.LetterSound[mDraggedLetterButton.Content])
+			{
+				(new Asset.LetterSound[mDraggedLetterButton.Content]() as Sound).play();
+			}
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageLetterButton);
+		}
+		
+		private function OnMouseMoveStageLetterButton(aEvent:MouseEvent):void
+		{
+			mDraggedLetterButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
+			mDraggedLetterButton.removeEventListener(MouseEvent.CLICK, OnClickLetterButton);
+			
+			if (!stage.hasEventListener(MouseEvent.MOUSE_UP))
+			{
+				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageLetterButton);
+			}
+			
+			TweenLite.to(mDraggedLetterButton, 0.5, { ease:Strong.easeOut, overwrite:true, x:mouseX, y:mouseY });
+		}
+		
+		private function OnMouseUpStageLetterButton(aEvent:MouseEvent):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageLetterButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageLetterButton);
+			
+			if (mouseX >= 545 && mouseX <= 795 && mouseY >= 135 && mouseY <= 540)
+			{
+				var target:Point = new Point(600, 185);
+				var index:int = mLetterPieceList.indexOf(mDraggedLetterButton);
+				if (index)
+				{
+					target.y = mLetterPieceList[index - 1].y;
+					target.x = mLetterPieceList[index - 1].x + (mLetterPieceList[index - 1].width / 2) +
+						OFFSET + (mDraggedLetterButton.width / 2);
+					if (target.x + (mDraggedLetterButton.width / 2) >= 785)
+					{
+						target.y += (mLetterPieceList[index - 1].height / 2) + OFFSET + (mDraggedLetterButton.height / 2);
+					}
+				}
+				
+				TweenLite.to(mDraggedLetterButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+					onComplete:OnTweenReturnLetterToBox, onCompleteParams:[mDraggedLetterButton],
+					x:target.x, y:target.y });
+			}
+			else
+			{
+				mDraggedLetterButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
+				mDraggedLetterButton.removeEventListener(MouseEvent.CLICK, OnClickLetterButton);
+				
+				mLetterPieceList.splice(mLetterPieceList.indexOf(mDraggedLetterButton), 1);
+				
+				if (mouseX >= mTray.x - (OFFSET + mDraggedLetterButton.width) &&
+					mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedLetterButton.width) &&
+					mouseY >= mTray.y - (OFFSET + mDraggedLetterButton.height) &&
+					mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedLetterButton.height))
+				{
+					while (mTray.width + OFFSET + mDraggedLetterButton.width > 410)
+					{
+						mTray.RemoveFirst();
+					}
+					
+					TweenLite.to(mDraggedLetterButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+						onComplete:OnTweenSendLetter, onCompleteParams:[mDraggedLetterButton],
+						x:mTray.NextSlotPosition + (mDraggedLetterButton.width / 2), y:mTray.y });
+				}
+				else
+				{
+					var button:DecayingButton = new DecayingButton(mDraggedLetterButton.Content, 5000);
+					button.x = mDraggedLetterButton.x;
+					button.y = mDraggedLetterButton.y;
+					button.addEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
+					addChild(button);
+					mPieceButtonList.push(button);
+					
+					TweenLite.to(button, 0.5, { ease:Strong.easeOut, overwrite:true,
+						onComplete:OnTweenReplaceLoosePieceButton, onCompleteParams:[button],
+						x:MathUtil.MinMax(button.x, 160, 500), y:MathUtil.MinMax(button.y, 100, 320) });
+					
+					mDraggedLetterButton.Dispose();
+					removeChild(mDraggedLetterButton);
+				}
+				
+				var slideTarget:Point = new Point(600, 185);
+				for (var i:int = 0, endi:int = mLetterPieceList.length; i < endi; ++i)
+				{
+					if (i > 0)
+					{
+						slideTarget.x += (mLetterPieceList[i - 1].width / 2) + OFFSET + (mLetterPieceList[i].width / 2);
+						if (slideTarget.x + (mLetterPieceList[i].width / 2) >= 785)
+						{
+							slideTarget.x = 600;
+							slideTarget.y += (mLetterPieceList[i - 1].height / 2) + OFFSET + (mLetterPieceList[i].height / 2);
+						}
+					}
+					
+					TweenLite.to(mLetterPieceList[i], 0.2, { ease:Strong.easeOut, overwrite:true, x:slideTarget.x, y:slideTarget.y });
+				}
+			}
+			
+			(new Asset.SlideSound() as Sound).play();
+			
+			mDraggedLetterButton = null;
+		}
+		
+		private function OnTweenReturnLetterToBox(aDraggedLetterButton:UIButton):void
+		{
+			aDraggedLetterButton.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
+			aDraggedLetterButton.addEventListener(MouseEvent.CLICK, OnClickLetterButton);
+		}
+		
 		private function OnClickLetterButton(aEvent:MouseEvent):void
 		{
 			var button:UIButton = aEvent.currentTarget as UIButton;
+			
+			mDraggedLetterButton = null;
 			
 			while (mTray.width + OFFSET + button.width > 410)
 			{
 				mTray.RemoveFirst();
 			}
 			
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageLetterButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageLetterButton);
+			
 			mLetterPieceList.splice(mLetterPieceList.indexOf(button), 1);
+			button.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
 			button.removeEventListener(MouseEvent.CLICK, OnClickLetterButton);
-			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendLetter,
-				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
+			TweenLite.to(button, 0.5, { ease:Strong.easeOut,
+				onComplete:OnTweenSendLetter, onCompleteParams:[button],
+				x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
 			
 			(new Asset.SlideSound() as Sound).play();
 			
@@ -871,19 +1135,159 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			}
 		}
 		
+		private function OnTweenSendLetter(aDraggedLetterButton:UIButton):void
+		{
+			ProgressState(MiniFeedingDemoState.PIECE_SORTING);
+			
+			mTray.Add(aDraggedLetterButton.Content, aDraggedLetterButton.x - mTray.x);
+			aDraggedLetterButton.Dispose();
+			removeChild(aDraggedLetterButton);
+			
+			mSubmit.Color = 0xAAFF99;
+		}
+		
+		private function OnMouseDownChunkButton(aEvent:MouseEvent):void
+		{
+			mDraggedChunkButton = aEvent.currentTarget as UIButton;
+			addChild(mDraggedChunkButton);
+			
+			if (Asset.WordSound[mDraggedChunkButton.Content])
+			{
+				(new Asset.WordSound[mDraggedChunkButton.Content]() as Sound).play();
+			}
+			else if (Asset.ChunkSound[mDraggedChunkButton.Content])
+			{
+				(new Asset.ChunkSound[mDraggedChunkButton.Content]() as Sound).play();
+			}
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageChunkButton);
+		}
+		
+		private function OnMouseMoveStageChunkButton(aEvent:MouseEvent):void
+		{
+			mDraggedChunkButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
+			mDraggedChunkButton.removeEventListener(MouseEvent.CLICK, OnClickChunkButton);
+			
+			if (!stage.hasEventListener(MouseEvent.MOUSE_UP))
+			{
+				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageChunkButton);
+			}
+			
+			TweenLite.to(mDraggedChunkButton, 0.5, { ease:Strong.easeOut, overwrite:true, x:mouseX, y:mouseY });
+		}
+		
+		private function OnMouseUpStageChunkButton(aEvent:MouseEvent):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageChunkButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageChunkButton);
+			
+			if (mouseX >= 545 && mouseX <= 795 && mouseY >= 135 && mouseY <= 540)
+			{
+				var target:Point = new Point(600, 385);
+				var index:int = mChunkPieceList.indexOf(mDraggedChunkButton);
+				if (index)
+				{
+					target.y = mChunkPieceList[index - 1].y;
+					target.x = mChunkPieceList[index - 1].x + (mChunkPieceList[index - 1].width / 2) +
+						OFFSET + (mDraggedChunkButton.width / 2);
+					if (target.x + (mDraggedChunkButton.width / 2) >= 785)
+					{
+						target.y += (mChunkPieceList[index - 1].height / 2) + OFFSET + (mDraggedChunkButton.height / 2);
+					}
+				}
+				
+				TweenLite.to(mDraggedChunkButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+					onComplete:OnTweenReturnChunkToBox, onCompleteParams:[mDraggedChunkButton],
+					x:target.x, y:target.y });
+			}
+			else
+			{
+				mDraggedChunkButton.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
+				mDraggedChunkButton.removeEventListener(MouseEvent.CLICK, OnClickChunkButton);
+				
+				mChunkPieceList.splice(mChunkPieceList.indexOf(mDraggedChunkButton), 1);
+				
+				if (mouseX >= mTray.x - (OFFSET + mDraggedChunkButton.width) &&
+					mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedChunkButton.width) &&
+					mouseY >= mTray.y - (OFFSET + mDraggedChunkButton.height) &&
+					mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedChunkButton.height))
+				{
+					while (mTray.width + OFFSET + mDraggedChunkButton.width > 410)
+					{
+						mTray.RemoveFirst();
+					}
+					
+					TweenLite.to(mDraggedChunkButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+						onComplete:OnTweenSendChunk, onCompleteParams:[mDraggedChunkButton],
+						x:mTray.NextSlotPosition + (mDraggedChunkButton.width / 2), y:mTray.y } );
+				}
+				else
+				{
+					var button:DecayingButton = new DecayingButton(mDraggedChunkButton.Content, 5000);
+					button.x = mDraggedChunkButton.x;
+					button.y = mDraggedChunkButton.y;
+					button.addEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
+					addChild(button);
+					mPieceButtonList.push(button);
+					
+					TweenLite.to(button, 0.5, { ease:Strong.easeOut, overwrite:true,
+						onComplete:OnTweenReplaceLoosePieceButton, onCompleteParams:[button],
+						x:MathUtil.MinMax(button.x, 160, 500), y:MathUtil.MinMax(button.y, 100, 320) });
+					
+					mDraggedChunkButton.Dispose();
+					removeChild(mDraggedChunkButton);
+				}
+				
+				(new Asset.SlideSound() as Sound).play();
+				
+				var slideTarget:Point = new Point(600, 385);
+				for (var i:int = 0, endi:int = mChunkPieceList.length; i < endi; ++i)
+				{
+					if (i > 0)
+					{
+						slideTarget.x += (mChunkPieceList[i - 1].width / 2) + OFFSET + (mChunkPieceList[i].width / 2);
+						if (slideTarget.x + (mChunkPieceList[i].width / 2) >= 785)
+						{
+							slideTarget.x = 600;
+							slideTarget.y += (mChunkPieceList[i - 1].height / 2) + OFFSET + (mChunkPieceList[i].height / 2);
+						}
+					}
+					
+					TweenLite.to(mChunkPieceList[i], 0.2, { ease:Strong.easeOut, x:slideTarget.x, y:slideTarget.y });
+				}
+			}
+			
+			mDraggedChunkButton = null;
+		}
+		
+		private function OnTweenReturnChunkToBox(aDraggedChunkButton:UIButton):void
+		{
+			aDraggedChunkButton.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
+			aDraggedChunkButton.addEventListener(MouseEvent.CLICK, OnClickChunkButton);
+		}
+		
 		private function OnClickChunkButton(aEvent:MouseEvent):void
 		{
 			var button:UIButton = aEvent.currentTarget as UIButton;
+			
+			mDraggedChunkButton = null;
 			
 			while (mTray.width + OFFSET + button.width > 450)
 			{
 				mTray.RemoveFirst();
 			}
 			
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageChunkButton);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageChunkButton);
+			
 			mChunkPieceList.splice(mChunkPieceList.indexOf(button), 1);
+			button.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
 			button.removeEventListener(MouseEvent.CLICK, OnClickChunkButton);
-			TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendChunk,
-				onCompleteParams:["{self}"], x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
+			TweenLite.to(button, 0.5, { ease:Strong.easeOut,
+				onComplete:OnTweenSendChunk, onCompleteParams:[button],
+				x:mTray.NextSlotPosition + (button.width / 2), y:mTray.y } );
 			
 			(new Asset.SlideSound() as Sound).play();
 			
@@ -904,55 +1308,171 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			}
 		}
 		
-		private function OnTweenSendLetter(aTween:TweenLite):void
+		private function OnTweenSendChunk(aDraggedChunkButton:UIButton):void
 		{
 			ProgressState(MiniFeedingDemoState.PIECE_SORTING);
 			
-			var letter:UIButton = aTween.target as UIButton;
-			mTray.Add(letter.Content, letter.x - mTray.x);
-			letter.Dispose();
-			removeChild(letter);
-			
-			mSubmit.Color = 0xAAFF99;
-		}
-		
-		private function OnTweenSendChunk(aTween:TweenLite):void
-		{
-			ProgressState(MiniFeedingDemoState.PIECE_SORTING);
-			
-			var chunk:UIButton = aTween.target as UIButton;
-			mTray.Add(chunk.Content, chunk.x - mTray.x);
-			chunk.Dispose();
-			removeChild(chunk);
+			mTray.Add(aDraggedChunkButton.Content, aDraggedChunkButton.x - mTray.x);
+			aDraggedChunkButton.Dispose();
+			removeChild(aDraggedChunkButton);
 			
 			mSubmit.Color = 0xAAFF99;
 		}
 		
 		private function OnPieceFreed(aEvent:PieceTrayEvent):void
 		{
-			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Content, new Point(mouseX, mouseY));
-			addChild(mDraggedPiece);
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+			mDraggedTrayPiece = new Piece(null, null, aEvent.EventPiece.Content, new Point(mouseX, mouseY));
+			addChild(mDraggedTrayPiece);
+			
+			if (Asset.WordSound[mDraggedTrayPiece.Content])
+			{
+				(new Asset.WordSound[mDraggedTrayPiece.Content]() as Sound).play();
+			}
+			else if (Asset.LetterSound[mDraggedTrayPiece.Content])
+			{
+				(new Asset.LetterSound[mDraggedTrayPiece.Content]() as Sound).play();
+			}
+			else if (Asset.ChunkSound[mDraggedTrayPiece.Content])
+			{
+				(new Asset.ChunkSound[mDraggedTrayPiece.Content]() as Sound).play();
+			}
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageTrayPiece);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageTrayPiece);
 			
 			mTray.Remove(aEvent.EventPiece);
 			
 			mSubmit.Color = (mTray.AssembleWord().length ? 0xAAFF99 : 0xCCCCCC);
 		}
 		
-		private function OnMouseMoveStage(aEvent:MouseEvent):void
+		private function OnMouseMoveStageTrayPiece(aEvent:MouseEvent):void
 		{
-			mDraggedPiece.Position = new Point(mouseX, mouseY);
-			mTray.MakePlace(mDraggedPiece);
+			mDraggedTrayPiece.Position = new Point(mouseX, mouseY);
+			mTray.MakePlace(mDraggedTrayPiece);
 		}
 		
-		private function OnMouseUpStage(aEvent:MouseEvent):void
+		private function OnMouseUpStageTrayPiece(aEvent:MouseEvent):void
 		{
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStageTrayPiece);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStageTrayPiece);
 			
-			mTray.addEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCaptured);
-			mTray.Insert(mDraggedPiece);
+			if (mouseX >= 545 && mouseX <= 795 && mouseY >= 135 && mouseY <= 540)
+			{
+				var targetList:Vector.<UIButton>;
+				var button:UIButton = new UIButton(mDraggedTrayPiece.Content, 0xCC99FF);
+				button.x = mDraggedTrayPiece.x;
+				button.y = mDraggedTrayPiece.y;
+				
+				var target:Point = new Point(600, 0);
+				var limitReached:Boolean;
+				if (mDraggedTrayPiece.Content.length == 1)
+				{
+					target.y = 185;
+					targetList = mLetterPieceList;
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownLetterButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickLetterButton);
+					limitReached = (targetList.length >= 8);
+				}
+				else
+				{
+					target.y = 385;
+					targetList = mChunkPieceList;
+					button.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownChunkButton);
+					button.addEventListener(MouseEvent.CLICK, OnClickChunkButton);
+					limitReached = (targetList.length >= 6);
+				}
+				
+				var slideTarget:Point = new Point(600, mDraggedTrayPiece.Content.length == 1 ? 185 : 385);
+				if (limitReached)
+				{
+					targetList[0].removeEventListener(MouseEvent.CLICK,
+						(mDraggedTrayPiece.Content.length == 1 ? OnClickLetterButton : OnClickChunkButton));
+					TweenLite.to(targetList[0], 0.2, { ease:Strong.easeIn, onComplete:OnTweenEliminatePiece,
+						onCompleteParams:[targetList[0]], alpha:0 } );
+					targetList.shift();
+					
+					for (var i:int = 0, endi:int = targetList.length; i < endi; ++i)
+					{
+						if (i > 0)
+						{
+							slideTarget.x += (targetList[i - 1].width / 2) + OFFSET + (targetList[i].width / 2);
+							if (slideTarget.x + (targetList[i].width / 2) >= 785)
+							{
+								slideTarget.x = 600;
+								slideTarget.y += (targetList[i - 1].height / 2) + OFFSET + (targetList[i].height / 2);
+							}
+						}
+						
+						TweenLite.to(targetList[i], 0.2, { ease:Strong.easeOut, x:slideTarget.x, y:slideTarget.y });
+					}
+				}
+				
+				if (targetList.length)
+				{
+					if (limitReached)
+					{
+						target.x = slideTarget.x + (targetList[targetList.length - 1].width / 2) +
+							OFFSET + (button.width / 2);
+						target.y = slideTarget.y;
+						if (target.x + (button.width / 2) >= 785)
+						{
+							target.x = 600;
+							target.y = slideTarget.y + (targetList[targetList.length - 1].height / 2) +
+								OFFSET + (button.height / 2);
+						}
+					}
+					else
+					{
+						target.x = targetList[targetList.length - 1].x + (targetList[targetList.length - 1].width / 2) +
+							OFFSET + (button.width / 2);
+						target.y = targetList[targetList.length - 1].y;
+						if (target.x + (button.width / 2) >= 785)
+						{
+							target.x = 600;
+							target.y = targetList[targetList.length - 1].y + (targetList[targetList.length - 1].height / 2) +
+								OFFSET + (button.height / 2);
+						}
+					}
+				}
+				
+				addChild(button);
+				targetList.push(button);
+				
+				TweenLite.to(button, 0.5, { ease:Strong.easeOut, onComplete:OnTweenPieceSelected, x:target.x, y:target.y });
+				
+				(new Asset.SlideSound() as Sound).play();
+				
+				mDraggedTrayPiece.Dispose();
+				removeChild(mDraggedTrayPiece);
+				mDraggedTrayPiece = null;
+			}
+			else if (mouseX >= mTray.x - (OFFSET + mDraggedTrayPiece.width) &&
+				mouseX <= mTray.x + mTray.width + (OFFSET + mDraggedTrayPiece.width) &&
+				mouseY >= mTray.y - (OFFSET + mDraggedTrayPiece.height) &&
+				mouseY <= mTray.y + mTray.width + (OFFSET + mDraggedTrayPiece.height))
+			{
+				mTray.addEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCaptured);
+				mTray.Insert(mDraggedTrayPiece);
+			}
+			else
+			{
+				var decayingButton:DecayingButton = new DecayingButton(mDraggedTrayPiece.Content, 5000);
+				decayingButton.x = mDraggedTrayPiece.x;
+				decayingButton.y = mDraggedTrayPiece.y;
+				decayingButton.addEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+				decayingButton.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+				decayingButton.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
+				addChild(decayingButton);
+				mPieceButtonList.push(decayingButton);
+				
+				TweenLite.to(decayingButton, 0.5, { ease:Strong.easeOut, overwrite:true,
+					onComplete:OnTweenReplaceLoosePieceButton, onCompleteParams:[decayingButton],
+					x:MathUtil.MinMax(decayingButton.x, 160, 500), y:MathUtil.MinMax(decayingButton.y, 100, 320) });
+				
+				mDraggedTrayPiece.Dispose();
+				removeChild(mDraggedTrayPiece);
+				mDraggedTrayPiece = null;
+			}
 			
 			mSubmit.Color = (mTray.AssembleWord().length ? 0xAAFF99 : 0xCCCCCC);
 		}
@@ -963,9 +1483,9 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			
 			aEvent.EventPiece.Dispose();
 			removeChild(aEvent.EventPiece);
-			if (aEvent.EventPiece == mDraggedPiece)
+			if (aEvent.EventPiece == mDraggedTrayPiece)
 			{
-				mDraggedPiece = null;
+				mDraggedTrayPiece = null;
 			}
 			
 			mSubmit.Color = (mTray.AssembleWord().length ? 0xAAFF99 : 0xCCCCCC);
@@ -986,14 +1506,68 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mInstruction.text = INSTRUCTION;
 			mInstruction.setTextFormat(FORMAT);
 			
-			ResetBulb();
+			//ResetBulb();
 			
-			mSubmitedWord = new UIButton(word, 0x99EEFF);
-			mSubmitedWord.x = mTray.Center;
-			mSubmitedWord.y = mTray.y;
-			mSubmitedWord.width = mTray.width;
-			addChild(mSubmitedWord);
-			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedWord, scaleX:1 } );
+			if (WordDictionary.Validate(word, 1))
+			{
+				mSubmitedWord = new UIButton(word, 0x99EEFF);
+				mSubmitedWord.x = mTray.Center;
+				mSubmitedWord.y = mTray.y;
+				mSubmitedWord.width = mTray.width;
+				addChild(mSubmitedWord);
+				
+				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedWord, scaleX:1 } );
+			}
+			else
+			{
+				mRedBulb.graphics.clear();
+				mRedBulb.graphics.lineStyle(2, 0xFF99AA);
+				mRedBulb.graphics.beginFill(0xFF99AA);
+				mRedBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
+				mRedBulb.graphics.endFill();
+				
+				(new Asset.ErrorSound() as Sound).play();
+				
+				var index:int = 0;
+				var piece:Piece = mTray.RemoveLast();
+				var button:DecayingButton;
+				while (piece)
+				{
+					button = new DecayingButton(piece.Content, 5000, 0xFF99AA);
+					button.x = mTray.x + piece.x;
+					button.y = mTray.y + piece.y;
+					addChild(button);
+					mPieceButtonList.push(button);
+					
+					TweenLite.to(button, 0.5, { ease:Strong.easeOut, overwrite:true, delay:(0.1 * index),
+						onComplete:OnTweenRecyclePieceButton, onCompleteParams:[button],
+						x:MathUtil.MinMax(button.x, 160, 500), y:MathUtil.MinMax(button.y, 100, 320) } );
+					
+					++index;
+					piece = mTray.RemoveLast();
+				}
+				
+				mSuccessFeedback = new Sprite();
+				mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
+				mSuccessFeedback.graphics.beginFill(0x000000, 0);
+				mSuccessFeedback.graphics.drawRect(0, 0, 800, 600);
+				mSuccessFeedback.graphics.endFill();
+				mSuccessFeedback.alpha = 0;
+				
+				var successLabel:TextField = new TextField();
+				successLabel.autoSize = TextFieldAutoSize.CENTER;
+				successLabel.selectable = false;
+				successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
+				successLabel.text = "TRY AGAIN!\n\nCLICK TO\nCONTINUE";
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
+				successLabel.x = 400 - (successLabel.width / 2);
+				successLabel.y = 300 - (successLabel.height / 2);
+				mSuccessFeedback.addChild(successLabel);
+				
+				addChild(mSuccessFeedback);
+				
+				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 });
+			}
 			
 			mTray.Clear();
 			
@@ -1015,44 +1589,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 		
 		private function OnTweenSquashSubmitedWord():void
 		{
-			if (WordDictionary.Validate(mSubmitedWord.Content, 1))
-			{
-				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenStretchSubmitedWord, scaleX:1.5, scaleY:1.5 } );
-			}
-			else
-			{
-				mRedBulb.graphics.clear();
-				mRedBulb.graphics.lineStyle(2, 0xFF99AA);
-				mRedBulb.graphics.beginFill(0xFF99AA);
-				mRedBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
-				mRedBulb.graphics.endFill();
-				
-				(new Asset.ErrorSound() as Sound).play();
-				
-				mSubmitedWord.Color = 0xFF99AA;
-				
-				TweenLite.to(mSubmitedWord, 1, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedWord, alpha:0 });
-				
-				mSuccessFeedback = new Sprite();
-				mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-				mSuccessFeedback.graphics.beginFill(0x000000, 0);
-				mSuccessFeedback.graphics.drawRect(0, 0, 800, 600);
-				mSuccessFeedback.graphics.endFill();
-				mSuccessFeedback.alpha = 0;
-				addChild(mSuccessFeedback);
-				
-				var successLabel:TextField = new TextField();
-				successLabel.autoSize = TextFieldAutoSize.CENTER;
-				successLabel.selectable = false;
-				successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
-				successLabel.text = "TRY AGAIN!\n\nCLICK TO\nCONTINUE";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
-				successLabel.x = 400 - (successLabel.width / 2);
-				successLabel.y = 300 - (successLabel.height / 2);
-				mSuccessFeedback.addChild(successLabel);
-				
-				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 } );
-			}
+			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenStretchSubmitedWord, scaleX:1.5, scaleY:1.5 });
 		}
 		
 		private function OnTweenStretchSubmitedWord():void
@@ -1071,7 +1608,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			mSuccessFeedback.graphics.drawRect(0, 0, 800, 600);
 			mSuccessFeedback.graphics.endFill();
 			mSuccessFeedback.alpha = 0;
-			addChild(mSuccessFeedback);
 			
 			var successLabel:TextField = new TextField();
 			successLabel.autoSize = TextFieldAutoSize.CENTER;
@@ -1106,14 +1642,40 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				successLabel.text = "GREAT WORD!\nBUT IT DOES NOT WORK\nIN THIS SENTENCE\n\nCLICK TO\nCONTINUE";
 				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
 				
-				TweenLite.to(mSubmitedWord, 1, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedWord, alpha:0 });
+				var button:DecayingButton = new DecayingButton(mSubmitedWord.Content, 5000, 0xFFEE99);
+				button.x = mSubmitedWord.x;
+				button.y = mSubmitedWord.y;
+				addChild(button);
+				mPieceButtonList.push(button);
+				
+				TweenLite.to(button, 0.5, { ease:Strong.easeOut, overwrite:true,
+					onComplete:OnTweenRecyclePieceButton, onCompleteParams:[button],
+					x:MathUtil.MinMax(button.x, 160, 500), y:MathUtil.MinMax(button.y, 100, 320) });
+				
+				mSubmitedWord.Dispose();
+				removeChild(mSubmitedWord);
+				mSubmitedWord = null;
 			}
 			
 			successLabel.x = 400 - (successLabel.width / 2);
 			successLabel.y = 300 - (successLabel.height / 2);
 			mSuccessFeedback.addChild(successLabel);
 			
+			addChild(mSuccessFeedback);
+			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 });
+		}
+		
+		private function OnTweenRecyclePieceButton(aRecycledPiece:DecayingButton):void
+		{
+			aRecycledPiece.addEventListener(DecayingButtonEvent.DECAY_COMPLETE, OnDecayCompletePiece);
+			aRecycledPiece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownPieceButton);
+			aRecycledPiece.addEventListener(MouseEvent.CLICK, OnClickPieceButton);
+			
+			aRecycledPiece.Color = 0xFFFFFF;
+			OnTweenReplaceLoosePieceButton(aRecycledPiece);
+			
+			aRecycledPiece.CallAttention();
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void

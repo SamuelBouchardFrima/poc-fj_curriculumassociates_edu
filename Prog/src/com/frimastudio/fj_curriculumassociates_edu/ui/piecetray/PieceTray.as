@@ -41,6 +41,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			return mFirstPiece != mLastPiece;
 		}
 		
+		public function get Empty():Boolean
+		{
+			return !mFirstPiece;
+		}
+		
 		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
 		{
 			super();
@@ -404,11 +409,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			(new Asset.SlideSound() as Sound).play();
 		}
 		
-		public function RemoveLast():void
+		public function RemoveLast():Piece
 		{
 			if (!mLastPiece)
 			{
-				return;
+				return null;
 			}
 			
 			var piece:Piece = mLastPiece;
@@ -429,6 +434,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			}
 			
 			(new Asset.SlideSound() as Sound).play();
+			
+			return piece;
 		}
 		
 		protected function UpdatePositionFrom(aPiece:Piece):void
