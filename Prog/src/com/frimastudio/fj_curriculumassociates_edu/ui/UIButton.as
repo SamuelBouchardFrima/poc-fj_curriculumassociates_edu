@@ -1,9 +1,12 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui
 {
+	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -15,6 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		protected static const MARGIN:Number = 10;
 		
 		protected var mContent:String;
+		protected var mColor:int;
 		protected var mAsset:Sprite;
 		protected var mLabel:TextField;
 		protected var mCallAttentionTimer:Timer;
@@ -32,9 +36,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		
 		public function set Color(aValue:int):void
 		{
+			mColor = aValue;
+			
 			mAsset.graphics.clear();
 			mAsset.graphics.lineStyle(2);
-			mAsset.graphics.beginFill(aValue);
+			mAsset.graphics.beginFill(mColor);
 			mAsset.graphics.moveTo(mLabel.x - MARGIN, mLabel.y);
 			mAsset.graphics.lineTo(mLabel.x + mLabel.textWidth + MARGIN, mLabel.y);
 			mAsset.graphics.lineTo(mLabel.x + mLabel.textWidth + MARGIN, mLabel.y + mLabel.height);
@@ -43,11 +49,20 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 			mAsset.graphics.endFill();
 		}
 		
+		public function PositionAtChar(aCharIndex:int):Point
+		{
+			var boundary:Rectangle = mLabel.getCharBoundaries(aCharIndex);
+			var charPosition:Point = new Point(((boundary.right - boundary.left) / 2) + boundary.left,
+				((boundary.bottom - boundary.top) / 2) + boundary.top);
+			return charPosition.add(DisplayObjectUtil.GetPosition(mLabel));
+		}
+		
 		public function UIButton(aContent:String, aColor:int = 0xFFFFFF)
 		{
 			super();
 			
 			mContent = aContent;
+			mColor = aColor;
 			
 			mAsset = new Sprite();
 			addChild(mAsset);
@@ -63,7 +78,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 			addChild(mLabel);
 			
 			mAsset.graphics.lineStyle(2);
-			mAsset.graphics.beginFill(aColor);
+			mAsset.graphics.beginFill(mColor);
 			mAsset.graphics.moveTo(mLabel.x - MARGIN, mLabel.y);
 			mAsset.graphics.lineTo(mLabel.x + mLabel.textWidth + MARGIN, mLabel.y);
 			mAsset.graphics.lineTo(mLabel.x + mLabel.textWidth + MARGIN, mLabel.y + mLabel.height);
@@ -81,12 +96,32 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 			mCallAttentionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnCallAttentionTimerComplete);
 		}
 		
-		public function CallAttention():void
+		public function CallAttention(aSpecialAnim:Boolean = false):void
 		{
 			mCallAttentionTimer.reset();
 			mCallAttentionTimer.start();
 			
-			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenVibrateUp, y:-2 });
+			if (aSpecialAnim)
+			{
+				TweenLite.to(mAsset, 0.1, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenScaleUp,
+					scaleX:1.05, scaleY:1.05 });
+			}
+			else
+			{
+				TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenVibrateUp, y: -2 });
+			}
+		}
+		
+		private function OnTweenScaleUp():void
+		{
+			TweenLite.to(mAsset, 0.1, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenScaleDown,
+					scaleX:0.95, scaleY:0.95 });
+		}
+		
+		private function OnTweenScaleDown():void
+		{
+			TweenLite.to(mAsset, 0.1, { ease:Strong.easeOut, overwrite:true, onComplete:OnTweenScaleUp,
+					scaleX:1.05, scaleY:1.05 });
 		}
 		
 		private function OnTweenVibrateUp():void
@@ -101,7 +136,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		
 		private function OnCallAttentionTimerComplete(aEvent:TimerEvent):void
 		{
-			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, y:0 } );
+			TweenLite.to(mAsset, 0.05, { ease:Strong.easeOut, overwrite:true, scaleX:1, scaleY:1, y:0 } );
 			
 			mCallAttentionTimer.reset();
 		}

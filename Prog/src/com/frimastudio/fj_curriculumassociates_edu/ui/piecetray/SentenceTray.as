@@ -80,11 +80,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			SetFirstPieceCase();
 		}
 		
-		override public function RemoveLast():void
+		override public function RemoveLast():Piece
 		{
-			super.RemoveLast();
+			var piece:Piece = super.RemoveLast();
 			
 			SetLastPiecePonctuation();
+			
+			return piece;
 		}
 		
 		private function SetFirstPieceCase():void

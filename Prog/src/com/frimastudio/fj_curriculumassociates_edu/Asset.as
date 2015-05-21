@@ -9,6 +9,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var ClickSound:Class;
 		[Embed(source = "../../../../audio/slide.mp3")]
 		public static var SlideSound:Class;
+		[Embed(source = "../../../../audio/snapping.mp3")]
+		public static var SnappingSound:Class;
 		
 		[Embed(source = "../../../../audio/crescendo.mp3")]
 		public static var CrescendoSound:Class;
@@ -19,6 +21,18 @@ package com.frimastudio.fj_curriculumassociates_edu
 		
 		[Embed(source = "../../../../audio/instruction.mp3")]
 		public static var InstructionSound:Class;
+		
+		[Embed(source = "../../../../audio/sentences/aFieldIsOnTheHill.mp3")]
+		private static var AFieldIsOnTheHill:Class;
+		[Embed(source = "../../../../audio/sentences/onAHillIsTheField.mp3")]
+		private static var OnAHillIsTheField:Class;
+		[Embed(source = "../../../../audio/sentences/onTheHillIsAField.mp3")]
+		private static var OnTheHillIsAField:Class;
+		[Embed(source = "../../../../audio/sentences/theFieldIsOnAHill.mp3")]
+		private static var TheFieldIsOnAHill:Class;
+		public static var SentenceSound:Object = { _a_field_is_on_the_hill:AFieldIsOnTheHill,
+			_on_a_hill_is_the_field:OnAHillIsTheField, _on_the_hill_is_a_field:OnTheHillIsAField,
+			_the_field_is_on_a_hill:TheFieldIsOnAHill };
 		
 		[Embed(source = "../../../../audio/words/hill.mp3")]
 		private static var Hill:Class;
@@ -34,7 +48,20 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Surf:Class;
 		[Embed(source = "../../../../audio/words/fair.mp3")]
 		private static var Fair:Class;
-		public static var WordSound:Object = { hill:Hill, felt:Felt, hall:Hall, clam:Clam, leaf:Leaf, surf:Surf, fair:Fair };
+		[Embed(source = "../../../../audio/words/a.mp3")]
+		private static var WordA:Class;
+		[Embed(source = "../../../../audio/words/field.mp3")]
+		private static var Field:Class;
+		[Embed(source = "../../../../audio/words/is.mp3")]
+		private static var Is:Class;
+		[Embed(source = "../../../../audio/words/on.mp3")]
+		private static var On:Class;
+		[Embed(source = "../../../../audio/words/sun.mp3")]
+		private static var Sun:Class;
+		[Embed(source = "../../../../audio/words/the.mp3")]
+		private static var The:Class;
+		public static var WordSound:Object = { _hill:Hill, _felt:Felt, _hall:Hall, _clam:Clam, _leaf:Leaf, _surf:Surf,
+			_fair:Fair, _a:WordA, _field:Field, _is:Is, _on:On, _sun:Sun, _the:The };
 		
 		[Embed(source = "../../../../audio/letters/h.mp3")]
 		private static var H:Class;
@@ -60,7 +87,7 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var U:Class;
 		[Embed(source = "../../../../audio/letters/r.mp3")]
 		private static var R:Class;
-		public static var LetterSound:Object = { h:H, i:I, l:L, f:F, e:E, t:T, a:A, c:C, m:M, s:S, u:U, r:R };
+		public static var LetterSound:Object = { _h:H, _i:I, _l:L, _f:F, _e:E, _t:T, _a:A, _c:C, _m:M, _s:S, _u:U, _r:R };
 		
 		[Embed(source = "../../../../audio/chunks/ill.mp3")]
 		private static var Ill:Class;
@@ -84,7 +111,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Urf:Class;
 		[Embed(source = "../../../../audio/chunks/ir.mp3")]
 		private static var Ir:Class;
-		public static var ChunkSound:Object = { ill:Ill, ll:Ll, lt:Lt, elt:Elt, all:All, cl:Cl, am:Am, af:Af, rf:Rf, urf:Urf, ir:Ir };
+		public static var ChunkSound:Object = { _ill:Ill, _ll:Ll, _lt:Lt, _elt:Elt, _all:All, _cl:Cl, _am:Am, _af:Af,
+			_rf:Rf, _urf:Urf, _ir:Ir };
 		
 		public function Asset()
 		{

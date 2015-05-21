@@ -13,6 +13,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	import flash.globalization.StringTools;
 	import flash.media.Sound;
@@ -29,9 +31,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 		private var mState:WordDraggingDemoState;
 		private var mLayout:Sprite;
 		private var mChallengePicture:Sprite;
-		private var mBlueBulb:Sprite;
-		private var mYellowBulb:Sprite;
-		private var mRedBulb:Sprite;
 		private var mSentenceTray:SentenceTray;
 		private var mPieceTray:PieceTray;
 		private var mDraggedPiece:Piece;
@@ -40,8 +39,74 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 		private var mBlocker:Sprite;
 		private var mSubmitedSentence:UIButton;
 		private var mSuccessFeedback:Sprite;
-		private var mWin:Boolean;
+		private var mReset:Boolean;
 		private var mProgressFeedbackTimer:Timer;
+		
+		private function get SentenceIsCorrect():Boolean
+		{
+			switch (mSentenceTray.AssembleSentence())
+			{
+				case "The field is on a hill.":
+				case "A field is on the hill.":
+				case "On a hill is the field.":
+				case "On the hill is a field.":
+					return true;
+				default:
+					return false;
+			}
+		}
+		
+		private function get SentenceIsValid():Boolean
+		{
+			switch (mSentenceTray.AssembleSentence())
+			{
+				case "The field is on a hill.":
+				case "A field is on the hill.":
+				case "On a hill is the field.":
+				case "On the hill is a field.":
+				case "The hill is on a field.":
+				case "A hill is on the field.":
+				case "The sun is on a hill.":
+				case "A sun is on the hill.":
+				case "The sun is on a field.":
+				case "A sun is on the field.":
+				case "The field is on a sun.":
+				case "A field is on the sun.":
+				case "The hill is on a sun.":
+				case "A hill is on the sun.":
+				case "On the field is a hill.":
+				case "On a field is the hill.":
+				case "On the sun is a hill.":
+				case "On a sun is the hill.":
+				case "On the sun is a field.":
+				case "On a sun is the field.":
+				case "On the field is a sun.":
+				case "On a field is the sun.":
+				case "On the hill is a sun.":
+				case "On a hill is the sun.":
+				case "The hill is a field.":
+				case "A hill is the field.":
+				case "The sun is a hill.":
+				case "A sun is the hill.":
+				case "The sun is a field.":
+				case "A sun is the field.":
+				case "The field is a hill.":
+				case "A field is the hill.":
+				case "The field is a sun.":
+				case "A field is the sun.":
+				case "The hill is a sun.":
+				case "A hill is the sun.":
+				case "The field is on.":
+				case "A field is on.":
+				case "The hill is on.":
+				case "A hill is on.":
+				case "The sun is on.":
+				case "A sun is on.":
+					return true;
+				default:
+					return false;
+			}
+		}
 		
 		public function WordDraggingDemo()
 		{
@@ -59,23 +124,6 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mChallengePicture.y = 105;
 			mChallengePicture.addChild(new Asset.TheFieldIsOnAHillBitmap() as Bitmap);
 			addChild(mChallengePicture);
-			
-			mBlueBulb = new Sprite();
-			mBlueBulb.x = 625;
-			mBlueBulb.y = 125;
-			addChild(mBlueBulb);
-			
-			mYellowBulb = new Sprite();
-			mYellowBulb.x = 622.5;
-			mYellowBulb.y = 175;
-			addChild(mYellowBulb);
-			
-			mRedBulb = new Sprite();
-			mRedBulb.x = 622.5;
-			mRedBulb.y = 225;
-			addChild(mRedBulb);
-			
-			ResetBulb();
 			
 			mSentenceTray = new SentenceTray(false);
 			mSentenceTray.x = 113.5;
@@ -101,8 +149,8 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mBlocker.graphics.drawRect(0, 0, 800, 600);
 			mBlocker.graphics.endFill();
 			
-			mProgressFeedbackTimer = new Timer(4000, 0);
-			mProgressFeedbackTimer.addEventListener(TimerEvent.TIMER, OnProgressFeedbackTimer);
+			mProgressFeedbackTimer = new Timer(4000, 1);
+			mProgressFeedbackTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnProgressFeedbackTimerComplete);
 			
 			ProgressState();
 		}
@@ -126,22 +174,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mProgressFeedbackTimer.start();
 		}
 		
-		private function ResetBulb():void
-		{
-			mRedBulb.graphics.clear();
-			mRedBulb.graphics.lineStyle(2, 0xFF99AA);
-			mRedBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
-			
-			mYellowBulb.graphics.clear();
-			mYellowBulb.graphics.lineStyle(2, 0xFFEE99);
-			mYellowBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
-			
-			mBlueBulb.graphics.clear();
-			mBlueBulb.graphics.lineStyle(2, 0x99EEFF);
-			mBlueBulb.graphics.drawCircle(-7.5, -7.5, 15);
-		}
-		
-		private function OnProgressFeedbackTimer(aEvent:TimerEvent):void
+		private function OnProgressFeedbackTimerComplete(aEvent:TimerEvent):void
 		{
 			switch (mState)
 			{
@@ -150,10 +183,13 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 					break;
 				case WordDraggingDemoState.WORD_SORTING:
 					mSentenceTray.CallAttention();
-					ProgressState(WordDraggingDemoState.SENTENCE_SUBMITTING);
+					if (SentenceIsValid)
+					{
+						ProgressState(WordDraggingDemoState.SENTENCE_SUBMITTING);
+					}
 					break;
 				case WordDraggingDemoState.SENTENCE_SUBMITTING:
-					mSubmit.CallAttention();
+					mSubmit.CallAttention(true);
 					break;
 				case null:
 					throw new Error("State is null!");
@@ -175,10 +211,14 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+				
+				(new Asset.WordSound["_" + mDraggedPiece.Content]() as Sound).play();
 			}
 			else
 			{
 				mPieceTray.InsertLast(aEvent.EventPiece.Content, new Point(mouseX - mPieceTray.x, mouseY - mPieceTray.y));
+				
+				(new Asset.WordSound["_" + aEvent.EventPiece.Content]() as Sound).play();
 			}
 			
 			mSentenceTray.Remove(aEvent.EventPiece);
@@ -202,10 +242,14 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+				
+				(new Asset.WordSound["_" + mDraggedPiece.Content]() as Sound).play();
 			}
 			else
 			{
 				mSentenceTray.InsertLast(aEvent.EventPiece.Content, new Point(mouseX - mSentenceTray.x, mouseY - mSentenceTray.y));
+				
+				(new Asset.WordSound["_" + aEvent.EventPiece.Content]() as Sound).play();
 				
 				mSubmit.Color = 0xAAFF99;
 				
@@ -255,6 +299,11 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			{
 				mPieceTray.addEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedPieceTray);
 				mPieceTray.Insert(mDraggedPiece, mPreviousPosition);
+				
+				if (SentenceIsValid)
+				{
+					ProgressState(WordDraggingDemoState.SENTENCE_SUBMITTING);
+				}
 			}
 		}
 		
@@ -295,7 +344,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			mSubmitedSentence.y = mSentenceTray.y;
 			mSubmitedSentence.width = mSentenceTray.width;
 			addChild(mSubmitedSentence);
-			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedSentence, scaleX:1 } );
+			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedSentence, scaleX:1 });
 			
 			mSentenceTray.visible = false;
 			
@@ -308,19 +357,31 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 		
 		private function OnTweenSquashSubmitedSentence():void
 		{
-			TweenLite.to(mSubmitedSentence, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenCenterSubmitedSentence, x:400, y:349 } );
+			(new Asset.SnappingSound() as Sound).play();
+			
+			TweenLite.to(mSubmitedSentence, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenCenterSubmitedSentence, x:400, y:189 });
 		}
 		
 		private function OnTweenCenterSubmitedSentence():void
 		{
-			TweenLite.to(mSubmitedSentence, 1, { ease:Elastic.easeOut, onComplete:OnTweenStretchSubmitedSentence, scaleX:2, scaleY:2 } );
+			if (SentenceIsCorrect)
+			{
+				var sentence:String = mSentenceTray.AssembleSentence();
+				sentence = sentence.substr(0, sentence.length - 1);
+				sentence = sentence.toLowerCase();
+				sentence = sentence.split(" ").join("_");
+				
+				(new Asset.SentenceSound["_" + sentence]() as Sound).play();
+			}
+			
+			TweenLite.to(mSubmitedSentence, 1, { ease:Elastic.easeOut, onComplete:OnTweenStretchSubmitedSentence, scaleX:2, scaleY:2 });
 		}
 		
 		private function OnTweenStretchSubmitedSentence():void
 		{
 			mSuccessFeedback = new Sprite();
 			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-			mSuccessFeedback.graphics.beginFill(0x000000, 0.5);
+			mSuccessFeedback.graphics.beginFill(0x000000, 0);
 			mSuccessFeedback.graphics.drawRect(0, 0, 800, 600);
 			mSuccessFeedback.graphics.endFill();
 			mSuccessFeedback.alpha = 0;
@@ -329,90 +390,38 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			var successLabel:TextField = new TextField();
 			successLabel.autoSize = TextFieldAutoSize.CENTER;
 			successLabel.selectable = false;
+			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
 			
-			switch (mSubmitedSentence.Content)
+			if (SentenceIsCorrect)
 			{
-				case "The field is on a hill.":
-				case "A field is on the hill.":
-				case "On a hill is the field.":
-				case "On the hill is a field.":
-					mWin = true;
-					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nYOU WIN!\n\nCLICK TO\nCONTINUE";
-					successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, "center"));
-					
-					(new Asset.CrescendoSound() as Sound).play();
-					
-					mBlueBulb.graphics.clear();
-					mBlueBulb.graphics.lineStyle(2, 0x99EEFF);
-					mBlueBulb.graphics.beginFill(0x99EEFF);
-					mBlueBulb.graphics.drawCircle(-7.5, -7.5, 15);
-					mBlueBulb.graphics.endFill();
-					
-					mSubmitedSentence.Color = 0xAAFF99;
-					break;
-				case "The hill is on a field.":
-				case "A hill is on the field.":
-				case "The sun is on a hill.":
-				case "A sun is on the hill.":
-				case "The sun is on a field.":
-				case "A sun is on the field.":
-				case "The field is on a sun.":
-				case "A field is on the sun.":
-				case "The hill is on a sun.":
-				case "A hill is on the sun.":
-				case "On the field is a hill.":
-				case "On a field is the hill.":
-				case "On the sun is a hill.":
-				case "On a sun is the hill.":
-				case "On the sun is a field.":
-				case "On a sun is the field.":
-				case "On the field is a sun.":
-				case "On a field is the sun.":
-				case "On the hill is a sun.":
-				case "On a hill is the sun.":
-				case "The hill is a field.":
-				case "A hill is the field.":
-				case "The sun is a hill.":
-				case "A sun is the hill.":
-				case "The sun is a field.":
-				case "A sun is the field.":
-				case "The field is a sun.":
-				case "A field is the sun.":
-				case "The hill is a sun.":
-				case "A hill is the sun.":
-				case "The field is on.":
-				case "A field is on.":
-				case "The hill is on.":
-				case "A hill is on.":
-				case "The sun is on.":
-				case "A sun is on.":
-					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nNICE SENTENCE!\n\nCLICK TO\nCONTINUE";
-					successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
-					
-					(new Asset.ValidationSound() as Sound).play();
-					
-					mYellowBulb.graphics.clear();
-					mYellowBulb.graphics.lineStyle(2, 0xFFEE99);
-					mYellowBulb.graphics.beginFill(0xFFEE99);
-					mYellowBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
-					mYellowBulb.graphics.endFill();
-					
-					mSubmitedSentence.Color = 0xFFEE99;
-					break;
-				default:
-					successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
-					successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
-					
-					(new Asset.ErrorSound() as Sound).play();
-					
-					mRedBulb.graphics.clear();
-					mRedBulb.graphics.lineStyle(2, 0xFF99AA);
-					mRedBulb.graphics.beginFill(0xFF99AA);
-					mRedBulb.graphics.drawCircle(-6.75, -6.75, 12.5);
-					mRedBulb.graphics.endFill();
-					
-					mSubmitedSentence.Color = 0xFF99AA;
-					break;
+				mReset = true;
+				
+				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nYOU WIN!\n\nCLICK TO\nSTART OVER";
+				successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, "center"));
+				
+				(new Asset.CrescendoSound() as Sound).play();
+				
+				mSubmitedSentence.Color = 0xAAFF99;
+			}
+			else if (SentenceIsValid)
+			{
+				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nGREAT SENTENCE!\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
+				
+				(new Asset.ValidationSound() as Sound).play();
+				
+				mSubmitedSentence.Color = 0xFFEE99;
+			}
+			else
+			{
+				mReset = true;
+				
+				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
+				
+				(new Asset.ErrorSound() as Sound).play();
+				
+				mSubmitedSentence.Color = 0xFF99AA;
 			}
 			
 			successLabel.x = 400 - (successLabel.width / 2);
@@ -438,16 +447,14 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 } );
 			
-			ResetBulb();
-			
-			if (mWin)
+			if (mReset)
 			{
 				mSentenceTray.Clear();
 				mPieceTray.Clear(new <String>["field", "hill", "on", "sun", "is", "the", "a"]);
 				
 				mSubmit.Color = 0xCCCCCC;
 				
-				mWin = false;
+				mReset = false;
 				
 				ProgressState(WordDraggingDemoState.WORD_SELECTING);
 			}
