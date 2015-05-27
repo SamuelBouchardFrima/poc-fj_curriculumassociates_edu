@@ -1,5 +1,7 @@
-package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
+package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
+{
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -8,7 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 	
 	public class PieceTray extends Sprite
 	{
-		protected static const OFFSET:Number = 10;
+		protected static const OFFSET:Number = 5;
 		protected static const DEADZONE:Number = 50;
 		
 		protected var mEnablePieceDelete:Boolean;
@@ -44,6 +46,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		public function get Empty():Boolean
 		{
 			return !mFirstPiece;
+		}
+		
+		public function set Color(aValue:int):void
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				piece.BoxColor = aValue;
+				piece = piece.NextPiece;
+			}
 		}
 		
 		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
@@ -123,7 +135,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			var piece:Piece = mFirstPiece;
 			while (piece)
 			{
-				word += piece.Content;
+				word += piece.Label;
 				piece = piece.NextPiece;
 			}
 			return word;
@@ -135,7 +147,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			var piece:Piece = mFirstPiece;
 			while (piece)
 			{
-				sentence.push(piece.Content);
+				sentence.push(piece.Label);
 				piece = piece.NextPiece;
 			}
 			return sentence.join(" ");
@@ -150,7 +162,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			
 			if (Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " already inserted! No need to make place.");
+				throw new Error("Piece " + aPiece.Label + " already inserted! No need to make place.");
 				return;
 			}
 			
@@ -198,7 +210,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		{
 			if (Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " already inserted!");
+				throw new Error("Piece " + aPiece.Label + " already inserted!");
 				return;
 			}
 			
@@ -217,7 +229,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 						relativePosition.x >= piece.Position.x - ((OFFSET + piece.width) / 2)) &&
 						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
-						InsertBefore(piece, aPiece.Content, relativePosition);
+						InsertBefore(piece, aPiece.Label, relativePosition);
 						newPosition = true;
 						break;
 					}
@@ -227,7 +239,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 						relativePosition.x <= piece.Position.x + ((OFFSET + piece.width) / 2)) &&
 						relativePosition.y >= -((2 * OFFSET) + piece.height) && relativePosition.y <= (2 * OFFSET) + piece.height)
 					{
-						InsertAfter(piece, aPiece.Content, relativePosition);
+						InsertAfter(piece, aPiece.Label, relativePosition);
 						newPosition = true;
 						break;
 					}
@@ -240,7 +252,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 				if (relativePosition.x >= -DEADZONE - (aPiece.width / 2) && relativePosition.x <= DEADZONE + (aPiece.width / 2) &&
 					relativePosition.y >= -((2 * OFFSET) + aPiece.height) && relativePosition.y <= (2 * OFFSET) + aPiece.height)
 				{
-					InsertFirst(aPiece.Content);
+					InsertFirst(aPiece.Label);
 					newPosition = true;
 				}
 			}
@@ -249,11 +261,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			{
 				if (Contain(aPreviousPosition))
 				{
-					InsertBefore(aPreviousPosition, aPiece.Content, relativePosition);
+					InsertBefore(aPreviousPosition, aPiece.Label, relativePosition);
 				}
 				else
 				{
-					InsertLast(aPiece.Content, relativePosition);
+					InsertLast(aPiece.Label, relativePosition);
 				}
 			}
 			
@@ -301,7 +313,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		{
 			if (!Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
+				throw new Error("Piece " + aPiece.Label + " is not in the tray!");
 				return;
 			}
 			
@@ -325,7 +337,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		{
 			if (!Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
+				throw new Error("Piece " + aPiece.Label + " is not in the tray!");
 				return;
 			}
 			
@@ -349,7 +361,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 		{
 			if (!Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
+				throw new Error("Piece " + aPiece.Label + " is not in the tray!");
 				return;
 			}
 			
@@ -447,7 +459,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			
 			if (!Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
+				throw new Error("Piece " + aPiece.Label + " is not in the tray!");
 				return;
 			}
 			
@@ -471,7 +483,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
 			
 			if (!Contain(aPiece))
 			{
-				throw new Error("Piece " + aPiece.Content + " is not in the tray!");
+				throw new Error("Piece " + aPiece.Label + " is not in the tray!");
 				return;
 			}
 			

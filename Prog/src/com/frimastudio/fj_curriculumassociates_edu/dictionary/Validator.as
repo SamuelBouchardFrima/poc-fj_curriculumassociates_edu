@@ -19,7 +19,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dictionary
 			var word:String;
 			for (var i:int = 1, end:int = parsedData.length - 1; i < end; ++i)
 			{
-				word = parsedData[i].toLowerCase();
+				word = parsedData[i];
 				word = word.substr(0, word.length - 1);
 				
 				if (word == "" || word.indexOf("'") != -1 || word.indexOf("-") != -1 || word.indexOf(" ") != -1 ||

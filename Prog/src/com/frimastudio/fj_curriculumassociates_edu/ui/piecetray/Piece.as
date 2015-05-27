@@ -1,4 +1,5 @@
-package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray {
+package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
+{
 	import com.frimastudio.fj_curriculumassociates_edu.ui.UIButton;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
 	import com.greensock.easing.Elastic;

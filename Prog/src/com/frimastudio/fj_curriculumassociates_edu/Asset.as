@@ -5,6 +5,42 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../art/TheFieldIsOnAHill.png")]
 		public static var TheFieldIsOnAHillBitmap:Class;
 		
+		[Embed(source = "../../../../art/POC/BtnLeft.png")]
+		public static var BtnLeftBitmap:Class;
+		[Embed(source = "../../../../art/POC/BtnTrash.png")]
+		public static var BtnTrashBitmap:Class;
+		[Embed(source = "../../../../art/POC/BtnRight.png")]
+		public static var BtnRightBitmap:Class;
+		[Embed(source = "../../../../art/POC/BtnEar.png")]
+		public static var BtnEarBitmap:Class;
+		[Embed(source = "../../../../art/POC/BtnFeed.png")]
+		public static var BtnFeedBitmap:Class;
+		[Embed(source = "../../../../art/POC/BtnWrite.png")]
+		public static var BtnWriteBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/IconHint.png")]
+		public static var IconHintBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconOK.png")]
+		public static var IconOKBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconWrite.png")]
+		public static var IconWriteBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconWrong.png")]
+		public static var IconWrongBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/Bubble.png")]
+		public static var BubbleBitmap:Class;
+		[Embed(source = "../../../../art/POC/BubbleSplash.png")]
+		public static var BubbleSplashBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/NPC.png")]
+		public static var NPCBitmap:Class;
+		[Embed(source = "../../../../art/POC/Mini.png")]
+		public static var MiniBitmap:Class;
+		[Embed(source = "../../../../art/POC/Cup.png")]
+		public static var CupBitmap:Class;
+		[Embed(source = "../../../../art/POC/Field.png")]
+		public static var FieldBitmap:Class;
+		
 		[Embed(source = "../../../../audio/click.mp3")]
 		public static var ClickSound:Class;
 		[Embed(source = "../../../../audio/slide.mp3")]
@@ -30,9 +66,11 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var OnTheHillIsAField:Class;
 		[Embed(source = "../../../../audio/sentences/theFieldIsOnAHill.mp3")]
 		private static var TheFieldIsOnAHill:Class;
+		[Embed(source = "../../../../audio/sentences/iAmSam.mp3")]
+		private static var IAmSam:Class;
 		public static var SentenceSound:Object = { _a_field_is_on_the_hill:AFieldIsOnTheHill,
 			_on_a_hill_is_the_field:OnAHillIsTheField, _on_the_hill_is_a_field:OnTheHillIsAField,
-			_the_field_is_on_a_hill:TheFieldIsOnAHill };
+			_the_field_is_on_a_hill:TheFieldIsOnAHill, _iAmSam:IAmSam };
 		
 		[Embed(source = "../../../../audio/words/hill.mp3")]
 		private static var Hill:Class;
@@ -87,7 +125,14 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var U:Class;
 		[Embed(source = "../../../../audio/letters/r.mp3")]
 		private static var R:Class;
-		public static var LetterSound:Object = { _h:H, _i:I, _l:L, _f:F, _e:E, _t:T, _a:A, _c:C, _m:M, _s:S, _u:U, _r:R };
+		[Embed(source = "../../../../audio/letters/p.mp3")]
+		private static var P:Class;
+		[Embed(source = "../../../../audio/letters/o.mp3")]
+		private static var O:Class;
+		[Embed(source = "../../../../audio/letters/g.mp3")]
+		private static var G:Class;
+		public static var LetterSound:Object = { _h:H, _i:I, _l:L, _f:F, _e:E, _t:T, _a:A, _c:C, _m:M, _s:S, _u:U, _r:R,
+			_p:P, _o:O, _g:G };
 		
 		[Embed(source = "../../../../audio/chunks/ill.mp3")]
 		private static var Ill:Class;
@@ -114,9 +159,25 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var ChunkSound:Object = { _ill:Ill, _ll:Ll, _lt:Lt, _elt:Elt, _all:All, _cl:Cl, _am:Am, _af:Af,
 			_rf:Rf, _urf:Urf, _ir:Ir };
 		
+		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
+			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
+		public static var SweaterSchoolFont:Class;
+		
+		[Embed(source = "../../../../font/sweater school sb.otf", fontName = "SweaterSchoolSb-Regular",
+			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
+		public static var SweaterSchoolSemiBoldFont:Class;
+		
+		[Embed(source = "../../../../font/sweater school bd.otf", fontName = "SweaterSchoolRg-Bold",
+			mimeType = "application/x-font", fontWeight = "bold", fontStyle = "normal", embedAsCFF = "false")]
+		public static var SweaterSchoolBoldFont:Class;
+		
+		[Embed(source = "../../../../font/sweater school xb.otf", fontName = "SweaterSchoolXb-Regular",
+			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
+		public static var SweaterSchoolExtraBoldFont:Class;
+		
 		public function Asset()
 		{
-			throw new Error("Asset is a static class not intended for instantiation!");
+			throw new Error("Asset is static and not intended for instantiation!");
 		}
 	}
 }

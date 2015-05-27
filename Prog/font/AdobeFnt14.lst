@@ -1,0 +1,94 @@
+%!Adobe-FontList 1.14
+%Locale:0xc0c
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:SweaterSchoolRg-Bold
+FamilyName:Sweater School
+StyleName:Bold
+FullName:SweaterSchoolRg-Bold
+MenuName:Sweater School Rg
+StyleBits:2
+WritingScript:Roman
+OutlineFileName:C:\SVN_CA_ART\trunk\UI\Font\sweater school bd.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:86540
+FileModTime:1431551842
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:SweaterSchoolRg-Regular
+FamilyName:Sweater School
+StyleName:Regular
+FullName:SweaterSchoolRg-Regular
+MenuName:Sweater School Rg
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\SVN_CA_ART\trunk\UI\Font\sweater school rg.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:86676
+FileModTime:1431551844
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:SweaterSchoolSb-Regular
+FamilyName:Sweater School
+StyleName:SemiBold
+FullName:SweaterSchoolSb-Regular
+MenuName:Sweater School Sb
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\SVN_CA_ART\trunk\UI\Font\sweater school sb.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:82068
+FileModTime:1431551845
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:SweaterSchoolXb-Regular
+FamilyName:Sweater School
+StyleName:ExtraBold
+FullName:SweaterSchoolXb-Regular
+MenuName:Sweater School Xb
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:C:\SVN_CA_ART\trunk\UI\Font\sweater school xb.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:82904
+FileModTime:1431551847
+WeightClass:800
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:C:\SVN_CA_ART\trunk\UI\Font\Sweater_school_info.png
+FileModTime:1431551899
+%EndFont
+

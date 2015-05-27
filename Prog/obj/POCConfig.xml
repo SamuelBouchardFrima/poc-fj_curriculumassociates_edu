@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'2015-05-25'</value>
+      <value>'2015-05-27'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -40,12 +40,12 @@
     </library-path>
   </compiler>
   <file-specs>
-    <path-element>D:\dev\QVTFacebook\CA\poc-fj_curriculumassociates_edu\Prog\src\com\frimastudio\fj_curriculumassociates_edu\rpt_wordcrafting\RPT_WordCrafting.as</path-element>
+    <path-element>D:\dev\QVTFacebook\CA\poc-fj_curriculumassociates_edu\Prog\src\com\frimastudio\fj_curriculumassociates_edu\poc\POC.as</path-element>
   </file-specs>
-  <default-background-color>#FFFFFF</default-background-color>
+  <default-background-color>#CCCCCC</default-background-color>
   <default-frame-rate>30</default-frame-rate>
   <default-size>
-    <width>800</width>
-    <height>600</height>
+    <width>1024</width>
+    <height>768</height>
   </default-size>
 </flex-config>
