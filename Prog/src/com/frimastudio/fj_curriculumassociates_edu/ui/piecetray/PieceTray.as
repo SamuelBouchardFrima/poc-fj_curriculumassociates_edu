@@ -150,6 +150,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				sentence.push(piece.Label);
 				piece = piece.NextPiece;
 			}
+			if (sentence.length)
+			{
+				sentence[0] = sentence[0].charAt(0).toUpperCase() + sentence[0].substring(1);
+				sentence[sentence.length - 1] += ".";
+			}
 			return sentence.join(" ");
 		}
 		

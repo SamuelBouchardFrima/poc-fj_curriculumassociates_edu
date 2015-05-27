@@ -8,6 +8,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -201,6 +203,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				label.selectable = false;
 				label.width = mSize.width - (mMargin * 2);
 				label.text = labelTemplate.Label;
+				if (labelTemplate.DropShadow)
+				{
+					label.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
+				}
 				switch (mAutoSizeAxis)
 				{
 					case Axis.HORIZONTAL:

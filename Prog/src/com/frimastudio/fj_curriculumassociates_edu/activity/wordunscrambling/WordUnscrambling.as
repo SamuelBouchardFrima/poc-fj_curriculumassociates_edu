@@ -84,7 +84,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			addChild(craftingIcon);
 			
 			mToolTray = new PieceTray(false, mTemplate.LetterList);
-			mToolTray.x = 220;
+			//mToolTray.x = 220;
+			mToolTray.x = 90;
 			mToolTray.y = 723;
 			mToolTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedToolTray);
 			addChild(mToolTray);
@@ -157,8 +158,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			{
 				mPreviousPosition = aEvent.EventPiece.NextPiece;
 				
-				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label,
-					MouseUtil.PositionRelativeTo(this));
+				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
 				mDraggedPiece.y = mToolTray.y;
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
@@ -265,7 +265,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			if (answer.length)
 			{
 				answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-				if (answer == "Sam")
+				if (answer == mTemplate.Answer)
 				{
 					mResult = Result.GREAT;
 					mLearnedWordList[answer] = answer;
@@ -317,7 +317,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnTweenStretchSubmitedWord():void
 		{
-			TweenLite.to(mSubmitedWord, 1, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
+			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
 				x:mAnswerField.x, y:mAnswerField.y });
 		}
 		
@@ -335,7 +335,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			var answer:String = mCraftingTray.AssembleWord();
 			answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-			mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color);
+			mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
 			mSubmitBtn.BoxColor = mSubmitedWord.BoxColor = mResult.Color;
 			
 			var successLabel:TextField = new TextField();
@@ -383,7 +383,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			if (mResult == Result.GREAT)
 			{
-				(new Asset.SentenceSound["_iAmSam"]() as Sound).play();
+				(new Asset.SentenceSound["_i_am_sam"]() as Sound).play();
 			}
 		}
 		

@@ -35,6 +35,16 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mNPC.y = 40;
 			addChild(mNPC);
 			
+			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
+			toolTrayBox.x = 512;
+			toolTrayBox.y = 723;
+			addChild(toolTrayBox);
+			
+			var craftingTrayBox:Box = new Box(new Point(1024, 90), Palette.CRAFTING_BOX);
+			craftingTrayBox.x = 512;
+			craftingTrayBox.y = 633;
+			addChild(craftingTrayBox);
+			
 			var dialog:String = mTemplate.DialogList[mStep];
 			if (mTemplate.DialogList.length > 1)
 			{
