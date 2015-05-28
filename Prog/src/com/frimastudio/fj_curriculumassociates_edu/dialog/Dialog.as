@@ -51,7 +51,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				dialog += "\n...";
 			}
 			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(dialog, 72,
+			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(dialog, 60,
 				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
 			mDialogBox.x = 640;
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
@@ -91,7 +91,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				addChild(mContinueBtn);
 			}
 			
-			mDialogBox.Content = new BoxLabel(dialog, 72, Palette.DIALOG_CONTENT);
+			mDialogBox.Content = new BoxLabel(dialog, 60, Palette.DIALOG_CONTENT);
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
 		}
 		

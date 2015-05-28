@@ -19,6 +19,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		private var mActive:Boolean;
 		private var mMouseDownOrigin:Point;
 		private var mDragAutostartTimer:Timer;
+		private var mDecayTimer:Timer;
 		
 		public function get PreviousPiece():Piece				{	return mPrevious;	}
 		public function set PreviousPiece(aValue:Piece):void	{	mPrevious = aValue;	}
@@ -62,6 +63,24 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			mDragAutostartTimer = new Timer(500, 1);
 			mDragAutostartTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDragAutostartTimerComplete);
+			
+			mDecayTimer = new Timer(15000, 1);
+			mDecayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDecayTimerComplete);
+		}
+		
+		override public function Dispose():void
+		{
+			super.Dispose();
+			
+			mDragAutostartTimer.reset();
+			mDragAutostartTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnDragAutostartTimerComplete);
+			
+			mDecayTimer.reset();
+			mDecayTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnDecayTimerComplete);
+			
+			removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			removeEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		public function Activate():void
@@ -73,6 +92,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 			
 			mDragAutostartTimer.reset();
+			mDecayTimer.reset();
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
 			addEventListener(MouseEvent.CLICK, OnClick);
@@ -88,10 +108,17 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 			
 			mDragAutostartTimer.reset();
+			mDecayTimer.reset();
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			removeEventListener(MouseEvent.CLICK, OnClick);
+		}
+		
+		public function StartDecay():void
+		{
+			mDecayTimer.reset();
+			mDecayTimer.start();
 		}
 		
 		private function OnMouseDown(aEvent:MouseEvent):void
@@ -105,6 +132,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		}
 		
 		private function OnDragAutostartTimerComplete(aEvent:TimerEvent):void
+		{
+			dispatchEvent(new PieceEvent(PieceEvent.REMOVE));
+		}
+		
+		private function OnDecayTimerComplete(aEvent:TimerEvent):void
 		{
 			dispatchEvent(new PieceEvent(PieceEvent.REMOVE));
 		}

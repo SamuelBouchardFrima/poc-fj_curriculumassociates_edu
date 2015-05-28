@@ -76,6 +76,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			mAttentionCallingTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnAttentionCallingTimerComplete);
 		}
 		
+		public function Dispose():void
+		{
+			Clear();
+		}
+		
 		public function CallAttention():void
 		{
 			mAttentionCallingTimer.reset();
@@ -114,6 +119,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 					piece.PreviousPiece.NextPiece = null;
 					piece.PreviousPiece = null;
 				}
+				piece.Dispose();
 				removeChild(piece);
 				piece = piece.NextPiece;
 			}
@@ -384,6 +390,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			aPiece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			aPiece.Deactivate();
+			aPiece.Dispose();
 			removeChild(aPiece);
 			
 			aPiece.PreviousPiece.NextPiece = aPiece.NextPiece;
@@ -408,6 +415,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			piece.Deactivate();
+			piece.Dispose();
 			removeChild(piece);
 			
 			if (piece == mLastPiece)
@@ -437,6 +445,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			piece.Deactivate();
+			piece.Dispose();
 			removeChild(piece);
 			
 			if (piece == mFirstPiece)

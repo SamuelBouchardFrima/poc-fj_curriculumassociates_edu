@@ -159,7 +159,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			addChild(craftingIcon);
 			
 			mToolTray = new PieceTray(false, mTemplate.WordList);
-			//mToolTray.x = 220;
 			mToolTray.x = 90;
 			mToolTray.y = 723;
 			mToolTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedToolTray);
@@ -185,7 +184,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			//}
 			//var request:String = mTemplate.Request.split("_").join(answerFieldString);
 			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Request, 64,
+			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Request, 60,
 				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
 			//mDialogBox.HideLabelSubString(answerFieldString);
 			mDialogBox.x = 640;
@@ -388,7 +387,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private function OnTweenStretchSubmitedSentence():void
 		{
 			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedSentence,
-				x:mPicture.x + (mPicture.width / 2), y:mPicture.y + mPicture.height - (mSubmitedSentence.height / 2) });
+				x:mPicture.x + (mPicture.width / 2), y:mPicture.y + mPicture.height - (mSubmitedSentence.height / 2),
+				scaleX:1, scaleY:1 });
 		}
 		
 		private function OnTweenSendSubmitedSentence():void

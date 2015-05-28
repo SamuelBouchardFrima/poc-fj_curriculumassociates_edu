@@ -68,9 +68,11 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var TheFieldIsOnAHill:Class;
 		[Embed(source = "../../../../audio/sentences/iAmSam.mp3")]
 		private static var IAmSam:Class;
+		[Embed(source = "../../../../audio/sentences/iNeedToFillUpThisCup.mp3")]
+		private static var INeedToFillUpThisCup:Class;
 		public static var SentenceSound:Object = { _a_field_is_on_the_hill:AFieldIsOnTheHill,
 			_on_a_hill_is_the_field:OnAHillIsTheField, _on_the_hill_is_a_field:OnTheHillIsAField,
-			_the_field_is_on_a_hill:TheFieldIsOnAHill, _i_am_sam:IAmSam };
+			_the_field_is_on_a_hill:TheFieldIsOnAHill, _i_am_sam:IAmSam, _i_need_to_fill_up_this_cup:INeedToFillUpThisCup };
 		
 		[Embed(source = "../../../../audio/words/hill.mp3")]
 		private static var Hill:Class;

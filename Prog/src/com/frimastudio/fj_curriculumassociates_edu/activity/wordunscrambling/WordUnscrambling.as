@@ -84,7 +84,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			addChild(craftingIcon);
 			
 			mToolTray = new PieceTray(false, mTemplate.LetterList);
-			//mToolTray.x = 220;
 			mToolTray.x = 90;
 			mToolTray.y = 723;
 			mToolTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedToolTray);
@@ -110,7 +109,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			}
 			var request:String = mTemplate.Request.split("_").join(answerFieldString);
 			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(request, 72,
+			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(request, 60,
 				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
 			mDialogBox.HideLabelSubString(answerFieldString);
 			mDialogBox.x = 640;
@@ -318,7 +317,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		private function OnTweenStretchSubmitedWord():void
 		{
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
-				x:mAnswerField.x, y:mAnswerField.y });
+				x:mAnswerField.x, y:mAnswerField.y, scaleX:1, scaleY:1 });
 		}
 		
 		private function OnTweenSendSubmitedWord():void
@@ -364,7 +363,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			successLabel.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 72, mResult.Color,
 				null, null, null, null, null, "center"));
-			
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
 			mSuccessFeedback.addChild(successLabel);
