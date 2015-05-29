@@ -165,7 +165,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(mSize.right - 5, 0));
 					break;
 				case Direction.DOWN:
-					coordinateList.push(new Point(13, mSize.bottom - 5));
+					coordinateList.push(new Point(-13, mSize.bottom - 5));
 					coordinateList.push(new Point(0, mSize.bottom + 20));
 					coordinateList.push(new Point(0, mSize.bottom - 5));
 					break;

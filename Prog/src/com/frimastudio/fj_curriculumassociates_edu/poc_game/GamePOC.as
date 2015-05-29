@@ -1,13 +1,13 @@
-package com.frimastudio.fj_curriculumassociates_edu.poc
+package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
 	
-	public class POC extends Sprite
+	public class GamePOC extends Sprite
 	{
-		public function POC():void
+		public function GamePOC():void
 		{
 			stage ? Init() : addEventListener(Event.ADDED_TO_STAGE, Init);
 		}
@@ -18,7 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc
 			
 			// entry point
 			
-			var quest:POCQuest = new POCQuest();
+			var quest:GamePOCQuest = new GamePOCQuest();
 			quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			addChild(quest);
 			
@@ -32,11 +32,11 @@ package com.frimastudio.fj_curriculumassociates_edu.poc
 		
 		private function OnCompleteQuest(aEvent:QuestEvent):void
 		{
-			var quest:POCQuest = aEvent.currentTarget as POCQuest;
+			var quest:GamePOCQuest = aEvent.currentTarget as GamePOCQuest;
 			quest.removeEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			removeChild(quest);
 			
-			quest = new POCQuest();
+			quest = new GamePOCQuest();
 			quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			addChild(quest);
 		}

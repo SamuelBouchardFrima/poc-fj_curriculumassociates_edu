@@ -1,4 +1,4 @@
-package com.frimastudio.fj_curriculumassociates_edu.poc
+package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscrambling.SentenceUnscramblingTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting.WordCraftingTemplate;
@@ -8,9 +8,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc
 	import com.frimastudio.fj_curriculumassociates_edu.quest.Quest;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
 	
-	public class POCQuest extends Quest
+	public class GamePOCQuest extends Quest
 	{
-		public function POCQuest()
+		public function GamePOCQuest()
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
 			

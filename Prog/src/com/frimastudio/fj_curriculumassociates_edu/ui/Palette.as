@@ -17,6 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		public static const ANSWER_CONTENT:int = 0xB4B4B4;
 		public static const BTN_CONTENT:int = 0xFFFFFF;
 		public static const DIALOG_CONTENT:int = 0x000000;
+		public static const HIGHLIGHT_CONTENT:int = 0xFAEB7E;
 		
 		public static const BACKGROUND:int = 0xCCCCCC;
 		

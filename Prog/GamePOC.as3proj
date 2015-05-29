@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\POC.swf" />
+    <movie path="bin\GamePOC.swf" />
     <movie fps="30" />
     <movie width="1024" />
     <movie height="768" />
@@ -72,7 +72,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\com\frimastudio\fj_curriculumassociates_edu\poc\POC.as" />
+    <compile path="src\com\frimastudio\fj_curriculumassociates_edu\poc_game\GamePOC.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

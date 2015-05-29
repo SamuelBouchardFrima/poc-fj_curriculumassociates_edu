@@ -26,6 +26,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var IconWriteBitmap:Class;
 		[Embed(source = "../../../../art/POC/IconWrong.png")]
 		public static var IconWrongBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconEar.png")]
+		public static var IconEarBitmap:Class;
 		
 		[Embed(source = "../../../../art/POC/Bubble.png")]
 		public static var BubbleBitmap:Class;
@@ -40,6 +42,34 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var CupBitmap:Class;
 		[Embed(source = "../../../../art/POC/Field.png")]
 		public static var FieldBitmap:Class;
+		
+		[Embed(source = "../../../../art/lesson/requestTube.png")]
+		public static var RequestTubeBitmap:Class;
+		[Embed(source = "../../../../art/lesson/lucu.png")]
+		public static var LucuBitmap:Class;
+		
+		[Embed(source = "../../../../art/lesson/thorn.png")]
+		public static var ThornBitmap:Class;
+		[Embed(source = "../../../../art/lesson/sports.png")]
+		public static var SportsBitmap:Class;
+		[Embed(source = "../../../../art/lesson/store.png")]
+		public static var StoreBitmap:Class;
+		
+		[Embed(source = "../../../../art/lesson/lamp1_on.png")]
+		private static var Lamp1On:Class;
+		[Embed(source = "../../../../art/lesson/lamp2_on.png")]
+		private static var Lamp2On:Class;
+		[Embed(source = "../../../../art/lesson/lamp3_on.png")]
+		private static var Lamp3On:Class;
+		public static var LampOnBitmap:Object = [Lamp1On, Lamp2On, Lamp3On];
+		
+		[Embed(source = "../../../../art/lesson/lamp1_off.png")]
+		private static var Lamp1Off:Class;
+		[Embed(source = "../../../../art/lesson/lamp2_off.png")]
+		private static var Lamp2Off:Class;
+		[Embed(source = "../../../../art/lesson/lamp3_off.png")]
+		private static var Lamp3Off:Class;
+		public static var LampOffBitmap:Object = [Lamp1Off, Lamp2Off, Lamp3Off];
 		
 		[Embed(source = "../../../../audio/click.mp3")]
 		public static var ClickSound:Class;
@@ -160,6 +190,13 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Ir:Class;
 		public static var ChunkSound:Object = { _ill:Ill, _ll:Ll, _lt:Lt, _elt:Elt, _all:All, _cl:Cl, _am:Am, _af:Af,
 			_rf:Rf, _urf:Urf, _ir:Ir };
+		
+		[Embed(source = "../../../../audio/lesson/thorn.mp3")]
+		public static var ThornSound:Class;
+		[Embed(source = "../../../../audio/lesson/sports.mp3")]
+		public static var SportsSound:Class;
+		[Embed(source = "../../../../audio/lesson/store.mp3")]
+		public static var StoreSound:Class;
 		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
