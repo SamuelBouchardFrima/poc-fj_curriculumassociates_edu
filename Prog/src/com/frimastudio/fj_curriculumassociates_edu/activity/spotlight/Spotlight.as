@@ -69,14 +69,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var colorTransform:ColorTransform = new ColorTransform(0.4, 0.4, 0.4);
 			mLucuList = new Vector.<Sprite>();
 			var lucu:Sprite;
-			var lucuPicture:Bitmap;
+			var lucuBitmap:Bitmap;
 			for (i = 0; i < endi; ++i)
 			{
 				lucu = new Sprite();
-				lucuPicture = new Asset.LucuBitmap();
-				lucuPicture.x = -lucuPicture.width / 2;
-				lucuPicture.y = -lucuPicture.height / 2;
-				lucu.addChild(lucuPicture);
+				lucuBitmap = new Asset.LucuBitmap();
+				lucuBitmap.x = -lucuBitmap.width / 2;
+				lucuBitmap.y = -lucuBitmap.height / 2;
+				lucu.addChild(lucuBitmap);
 				lucu.x = (i + 0.5) * offset;
 				lucu.y = 475;
 				lucu.transform.colorTransform = colorTransform;
@@ -142,6 +142,36 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mEarAudioTimer.reset();
 			mEarAudioTimer.start();
+		}
+		
+		override public function Dispose():void
+		{
+			var i:int, endi:int;
+			for (i = 0, endi = mLucuList.length; i < endi; ++i)
+			{
+				mLucuList[i].removeEventListener(MouseEvent.CLICK, OnClickLucu);
+			}
+			for (i = 0, endi = mEarBtnList.length; i < endi; ++i)
+			{
+				mEarBtnList[i].removeEventListener(MouseEvent.CLICK, OnClickEarBtn);
+			}
+			
+			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
+			
+			mEarAudioTimer.reset();
+			mEarAudioTimer.removeEventListener(TimerEvent.TIMER, OnEarAudioTimer);
+			mEarAudioTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAudioTimerComplete);
+			
+			mValidateAnswerTimer.reset();
+			mValidateAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
+			
+			mShowAnswerTimer.reset();
+			mShowAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnShowAnswerTimerComplete);
+			
+			mShowFeedbackTimer.reset();
+			mShowFeedbackTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnShowFeedbackTimerComplete);
+			
+			super.Dispose();
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
@@ -320,6 +350,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		
 		private function OnTweenHideSuccessFeedback():void
 		{
+			TweenLite.killTweensOf(mSuccessFeedback);
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			removeChild(mSuccessFeedback);
 			mSuccessFeedback = null;

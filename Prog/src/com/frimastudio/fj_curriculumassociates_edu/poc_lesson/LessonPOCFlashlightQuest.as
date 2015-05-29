@@ -11,8 +11,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
 			
-			mStepList.push(new FlashlightTemplate("Sports", 1,
-				new <Class>[Asset.ThornBitmap, Asset.SportsBitmap, Asset.StoreBitmap]));
+			mStepList.push(new FlashlightTemplate("Sports", "or", 1,
+				new <Class>[Asset.ThornBitmap, Asset.SportsBitmap, Asset.StoreBitmap],
+				new <Class>[Asset.ThornSound, Asset.SportsSound, Asset.StoreSound]));
 			
 			super();
 		}

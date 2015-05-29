@@ -17,6 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		private var mSpotlight:CurvedBox;
 		private var mFlashlight:CurvedBox;
 		private var mQuest:Quest
+		private var mVersion:TextField;
 		
 		public function LessonPOC():void
 		{
@@ -29,12 +30,11 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			
 			// entry point
 			
-			var version:TextField = new TextField();
-			version.text = "v0.1";
-			version.selectable = false;
-			version.x = 5;
-			version.y = 5;
-			addChild(version);
+			mVersion = new TextField();
+			mVersion.text = "v0.2";
+			mVersion.selectable = false;
+			mVersion.x = 5;
+			mVersion.y = 5;
 			
 			mSpotlight = new CurvedBox(new Point(100, 52), Palette.GREAT_BTN,
 				new BoxLabel("Spotlight", 39, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
@@ -43,33 +43,39 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mSpotlight.addEventListener(MouseEvent.CLICK, OnClickSpotlight);
 			addChild(mSpotlight);
 			
-			//mFlashlight = new CurvedBox(new Point(100, 52), Palette.GREAT_BTN,
-				//new BoxLabel("Flashlight", 39, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
-			//mFlashlight.x = 512;
-			//mFlashlight.y = mSpotlight.y + 62;
-			//mFlashlight.addEventListener(MouseEvent.CLICK, OnClickFlashlight);
-			//addChild(mFlashlight);
+			mFlashlight = new CurvedBox(new Point(100, 52), Palette.GREAT_BTN,
+				new BoxLabel("Flashlight", 39, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
+			mFlashlight.x = 512;
+			mFlashlight.y = mSpotlight.y + 62;
+			mFlashlight.addEventListener(MouseEvent.CLICK, OnClickFlashlight);
+			addChild(mFlashlight);
+			
+			addChild(mVersion);
 		}
 		
 		private function OnClickSpotlight(aEvent:MouseEvent):void
 		{
 			removeChild(mSpotlight);
-			//removeChild(mFlashlight);
+			removeChild(mFlashlight);
 			
 			mQuest = new LessonPOCSpotlightQuest();
 			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			addChild(mQuest);
+			
+			addChild(mVersion);
 		}
 		
-		//private function OnClickFlashlight(aEvent:MouseEvent):void
-		//{
-			//removeChild(mSpotlight);
-			//removeChild(mFlashlight);
-			//
-			//mQuest = new LessonPOCFlashlightQuest();
-			//mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
-			//addChild(mQuest);
-		//}
+		private function OnClickFlashlight(aEvent:MouseEvent):void
+		{
+			removeChild(mSpotlight);
+			removeChild(mFlashlight);
+			
+			mQuest = new LessonPOCFlashlightQuest();
+			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+			addChild(mQuest);
+			
+			addChild(mVersion);
+		}
 		
 		private function OnCompleteQuest(aEvent:QuestEvent):void
 		{
@@ -78,7 +84,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mQuest = null;
 			
 			addChild(mSpotlight);
-			//addChild(mFlashlight);
+			addChild(mFlashlight);
+			
+			addChild(mVersion);
 		}
 	}
 }

@@ -47,6 +47,10 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var RequestTubeBitmap:Class;
 		[Embed(source = "../../../../art/lesson/lucu.png")]
 		public static var LucuBitmap:Class;
+		[Embed(source = "../../../../art/lesson/flashlightLucu.png")]
+		public static var FlashlightLucuBitmap:Class;
+		[Embed(source = "../../../../art/lesson/flashlight.png")]
+		public static var FlashlightBitmap:Class;
 		
 		[Embed(source = "../../../../art/lesson/thorn.png")]
 		public static var ThornBitmap:Class;
