@@ -51,6 +51,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightLucuBitmap:Class;
 		[Embed(source = "../../../../art/lesson/flashlight.png")]
 		public static var FlashlightBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuitLucu.png")]
+		public static var CircuitLucuBitmap:Class;
 		
 		[Embed(source = "../../../../art/lesson/thorn.png")]
 		public static var ThornBitmap:Class;
@@ -74,6 +76,13 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../art/lesson/lamp3_off.png")]
 		private static var Lamp3Off:Class;
 		public static var LampOffBitmap:Object = [Lamp1Off, Lamp2Off, Lamp3Off];
+		
+		[Embed(source = "../../../../art/lesson/circuit_on.png")]
+		public static var CircuitOn:Class;
+		[Embed(source = "../../../../art/lesson/circuit_off.png")]
+		public static var CircuitOff:Class;
+		[Embed(source = "../../../../art/lesson/circuitConnection.png")]
+		public static var CircuitConnection:Class;
 		
 		[Embed(source = "../../../../audio/click.mp3")]
 		public static var ClickSound:Class;
@@ -201,6 +210,12 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var SportsSound:Class;
 		[Embed(source = "../../../../audio/lesson/store.mp3")]
 		public static var StoreSound:Class;
+		[Embed(source = "../../../../audio/lesson/throne.mp3")]
+		public static var ThroneSound:Class;
+		[Embed(source = "../../../../audio/lesson/start.mp3")]
+		public static var StartSound:Class;
+		[Embed(source = "../../../../audio/lesson/score.mp3")]
+		public static var ScoreSound:Class;
 		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]

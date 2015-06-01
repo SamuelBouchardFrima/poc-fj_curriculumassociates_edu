@@ -48,6 +48,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			var background:Sprite = new Sprite();
 			background.graphics.beginFill(Palette.CRAFTING_BOX);
 			background.graphics.drawRect(0, 0, 1024, 768);
+			background.graphics.endFill();
 			addChild(background);
 			
 			var lamp:Bitmap = new Asset.LampOnBitmap[2]();

@@ -16,6 +16,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	{
 		private var mSpotlight:CurvedBox;
 		private var mFlashlight:CurvedBox;
+		private var mCurcuit:CurvedBox;
 		private var mQuest:Quest
 		private var mVersion:TextField;
 		
@@ -31,7 +32,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			// entry point
 			
 			mVersion = new TextField();
-			mVersion.text = "v0.2";
+			mVersion.text = "v0.3";
 			mVersion.selectable = false;
 			mVersion.x = 5;
 			mVersion.y = 5;
@@ -50,6 +51,13 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mFlashlight.addEventListener(MouseEvent.CLICK, OnClickFlashlight);
 			addChild(mFlashlight);
 			
+			mCurcuit = new CurvedBox(new Point(100, 52), Palette.GREAT_BTN,
+				new BoxLabel("Circuit", 39, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
+			mCurcuit.x = 512;
+			mCurcuit.y = mFlashlight.y + 62;
+			mCurcuit.addEventListener(MouseEvent.CLICK, OnClickCircuit);
+			addChild(mCurcuit);
+			
 			addChild(mVersion);
 		}
 		
@@ -57,6 +65,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 			removeChild(mSpotlight);
 			removeChild(mFlashlight);
+			removeChild(mCurcuit);
 			
 			mQuest = new LessonPOCSpotlightQuest();
 			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
@@ -69,8 +78,22 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 			removeChild(mSpotlight);
 			removeChild(mFlashlight);
+			removeChild(mCurcuit);
 			
 			mQuest = new LessonPOCFlashlightQuest();
+			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+			addChild(mQuest);
+			
+			addChild(mVersion);
+		}
+		
+		private function OnClickCircuit(aEvent:MouseEvent):void
+		{
+			removeChild(mSpotlight);
+			removeChild(mFlashlight);
+			removeChild(mCurcuit);
+			
+			mQuest = new LessonPOCCircuitQuest();
 			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			addChild(mQuest);
 			
@@ -85,6 +108,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			
 			addChild(mSpotlight);
 			addChild(mFlashlight);
+			addChild(mCurcuit);
 			
 			addChild(mVersion);
 		}

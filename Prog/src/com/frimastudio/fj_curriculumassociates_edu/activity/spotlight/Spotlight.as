@@ -53,6 +53,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var background:Sprite = new Sprite();
 			background.graphics.beginFill(Palette.CRAFTING_BOX);
 			background.graphics.drawRect(0, 0, 1024, 768);
+			background.graphics.endFill();
 			addChild(background);
 			
 			mLampList = new Vector.<Bitmap>();
