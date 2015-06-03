@@ -8,8 +8,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
+	import flash.filters.GlowFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -267,6 +269,18 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			}
 		}
 		
+		public function EnableMouseOver():void
+		{
+			addEventListener(MouseEvent.ROLL_OVER, OnRollOver);
+			addEventListener(MouseEvent.ROLL_OUT, OnRollOut);
+		}
+		
+		public function DisableMouseOver():void
+		{
+			removeEventListener(MouseEvent.ROLL_OVER, OnRollOver);
+			removeEventListener(MouseEvent.ROLL_OUT, OnRollOut);
+		}
+		
 		public function HideLabelSubString(aSubString:String):void
 		{
 			if (!(mContentTemplate is BoxLabel))
@@ -305,6 +319,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			var leftBoundary:Rectangle = field.getCharBoundaries(field.text.indexOf(aSubString));
 			var rightBoundary:Rectangle = field.getCharBoundaries(field.text.indexOf(aSubString) + aSubString.length - 1);
 			return Geometry.RectangleAdd(leftBoundary.union(rightBoundary), DisplayObjectUtil.GetPosition(field));
+		}
+		
+		private function OnRollOver(aEvent:MouseEvent):void
+		{
+			filters = [new GlowFilter(BoxColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+		}
+		
+		private function OnRollOut(aEvent:MouseEvent):void
+		{
+			filters = [];
 		}
 	}
 }

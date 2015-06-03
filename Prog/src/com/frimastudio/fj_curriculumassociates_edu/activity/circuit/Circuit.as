@@ -10,10 +10,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.greensock.easing.Elastic;
+	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.filters.BitmapFilterQuality;
@@ -32,6 +34,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		private var mCircuitList:Vector.<Sprite>;
 		private var mWordList:Vector.<CurvedBox>;
 		private var mCurrentCircuit:int;
+		private var mSlot:CurvedBox;
 		private var mResultList:Vector.<Result>;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
@@ -90,8 +93,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				word = new CurvedBox(new Point(188, 66), Palette.DIALOG_BOX,
 					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
 				word.x = ((i % 3) * 240) + 190;
-				word.y = (Math.floor(i / 3) * 90) + 620;
+				word.y = (Math.floor(i / 3) * 90) + 620 + 300;
+				TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 1.2), y:(word.y - 300) });
 				word.addEventListener(MouseEvent.CLICK, OnClickWord);
+				word.EnableMouseOver();
 				addChild(word);
 				mWordList.push(word);
 			}
@@ -111,7 +116,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			addChild(mBlocker);
 			
 			mCurrentCircuit = 0;
-			ShowPicture();
+			
+			var instruction:Sound = new Asset.CircuitInstructionSound() as Sound;
+			instruction.play();
+			var instructionTimer:Timer = new Timer(instruction.length, 1);
+			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			instructionTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -119,6 +129,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			for (var i:int = 0, endi:int = mWordList.length; i < endi; ++i)
 			{
 				mWordList[i].removeEventListener(MouseEvent.CLICK, OnClickWord);
+				mWordList[i].DisableMouseOver();
 			}
 			
 			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
@@ -144,7 +155,33 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				mWordList[i].filters = [];
 			}
 			
+			mSlot = new CurvedBox(new Point(188, 66), 0xFF000000);
+			mSlot.x = mCircuitList[mCurrentCircuit].x - 5;
+			mSlot.y = mCircuitList[mCurrentCircuit].y + 202;
+			var filter:GlowFilter = new GlowFilter(0x00FF99, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH, true);
+			mSlot.filters = [filter];
+			mSlot.alpha = 0;
+			addChild(mSlot);
+			TweenLite.to(mSlot, 0.5, { ease:Strong.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 });
+			
 			removeChild(mBlocker);
+		}
+		
+		private function OnTweenGlowSlotStronger():void
+		{
+			TweenLite.to(mSlot, 1, { ease:Quad.easeOut, onComplete:OnTweenGlowSlotWeaker, alpha:0.5 } );
+		}
+		
+		private function OnTweenGlowSlotWeaker():void
+		{
+			TweenLite.to(mSlot, 1, { ease:Quad.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 });
+		}
+		
+		private function OnInstructionTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			
+			ShowPicture();
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
@@ -153,23 +190,33 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		
 		private function OnClickWord(aEvent:MouseEvent):void
 		{
+			(new Asset.ClickSound() as Sound).play();
+			(new Asset.SlideSound() as Sound).play();
+			
 			var wordBtn:CurvedBox = aEvent.currentTarget as CurvedBox;
+			TweenLite.to(wordBtn, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendAnswer, onCompleteParams:[wordBtn],
+				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) });
 			
-			var answerBtn:CurvedBox = new CurvedBox(wordBtn.Size, Palette.DIALOG_BOX,
-				new BoxLabel(wordBtn.Label, 52.5, Palette.DIALOG_CONTENT), 12);
-			answerBtn.x = mCircuitList[mCurrentCircuit].x - 5;
-			answerBtn.y = mCircuitList[mCurrentCircuit].y + 202;
-			answerBtn.width = 0;
+			addChild(wordBtn);
+			addChild(mBlocker);
+		}
+		
+		private function OnTweenSendAnswer(aWordBtn:CurvedBox):void
+		{
+			var answer:int = mWordList.indexOf(aWordBtn);
+			
+			var answerBtn:CurvedBox = new CurvedBox(aWordBtn.Size, Palette.DIALOG_BOX,
+				new BoxLabel(aWordBtn.Label, 52.5, Palette.DIALOG_CONTENT), 12);
+			answerBtn.x = aWordBtn.x;
+			answerBtn.y = aWordBtn.y;
 			addChild(answerBtn);
-			
-			var answer:int = mWordList.indexOf(wordBtn);
-			(new mTemplate.AudioAssetList[answer]() as Sound).play();
 			
 			var btnColor:int;
 			if (answer == mTemplate.AnswerList[mCurrentCircuit])
 			{
-				TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenShowAnswer,
-					onCompleteParams:[answerBtn], scaleX:1 });
+				(new Asset.CrescendoSound() as Sound).play();
+				
+				TweenLite.to(answerBtn, 0.5, { onComplete:OnTweenShowAnswer, onCompleteParams:[answerBtn] });
 				
 				mResultList.push(Result.GREAT);
 				btnColor = 0x00FF99;
@@ -195,41 +242,54 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			}
 			else
 			{
+				(new Asset.ErrorSound() as Sound).play();
+				
 				mResultList.push(Result.WRONG);
 				btnColor = Palette.WRONG_BTN;
 				
-				TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, delay:0.2, onComplete:OnTweenShowWrongAnswer,
-					onCompleteParams:[answerBtn], scaleX:1 });
+				TweenLite.to(answerBtn, 0.5, { delay:0.2, onComplete:OnTweenShowWrongAnswer, onCompleteParams:[answerBtn] });
 			}
-			wordBtn.BoxColor = btnColor;
-			wordBtn.filters = [new GlowFilter(btnColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			answerBtn.BoxColor = btnColor;
 			answerBtn.filters = [new GlowFilter(btnColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			
+			aWordBtn.alpha = 0;
+			aWordBtn.x = ((answer % 3) * 240) + 190;
+			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
+			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 			
 			addChild(mBlocker);
 		}
 		
 		private function OnTweenShowWrongAnswer(aWrongAnswerBtn:CurvedBox):void
 		{
-			TweenLite.to(aWrongAnswerBtn, 0.5, { ease:Strong.easeOut, delay:0.5, onComplete:OnTweenHideWrongAnswer,
+			TweenLite.to(aWrongAnswerBtn, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideWrongAnswer,
 				onCompleteParams:[aWrongAnswerBtn], scaleX:1.5, scaleY:1.5, alpha:0 } );
 			
-			var answerBtn:CurvedBox = new CurvedBox(aWrongAnswerBtn.Size, Palette.DIALOG_BOX,
+			(new Asset.SlideSound() as Sound).play();
+			
+			TweenLite.to(mWordList[mTemplate.AnswerList[mCurrentCircuit]], 1, { ease:Elastic.easeOut,
+				onComplete:OnTweenSendCorrectAnswer, onCompleteParams:[mWordList[mTemplate.AnswerList[mCurrentCircuit]]],
+				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) });
+			
+			addChild(mWordList[mTemplate.AnswerList[mCurrentCircuit]]);
+			addChild(mBlocker);
+		}
+		
+		private function OnTweenSendCorrectAnswer(aWordBtn:CurvedBox):void
+		{
+			var answer:int = mWordList.indexOf(aWordBtn);
+			
+			var answerBtn:CurvedBox = new CurvedBox(aWordBtn.Size, Palette.DIALOG_BOX,
 				new BoxLabel(mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]], 52.5, Palette.DIALOG_CONTENT), 12);
-			answerBtn.x = mCircuitList[mCurrentCircuit].x - 5;
-			answerBtn.y = mCircuitList[mCurrentCircuit].y + 202;
-			answerBtn.width = 0;
-			answerBtn.alpha = 0;
+			answerBtn.x = aWordBtn.x;
+			answerBtn.y = aWordBtn.y;
 			addChild(answerBtn);
+			TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenShowAnswer, onCompleteParams:[answerBtn] });
 			
-			(new mTemplate.AudioAssetList[mTemplate.AnswerList[mCurrentCircuit]]() as Sound).play();
-			
-			var wordBtn:CurvedBox = mWordList[mTemplate.AnswerList[mCurrentCircuit]];
-			wordBtn.BoxColor = 0x00FF99;
-			wordBtn.filters = [new GlowFilter(0x00FF99, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-			
-			TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, delay:0.5, onComplete:OnTweenShowAnswer,
-				onCompleteParams:[answerBtn], alpha:1, scaleX:1 });
+			aWordBtn.alpha = 0;
+			aWordBtn.x = ((answer % 3) * 240) + 190;
+			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
+			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 		}
 		
 		private function OnTweenHideWrongAnswer(aWrongAnswerBtn:CurvedBox):void
@@ -239,6 +299,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		
 		private function OnTweenShowAnswer(aAnswerBtn:CurvedBox):void
 		{
+			if (mSlot)
+			{
+				TweenLite.killTweensOf(mSlot);
+				removeChild(mSlot);
+			}
+			
 			++mCurrentCircuit;
 			if (mCurrentCircuit < mTemplate.PictureAssetList.length)
 			{

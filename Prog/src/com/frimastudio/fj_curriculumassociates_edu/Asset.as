@@ -217,6 +217,15 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../audio/lesson/score.mp3")]
 		public static var ScoreSound:Class;
 		
+		[Embed(source = "../../../../audio/lesson/hubInstruction.mp3")]
+		public static var HUBInstructionSound:Class;
+		[Embed(source = "../../../../audio/lesson/spotlightInstruction.mp3")]
+		public static var SpotlightInstructionSound:Class;
+		[Embed(source = "../../../../audio/lesson/flashlightInstruction.mp3")]
+		public static var FlashlightInstructionSound:Class;
+		[Embed(source = "../../../../audio/lesson/circuitInstruction.mp3")]
+		public static var CircuitInstructionSound:Class;
+		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
 		public static var SweaterSchoolFont:Class;
