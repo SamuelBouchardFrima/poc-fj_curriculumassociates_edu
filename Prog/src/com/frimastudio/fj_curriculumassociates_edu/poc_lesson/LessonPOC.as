@@ -151,7 +151,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mContainer.addChild(mBlocker);
 			
 			mVersion = new TextField();
-			mVersion.text = "v0.5";
+			mVersion.text = "v1.0";
 			mVersion.selectable = false;
 			mVersion.x = 5;
 			mVersion.y = 5;
