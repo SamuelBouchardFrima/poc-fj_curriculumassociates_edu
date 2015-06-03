@@ -43,6 +43,25 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../art/POC/Field.png")]
 		public static var FieldBitmap:Class;
 		
+		[Embed(source = "../../../../art/lesson/labLucu.png")]
+		public static var LabLucuBitmap:Class;
+		[Embed(source = "../../../../art/lesson/labCounter.png")]
+		public static var LabCounterBitmap:Class;
+		[Embed(source = "../../../../art/lesson/curtain.png")]
+		public static var CurtainBitmap:Class;
+		
+		[Embed(source = "../../../../art/lesson/lesson_1.png")]
+		private static var Lesson1:Class;
+		[Embed(source = "../../../../art/lesson/lesson_2.png")]
+		private static var Lesson2:Class;
+		[Embed(source = "../../../../art/lesson/lesson_3.png")]
+		private static var Lesson3:Class;
+		[Embed(source = "../../../../art/lesson/lesson_4.png")]
+		private static var Lesson4:Class;
+		[Embed(source = "../../../../art/lesson/lesson_5.png")]
+		private static var Lesson5:Class;
+		public static var LessonBitmap:Object = [Lesson1, Lesson2, Lesson3, Lesson4, Lesson5];
+		
 		[Embed(source = "../../../../art/lesson/requestTube.png")]
 		public static var RequestTubeBitmap:Class;
 		[Embed(source = "../../../../art/lesson/lucu.png")]
@@ -51,6 +70,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightLucuBitmap:Class;
 		[Embed(source = "../../../../art/lesson/flashlight.png")]
 		public static var FlashlightBitmap:Class;
+		[Embed(source = "../../../../art/lesson/flashlight_off.png")]
+		public static var FlashlightOffBitmap:Class;
 		[Embed(source = "../../../../art/lesson/circuitLucu.png")]
 		public static var CircuitLucuBitmap:Class;
 		
@@ -225,6 +246,13 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightInstructionSound:Class;
 		[Embed(source = "../../../../audio/lesson/circuitInstruction.mp3")]
 		public static var CircuitInstructionSound:Class;
+		
+		[Embed(source = "../../../../audio/lesson/spotlightTitle.mp3")]
+		public static var SpotlightTitleSound:Class;
+		[Embed(source = "../../../../audio/lesson/flashlightTitle.mp3")]
+		public static var FlashlightTitleSound:Class;
+		[Embed(source = "../../../../audio/lesson/circuitTitle.mp3")]
+		public static var CircuitTitleSound:Class;
 		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]

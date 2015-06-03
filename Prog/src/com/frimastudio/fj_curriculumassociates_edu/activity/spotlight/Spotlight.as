@@ -64,7 +64,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var lamp:Bitmap;
 			for (i = 0, endi = mTemplate.AudioAssetList.length; i < endi; ++i)
 			{
-				lamp = new Asset.LampOnBitmap[i]();
+				lamp = new Asset.LampOffBitmap[i]();
 				lamp.x = ((i + 0.5) * offset) - (lamp.width / 2);
 				lamp.y = 340 - (lamp.height / 2);
 				addChild(lamp);
@@ -74,6 +74,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mLucuList = new Vector.<Sprite>();
 			var lucu:Sprite;
 			var lucuBitmap:Bitmap;
+			var colorTransform:ColorTransform = new ColorTransform(0.4, 0.4, 0.4);
 			for (i = 0, endi = mTemplate.AudioAssetList.length; i < endi; ++i)
 			{
 				lucu = new Sprite();
@@ -86,6 +87,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 				lucu.addEventListener(MouseEvent.ROLL_OVER, OnRollOverLucu);
 				lucu.addEventListener(MouseEvent.ROLL_OUT, OnRollOutLucu);
 				lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
+				lucu.transform.colorTransform = colorTransform;
 				addChild(lucu);
 				mLucuList.push(lucu);
 			}
@@ -208,15 +210,34 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private function OnRollOverLucu(aEvent:MouseEvent):void
 		{
 			var lucu:Sprite = aEvent.currentTarget as Sprite;
-			lucu.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			lucu.transform.colorTransform = new ColorTransform();
 			(new mTemplate.AudioAssetList[mLucuList.indexOf(lucu)]() as Sound).play();
+			
+			var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
+			var index:int = mLucuList.indexOf(lucu);
+			var lamp:Bitmap = new Asset.LampOnBitmap[index]();
+			lamp.x = ((index + 0.5) * offset) - (lamp.width / 2);
+			lamp.y = 340 - (lamp.height / 2);
+			addChildAt(lamp, getChildIndex(mLampList[index]));
+			removeChild(mLampList[index]);
+			mLampList[index] = lamp;
 		}
 		
 		private function OnRollOutLucu(aEvent:MouseEvent):void
 		{
 			if (!contains(mBlocker) && !mSuccessFeedback)
 			{
-				(aEvent.currentTarget as Sprite).filters = [];
+				var lucu:Sprite = aEvent.currentTarget as Sprite;
+				lucu.transform.colorTransform = new ColorTransform(0.4, 0.4, 0.4);
+				
+				var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
+				var index:int = mLucuList.indexOf(lucu);
+				var lamp:Bitmap = new Asset.LampOffBitmap[index]();
+				lamp.x = ((index + 0.5) * offset) - (lamp.width / 2);
+				lamp.y = 340 - (lamp.height / 2);
+				addChildAt(lamp, getChildIndex(mLampList[index]));
+				removeChild(mLampList[index]);
+				mLampList[index] = lamp;
 			}
 		}
 		
@@ -256,7 +277,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 				}
 			}
 			
-			mLucuList[mAnswer].filters = [];
 			if (mResult == Result.GREAT)
 			{
 				(new Asset.CrescendoSound() as Sound).play();

@@ -176,6 +176,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(mSize.left - 20, 0));
 					coordinateList.push(new Point(mSize.left + 5, 0));
 					break;
+				case Direction.DOWN_LEFT:
+					coordinateList.push(new Point(mSize.left + 27, mSize.bottom - 5));
+					coordinateList.push(new Point(mSize.left + 40, mSize.bottom + 20));
+					coordinateList.push(new Point(mSize.left + 40, mSize.bottom - 5));
+					break;
 				default:
 					return;
 			}

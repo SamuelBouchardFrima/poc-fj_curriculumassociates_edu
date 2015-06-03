@@ -35,10 +35,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		private var mWordList:Vector.<CurvedBox>;
 		private var mCurrentCircuit:int;
 		private var mSlot:CurvedBox;
+		private var mAnswer:int;
 		private var mResultList:Vector.<Result>;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
+		private var mEarWordTimer:Timer;
+		private var mEarCorrectWordSlideTimer:Timer;
+		private var mEarCorrectWordTimer:Timer;
+		private var mSuccessFeedbackAudioTimer:Timer;
 		
 		public function Circuit(aTemplate:CircuitTemplate)
 		{
@@ -122,6 +127,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			var instructionTimer:Timer = new Timer(instruction.length, 1);
 			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
 			instructionTimer.start();
+			
+			mEarWordTimer = new Timer(300, 1);
+			mEarWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarWordTimerComplete);
+			
+			mEarCorrectWordSlideTimer = new Timer(300, 1);
+			mEarCorrectWordSlideTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCorrectWordSlideTimerComplete);
+			
+			mEarCorrectWordTimer = new Timer(600, 1);
+			mEarCorrectWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCorrectWordTimerComplete);
+			
+			mSuccessFeedbackAudioTimer = new Timer(500, 1);
+			mSuccessFeedbackAudioTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSuccessFeedbackAudioTimerComplete);
 		}
 		
 		override public function Dispose():void
@@ -133,6 +150,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			}
 			
 			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
+			
+			mEarWordTimer.reset();
+			mEarWordTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarWordTimerComplete);
+			
+			mEarCorrectWordSlideTimer.reset();
+			mEarCorrectWordSlideTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarCorrectWordSlideTimerComplete);
+			
+			mEarCorrectWordTimer.reset();
+			mEarCorrectWordTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarCorrectWordTimerComplete);
+			
+			mSuccessFeedbackAudioTimer.reset();
+			mSuccessFeedbackAudioTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnSuccessFeedbackAudioTimerComplete);
 		}
 		
 		private function ShowPicture():void
@@ -195,16 +224,26 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			
 			var wordBtn:CurvedBox = aEvent.currentTarget as CurvedBox;
 			TweenLite.to(wordBtn, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendAnswer, onCompleteParams:[wordBtn],
-				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) });
+				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) } );
+			
+			mAnswer = mWordList.indexOf(wordBtn);
+			
+			mEarWordTimer.reset();
+			mEarWordTimer.start();
 			
 			addChild(wordBtn);
 			addChild(mBlocker);
 		}
 		
+		private function OnEarWordTimerComplete(aEvent:TimerEvent):void
+		{
+			mEarWordTimer.reset();
+			
+			(new mTemplate.AudioAssetList[mAnswer]() as Sound).play();
+		}
+		
 		private function OnTweenSendAnswer(aWordBtn:CurvedBox):void
 		{
-			var answer:int = mWordList.indexOf(aWordBtn);
-			
 			var answerBtn:CurvedBox = new CurvedBox(aWordBtn.Size, Palette.DIALOG_BOX,
 				new BoxLabel(aWordBtn.Label, 52.5, Palette.DIALOG_CONTENT), 12);
 			answerBtn.x = aWordBtn.x;
@@ -212,7 +251,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			addChild(answerBtn);
 			
 			var btnColor:int;
-			if (answer == mTemplate.AnswerList[mCurrentCircuit])
+			if (mAnswer == mTemplate.AnswerList[mCurrentCircuit])
 			{
 				(new Asset.CrescendoSound() as Sound).play();
 				
@@ -253,8 +292,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			answerBtn.filters = [new GlowFilter(btnColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			
 			aWordBtn.alpha = 0;
-			aWordBtn.x = ((answer % 3) * 240) + 190;
-			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
+			aWordBtn.x = ((mAnswer % 3) * 240) + 190;
+			aWordBtn.y = (Math.floor(mAnswer / 3) * 90) + 620;
 			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 			
 			addChild(mBlocker);
@@ -262,17 +301,40 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		
 		private function OnTweenShowWrongAnswer(aWrongAnswerBtn:CurvedBox):void
 		{
-			TweenLite.to(aWrongAnswerBtn, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideWrongAnswer,
-				onCompleteParams:[aWrongAnswerBtn], scaleX:1.5, scaleY:1.5, alpha:0 } );
+			TweenLite.to(aWrongAnswerBtn, 0.3, { ease:Quad.easeIn, onComplete:OnTweenHideWrongAnswer,
+				onCompleteParams:[aWrongAnswerBtn], y:825 } );
 			
-			(new Asset.SlideSound() as Sound).play();
-			
-			TweenLite.to(mWordList[mTemplate.AnswerList[mCurrentCircuit]], 1, { ease:Elastic.easeOut,
+			TweenLite.to(mWordList[mTemplate.AnswerList[mCurrentCircuit]], 1, { ease:Elastic.easeOut, delay:0.3,
 				onComplete:OnTweenSendCorrectAnswer, onCompleteParams:[mWordList[mTemplate.AnswerList[mCurrentCircuit]]],
 				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) });
 			
+			mEarCorrectWordSlideTimer.reset();
+			mEarCorrectWordSlideTimer.start();
+			
+			mEarCorrectWordTimer.reset();
+			mEarCorrectWordTimer.start();
+			
 			addChild(mWordList[mTemplate.AnswerList[mCurrentCircuit]]);
 			addChild(mBlocker);
+		}
+		
+		private function OnEarCorrectWordSlideTimerComplete(aEvent:TimerEvent):void
+		{
+			mEarCorrectWordSlideTimer.reset();
+			
+			(new Asset.SlideSound() as Sound).play();
+		}
+		
+		private function OnEarCorrectWordTimerComplete(aEvent:TimerEvent):void
+		{
+			mEarCorrectWordTimer.reset();
+			
+			(new mTemplate.AudioAssetList[mTemplate.AnswerList[mCurrentCircuit]]() as Sound).play();
+		}
+		
+		private function OnTweenHideWrongAnswer(aWrongAnswerBtn:CurvedBox):void
+		{
+			removeChild(aWrongAnswerBtn);
 		}
 		
 		private function OnTweenSendCorrectAnswer(aWordBtn:CurvedBox):void
@@ -290,11 +352,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			aWordBtn.x = ((answer % 3) * 240) + 190;
 			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
 			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
-		}
-		
-		private function OnTweenHideWrongAnswer(aWrongAnswerBtn:CurvedBox):void
-		{
-			removeChild(aWrongAnswerBtn);
 		}
 		
 		private function OnTweenShowAnswer(aAnswerBtn:CurvedBox):void
@@ -315,21 +372,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				var wrongIndex:int = mResultList.indexOf(Result.WRONG);
 				if (wrongIndex >= 0)
 				{
-					if (mResultList.indexOf(Result.WRONG, wrongIndex + 1) >= 0)
-					{
-						mResult = Result.WRONG;
-						(new Asset.ErrorSound() as Sound).play();
-					}
-					else
-					{
-						mResult = Result.VALID;
-						(new Asset.ValidationSound() as Sound).play();
-					}
+					mResult = (mResultList.indexOf(Result.WRONG, wrongIndex + 1) >= 0 ? Result.WRONG : Result.VALID);
 				}
 				else
 				{
 					mResult = Result.GREAT;
-					(new Asset.CrescendoSound() as Sound).play();
 				}
 				
 				mSuccessFeedback = new Sprite();
@@ -361,7 +408,29 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				successLabel.y = 384 - (successLabel.height / 2);
 				mSuccessFeedback.addChild(successLabel);
 				addChild(mSuccessFeedback);
-				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
+				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, delay:1.2,
+					onComplete:OnTweenShowSuccessFeedback, alpha:1 } );
+				
+				mSuccessFeedbackAudioTimer.reset();
+				mSuccessFeedbackAudioTimer.start();
+			}
+		}
+		
+		private function OnSuccessFeedbackAudioTimerComplete(aEvent:TimerEvent):void
+		{
+			mSuccessFeedbackAudioTimer.reset();
+			
+			switch (mResult)
+			{
+				case Result.GREAT:
+					(new Asset.CrescendoSound() as Sound).play();
+					break;
+				case Result.VALID:
+					(new Asset.ValidationSound() as Sound).play();
+					break;
+				case Result.WRONG:
+					(new Asset.ErrorSound() as Sound).play();
+					break;
 			}
 		}
 		

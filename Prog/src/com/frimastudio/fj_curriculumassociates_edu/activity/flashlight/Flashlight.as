@@ -42,6 +42,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
+		private var mEarAnswerTimer:Timer;
 		private var mValidateAnswerTimer:Timer;
 		private var mShowAnswerTimer:Timer;
 		private var mShowFeedbackTimer:Timer;
@@ -59,30 +60,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			addChild(background);
 			
 			var lamp:Bitmap = new Asset.LampOnBitmap[2]();
-			lamp.x = 800 - (lamp.width / 2);
-			lamp.y = 340 - (lamp.height / 2);
+			lamp.x = 820 - (lamp.width / 2);
+			lamp.y = 380 - (lamp.height / 2);
 			addChild(lamp);
 			
 			var lucu:Bitmap = new Asset.FlashlightLucuBitmap();
-			lucu.x = 800 - (lucu.width / 2);
-			lucu.y = 475 - (lucu.height / 2);
+			lucu.x = 820 - (lucu.width / 2);
+			lucu.y = 515 - (lucu.height / 2);
 			addChild(lucu);
 			
 			mFlashlight = new Sprite();
-			mFlashlight.x = 835;
-			mFlashlight.y = 415;
-			mFlashlight.rotation = -15;
-			var flashlightBitmap:Bitmap = new Asset.FlashlightBitmap();
+			mFlashlight.x = 855;
+			mFlashlight.y = 455;
+			mFlashlight.rotation = -10;
+			var flashlightBitmap:Bitmap = new Asset.FlashlightOffBitmap();
 			flashlightBitmap.smoothing = true;
 			flashlightBitmap.x = 50 - flashlightBitmap.width;
 			flashlightBitmap.y = 130 - (flashlightBitmap.height / 2);
 			mFlashlight.addChild(flashlightBitmap);
 			addChild(mFlashlight);
-			//var origin:Point = mFlashlight.localToGlobal(new Point(15, 98));
-			//var cursor:Point = MouseUtil.PositionRelativeTo(this);
-			//var axis:Point = origin.subtract(cursor);
-			//var angle:Number = Math.atan2(axis.y, axis.x) * 180 / Math.PI;
-			//TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -15, 45) });
 			
 			mPictureMaskList = new Vector.<Sprite>();
 			mPictureList = new Vector.<Sprite>();
@@ -165,7 +161,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mBlocker.graphics.endFill();
 			addChild(mBlocker);
 			
-			mValidateAnswerTimer = new Timer(700, 1);
+			mEarAnswerTimer = new Timer(300, 1);
+			mEarAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			
+			mValidateAnswerTimer = new Timer(1000, 1);
 			mValidateAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
 			mShowAnswerTimer = new Timer(700, 1);
@@ -193,6 +192,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
 			
+			mEarAnswerTimer.reset();
+			mEarAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			
 			mValidateAnswerTimer.reset();
 			mValidateAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
@@ -211,11 +213,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			removeChild(mBlocker);
 			
+			mFlashlight.removeChildAt(0);
+			var flashlightBitmap:Bitmap = new Asset.FlashlightBitmap();
+			flashlightBitmap.smoothing = true;
+			flashlightBitmap.x = 50 - flashlightBitmap.width;
+			flashlightBitmap.y = 130 - (flashlightBitmap.height / 2);
+			mFlashlight.addChild(flashlightBitmap);
+			
 			var origin:Point = mFlashlight.localToGlobal(new Point(15, 98));
 			var cursor:Point = MouseUtil.PositionRelativeTo(this);
 			var axis:Point = origin.subtract(cursor);
 			var angle:Number = Math.atan2(axis.y, axis.x) * 180 / Math.PI;
-			TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -15, 45) });
+			TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -10, 50) });
 		}
 		
 		private function OnTweenShowRequestLetter(aLetter:TextField, aIndex:int):void
@@ -236,7 +245,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				var cursor:Point = MouseUtil.PositionRelativeTo(this);
 				var axis:Point = origin.subtract(cursor);
 				var angle:Number = Math.atan2(axis.y, axis.x) * 180 / Math.PI;
-				TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -15, 45) });
+				TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -10, 50) });
 			}
 		}
 		
@@ -301,12 +310,22 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			mResult = (mAnswer == mTemplate.Answer ? Result.GREAT : Result.WRONG);
 			
+			mEarAnswerTimer.reset();
+			mEarAnswerTimer.start();
+			
 			mValidateAnswerTimer.reset();
 			mValidateAnswerTimer.start();
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
 		{
+		}
+		
+		private function OnEarAnswerTimerComplete(aEvent:TimerEvent):void
+		{
+			mEarAnswerTimer.reset();
+			
+			(new mTemplate.AudioAssetList[mAnswer] as Sound).play();
 		}
 		
 		private function OnValidateAnswerTimerComplete(aEvent:TimerEvent):void
@@ -339,8 +358,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				mPictureList[mAnswer].filters =
 					[new GlowFilter(Palette.WRONG_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				
-				var target:Number = (((mTemplate.PictureAssetList.length - 1) - mTemplate.Answer) /
-					(mTemplate.PictureAssetList.length - 1)) * 30;
+				var target:Number = ((((mTemplate.PictureAssetList.length - 1) - mTemplate.Answer) /
+					(mTemplate.PictureAssetList.length - 1)) * 30) + 2.5;
 				TweenLite.to(mFlashlight, 0.7, { onComplete:OnTweenFlashlightToAnswer, rotation:target });
 			}
 		}
