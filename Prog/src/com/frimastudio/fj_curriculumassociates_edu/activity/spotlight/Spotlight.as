@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
@@ -74,16 +75,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mLucuList = new Vector.<Sprite>();
 			var lucu:Sprite;
 			var lucuBitmap:Bitmap;
-			var colorTransform:ColorTransform = new ColorTransform(0.4, 0.4, 0.4);
+			var colorTransform:ColorTransform = new ColorTransform(0.3, 0.3, 0.3);
 			for (i = 0, endi = mTemplate.AudioAssetList.length; i < endi; ++i)
 			{
 				lucu = new Sprite();
-				lucuBitmap = new Asset.LucuBitmap();
+				lucuBitmap = new Asset.NewLucuBitmap[i]();
 				lucuBitmap.x = -lucuBitmap.width / 2;
 				lucuBitmap.y = -lucuBitmap.height / 2;
 				lucu.addChild(lucuBitmap);
 				lucu.x = (i + 0.5) * offset;
-				lucu.y = 475;
+				lucu.y = 545;
 				lucu.addEventListener(MouseEvent.ROLL_OVER, OnRollOverLucu);
 				lucu.addEventListener(MouseEvent.ROLL_OUT, OnRollOutLucu);
 				lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
@@ -102,13 +103,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mRequest.width = 200;
 			mRequest.height = 96;
 			mRequest.autoSize = TextFieldAutoSize.CENTER;
-			mRequest.text = mTemplate.Request.toUpperCase();
-			mRequest.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 96, 0x66FF99,
+			mRequest.text = mTemplate.Request;
+			mRequest.embedFonts = true;
+			mRequest.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, Palette.DIALOG_BOX,
 				null, null, null, null, null, "center"));
 			var highlightStart:int = mTemplate.Request.indexOf(mTemplate.Highlight);
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
 			mRequest.x = 512 - (mRequest.width / 2);
-			mRequest.y = 48;
+			mRequest.y = 52;
+			
+			var requestLabel:CurvedBox = new CurvedBox(new Point(mRequest.width + 24, mRequest.height), Palette.DIALOG_BOX);
+			requestLabel.x = 512;
+			requestLabel.y = 106;
+			addChild(requestLabel);
+			
 			addChild(mRequest);
 			
 			var requestLetter:TextField;
@@ -116,15 +124,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			for (i = 0, endi = mTemplate.Request.length; i < endi; ++i)
 			{
 				boundaries = mRequest.getCharBoundaries(i);
-				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 82, 48 - 2));
+				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 4, 52 - 2));
 				boundaries.height = Math.max(boundaries.height, mRequest.height);
 				requestLetter = new TextField();
 				requestLetter.selectable = false;
 				requestLetter.width = boundaries.width + 10;
 				requestLetter.height = boundaries.height;
-				requestLetter.text = mTemplate.Request.charAt(i).toUpperCase();
-				requestLetter.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 96,
-					(i >= highlightStart && i < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.BTN_CONTENT),
+				requestLetter.text = mTemplate.Request.charAt(i);
+				requestLetter.embedFonts = true;
+				requestLetter.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72,
+					(i >= highlightStart && i < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.DIALOG_CONTENT),
 					null, null, null, null, null, "center"));
 				requestLetter.x = boundaries.x;
 				requestLetter.y = boundaries.y;
@@ -199,7 +208,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			var highlightStart:int = mTemplate.Request.indexOf(mTemplate.Highlight);
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
-			var color:int = (aIndex >= highlightStart && aIndex < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.BTN_CONTENT);
+			var color:int = (aIndex >= highlightStart && aIndex < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.DIALOG_CONTENT);
 			mRequest.setTextFormat(new TextFormat(null, null, color), aIndex, aIndex + 1);
 		}
 		
@@ -228,7 +237,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			if (!contains(mBlocker) && !mSuccessFeedback)
 			{
 				var lucu:Sprite = aEvent.currentTarget as Sprite;
-				lucu.transform.colorTransform = new ColorTransform(0.4, 0.4, 0.4);
+				lucu.transform.colorTransform = new ColorTransform(0.3, 0.3, 0.3);
 				
 				var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
 				var index:int = mLucuList.indexOf(lucu);
@@ -259,7 +268,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mValidateAnswerTimer.reset();
 			
 			var endi:int = mTemplate.AudioAssetList.length;
-			var colorTransform:ColorTransform = new ColorTransform(0.4, 0.4, 0.4);
+			var colorTransform:ColorTransform = new ColorTransform(0.3, 0.3, 0.3);
 			var offset:Number = 1024 / (endi + 0.2);
 			var lamp:Bitmap;
 			for (var i:int = 0; i < endi; ++i)
@@ -326,10 +335,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			successLabel.selectable = false;
 			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
 			successLabel.text = (mResult == Result.GREAT ? "Great!\nClick to continue." : "Almost!\nClick to continue.");
-			successLabel.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 72, mResult.Color,
+			successLabel.embedFonts = true;
+			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
 				null, null, null, null, null, "center"));
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
+			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
+			successBox.alpha = 0.7;
+			successBox.x = 512;
+			successBox.y = 384;
+			mSuccessFeedback.addChild(successBox);
 			mSuccessFeedback.addChild(successLabel);
 			addChild(mSuccessFeedback);
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });

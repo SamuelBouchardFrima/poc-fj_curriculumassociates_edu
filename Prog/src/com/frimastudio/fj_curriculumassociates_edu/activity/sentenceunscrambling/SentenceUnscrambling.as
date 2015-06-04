@@ -430,7 +430,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 					return;
 			}
 			
-			successLabel.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 72, mResult.Color,
+			successLabel.embedFonts = true;
+			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
 				null, null, null, null, null, "center"));
 			
 			successLabel.x = 512 - (successLabel.width / 2);

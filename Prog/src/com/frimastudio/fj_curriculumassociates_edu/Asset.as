@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu
 {
+	import flash.text.Font;
 	public class Asset
 	{
 		[Embed(source = "../../../../art/TheFieldIsOnAHill.png")]
@@ -64,16 +65,20 @@ package com.frimastudio.fj_curriculumassociates_edu
 		
 		[Embed(source = "../../../../art/lesson/requestTube.png")]
 		public static var RequestTubeBitmap:Class;
-		[Embed(source = "../../../../art/lesson/lucu.png")]
-		public static var LucuBitmap:Class;
 		[Embed(source = "../../../../art/lesson/flashlightLucu.png")]
 		public static var FlashlightLucuBitmap:Class;
-		[Embed(source = "../../../../art/lesson/flashlight.png")]
+		[Embed(source = "../../../../art/lesson/handheldFlashlight.png")]
 		public static var FlashlightBitmap:Class;
-		[Embed(source = "../../../../art/lesson/flashlight_off.png")]
-		public static var FlashlightOffBitmap:Class;
-		[Embed(source = "../../../../art/lesson/circuitLucu.png")]
-		public static var CircuitLucuBitmap:Class;
+		[Embed(source = "../../../../art/lesson/newCircuitLucu.png")]
+		public static var NewCircuitLucuBitmap:Class;
+		
+		[Embed(source = "../../../../art/lesson/newLucu_1.png")]
+		private static var NewLucu1:Class;
+		[Embed(source = "../../../../art/lesson/newLucu_2.png")]
+		private static var NewLucu2:Class;
+		[Embed(source = "../../../../art/lesson/newLucu_3.png")]
+		private static var NewLucu3:Class;
+		public static var NewLucuBitmap:Object = [NewLucu1, NewLucu2, NewLucu3];
 		
 		[Embed(source = "../../../../art/lesson/thorn.png")]
 		public static var ThornBitmap:Class;
@@ -102,6 +107,10 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var CircuitOn:Class;
 		[Embed(source = "../../../../art/lesson/circuit_off.png")]
 		public static var CircuitOff:Class;
+		[Embed(source = "../../../../art/lesson/circuit_disabled.png")]
+		public static var CircuitDisabled:Class;
+		[Embed(source = "../../../../art/lesson/circuitConnection_on.png")]
+		public static var CircuitConnectionOn:Class;
 		[Embed(source = "../../../../art/lesson/circuitConnection.png")]
 		public static var CircuitConnection:Class;
 		
@@ -256,19 +265,23 @@ package com.frimastudio.fj_curriculumassociates_edu
 		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
-		public static var SweaterSchoolFont:Class;
+		private static var SweaterSchool:Class;
+		public static var SweaterSchoolFont:Font = new SweaterSchool();
 		
 		[Embed(source = "../../../../font/sweater school sb.otf", fontName = "SweaterSchoolSb-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
-		public static var SweaterSchoolSemiBoldFont:Class;
+		public static var SweaterSchoolSemiBold:Class;
+		public static var SweaterSchoolSemiBoldFont:Font = new SweaterSchoolSemiBold();
 		
 		[Embed(source = "../../../../font/sweater school bd.otf", fontName = "SweaterSchoolRg-Bold",
 			mimeType = "application/x-font", fontWeight = "bold", fontStyle = "normal", embedAsCFF = "false")]
-		public static var SweaterSchoolBoldFont:Class;
+		private static var SweaterSchoolBold:Class;
+		public static var SweaterSchoolBoldFont:Font = new SweaterSchoolBold();
 		
 		[Embed(source = "../../../../font/sweater school xb.otf", fontName = "SweaterSchoolXb-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
-		public static var SweaterSchoolExtraBoldFont:Class;
+		private static var SweaterSchoolExtraBold:Class;
+		public static var SweaterSchoolExtraBoldFont:Font = new SweaterSchoolExtraBold();
 		
 		public function Asset()
 		{

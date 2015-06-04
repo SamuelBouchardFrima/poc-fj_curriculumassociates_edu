@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
@@ -34,6 +35,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 	public class Flashlight extends Activity
 	{
 		private var mTemplate:FlashlightTemplate;
+		private var mFlashlightBeam:Sprite;
 		private var mFlashlight:Sprite;
 		private var mPictureMaskList:Vector.<Sprite>;
 		private var mPictureList:Vector.<Sprite>;
@@ -59,24 +61,21 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			background.graphics.endFill();
 			addChild(background);
 			
-			var lamp:Bitmap = new Asset.LampOnBitmap[2]();
-			lamp.x = 820 - (lamp.width / 2);
-			lamp.y = 380 - (lamp.height / 2);
-			addChild(lamp);
-			
-			var lucu:Bitmap = new Asset.FlashlightLucuBitmap();
-			lucu.x = 820 - (lucu.width / 2);
-			lucu.y = 515 - (lucu.height / 2);
-			addChild(lucu);
+			mFlashlightBeam = new Sprite();
+			mFlashlightBeam.x = 512;
+			mFlashlightBeam.y = 650;
+			mFlashlightBeam.filters = [new GlowFilter(0xFFFFFF, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			mFlashlightBeam.alpha = 0;
+			addChild(mFlashlightBeam);
 			
 			mFlashlight = new Sprite();
-			mFlashlight.x = 855;
-			mFlashlight.y = 455;
-			mFlashlight.rotation = -10;
-			var flashlightBitmap:Bitmap = new Asset.FlashlightOffBitmap();
+			mFlashlight.x = 512;
+			mFlashlight.y = 768;
+			mFlashlight.transform.colorTransform = new ColorTransform(0.3, 0.3, 0.3);
+			var flashlightBitmap:Bitmap = new Asset.FlashlightBitmap();
 			flashlightBitmap.smoothing = true;
-			flashlightBitmap.x = 50 - flashlightBitmap.width;
-			flashlightBitmap.y = 130 - (flashlightBitmap.height / 2);
+			flashlightBitmap.x = -flashlightBitmap.width / 2;
+			flashlightBitmap.y = -flashlightBitmap.height / 2;
 			mFlashlight.addChild(flashlightBitmap);
 			addChild(mFlashlight);
 			
@@ -90,8 +89,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				addChild(mPictureMaskList[i]);
 				
 				picture = new Sprite();
-				picture.x = 190 + (70 * Math.abs((i - ((endi / 2) - 0.5)) / ((endi / 2) - 0.5)));
-				picture.y = 290 + (300 * (i / (endi - 1)));
+				picture.x = (i + 0.75) * (1024 / (endi + 0.5))
+				picture.y = 300 + (50 * Math.abs((i - ((endi / 2) - 0.5)) / ((endi / 2) - 0.5)));
 				pictureBitmap = new mTemplate.PictureAssetList[i]();
 				pictureBitmap.smoothing = true;
 				pictureBitmap.height = (400 - ((endi - 1) * 10)) / endi;
@@ -117,13 +116,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mRequest.width = 200;
 			mRequest.height = 96;
 			mRequest.autoSize = TextFieldAutoSize.CENTER;
-			mRequest.text = mTemplate.Request.toUpperCase();
-			mRequest.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 96, 0x66FF99,
+			mRequest.text = mTemplate.Request;
+			mRequest.embedFonts = true;
+			mRequest.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, Palette.DIALOG_BOX,
 				null, null, null, null, null, "center"));
 			var highlightStart:int = mTemplate.Request.indexOf(mTemplate.Highlight);
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
 			mRequest.x = 512 - (mRequest.width / 2);
-			mRequest.y = 48;
+			mRequest.y = 52;
+			
+			var requestLabel:CurvedBox = new CurvedBox(new Point(mRequest.width + 24, mRequest.height), Palette.DIALOG_BOX);
+			requestLabel.x = 512;
+			requestLabel.y = 106;
+			addChild(requestLabel);
+			
 			addChild(mRequest);
 			
 			var requestLetter:TextField;
@@ -131,15 +137,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			for (i = 0, endi = mTemplate.Request.length; i < endi; ++i)
 			{
 				boundaries = mRequest.getCharBoundaries(i);
-				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 82, 48 - 2));
+				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 4, 52 - 2));
 				boundaries.height = Math.max(boundaries.height, mRequest.height);
 				requestLetter = new TextField();
 				requestLetter.selectable = false;
 				requestLetter.width = boundaries.width + 10;
 				requestLetter.height = boundaries.height;
-				requestLetter.text = mTemplate.Request.charAt(i).toUpperCase();
-				requestLetter.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 96,
-					(i >= highlightStart && i < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.BTN_CONTENT),
+				requestLetter.text = mTemplate.Request.charAt(i);
+				requestLetter.embedFonts = true;
+				requestLetter.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72,
+					(i >= highlightStart && i < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.DIALOG_CONTENT),
 					null, null, null, null, null, "center"));
 				requestLetter.x = boundaries.x;
 				requestLetter.y = boundaries.y;
@@ -213,18 +220,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			removeChild(mBlocker);
 			
-			mFlashlight.removeChildAt(0);
-			var flashlightBitmap:Bitmap = new Asset.FlashlightBitmap();
-			flashlightBitmap.smoothing = true;
-			flashlightBitmap.x = 50 - flashlightBitmap.width;
-			flashlightBitmap.y = 130 - (flashlightBitmap.height / 2);
-			mFlashlight.addChild(flashlightBitmap);
+			mFlashlight.transform.colorTransform = new ColorTransform();
 			
-			var origin:Point = mFlashlight.localToGlobal(new Point(15, 98));
-			var cursor:Point = MouseUtil.PositionRelativeTo(this);
-			var axis:Point = origin.subtract(cursor);
-			var angle:Number = Math.atan2(axis.y, axis.x) * 180 / Math.PI;
-			TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -10, 50) });
+			mFlashlightBeam.alpha = 1;
+			
+			var origin:Point = mFlashlight.localToGlobal(new Point(0, -20));
+			var target:Point = MouseUtil.PositionRelativeTo(this);
+			target.y = Math.min(target.y, 650);
+			var axis:Point = origin.subtract(target);
+			var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
+			TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:angle });
+			TweenLite.to(mFlashlightBeam, 0.5, { ease:Quad.easeOut, x:target.x, y:target.y });
 		}
 		
 		private function OnTweenShowRequestLetter(aLetter:TextField, aIndex:int):void
@@ -233,7 +239,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			var highlightStart:int = mTemplate.Request.indexOf(mTemplate.Highlight);
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
-			var color:int = (aIndex >= highlightStart && aIndex < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.BTN_CONTENT);
+			var color:int = (aIndex >= highlightStart && aIndex < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.DIALOG_CONTENT);
 			mRequest.setTextFormat(new TextFormat(null, null, color), aIndex, aIndex + 1);
 		}
 		
@@ -241,29 +247,38 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			if (!contains(mBlocker) && !mSuccessFeedback)
 			{
-				var origin:Point = mFlashlight.localToGlobal(new Point(15, 98));
-				var cursor:Point = MouseUtil.PositionRelativeTo(this);
-				var axis:Point = origin.subtract(cursor);
-				var angle:Number = Math.atan2(axis.y, axis.x) * 180 / Math.PI;
-				TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:MathUtil.MinMax(angle + 7.5, -10, 50) });
+				var origin:Point = mFlashlight.localToGlobal(new Point(0, -20));
+				var target:Point = MouseUtil.PositionRelativeTo(this);
+				target.y = Math.min(target.y, 650);
+				var axis:Point = origin.subtract(target);
+				var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
+				TweenLite.to(mFlashlight, 0.5, { ease:Quad.easeOut, rotation:angle });
+				TweenLite.to(mFlashlightBeam, 0.5, { ease:Quad.easeOut, x:target.x, y:target.y });
 			}
 		}
 		
 		private function OnEnterFrame(aEvent:Event):void
 		{
-			var origin:Point = mFlashlight.localToGlobal(new Point(15, 98));
-			var targetA:Point = mFlashlight.localToGlobal(new Point(-800, 116));
-			var targetB:Point = mFlashlight.localToGlobal(new Point(-800, 286));
+			var origin:Point = mFlashlight.localToGlobal(new Point(0, -20));
+			var axis:Point = origin.subtract(DisplayObjectUtil.GetPosition(mFlashlightBeam));
+			var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
+			var spotSize:Number = 80 + (axis.length / 4);
+			var elipse:Rectangle = new Rectangle(mouseX - ((spotSize * 1.2) / 2), mouseY - (spotSize / 2),
+				spotSize * 1.2, spotSize);
+			
+			mFlashlightBeam.graphics.clear();
+			mFlashlightBeam.graphics.beginFill(0xFFFFFF, 0.75);
+			mFlashlightBeam.graphics.drawEllipse(-elipse.width / 2, -elipse.height / 2, elipse.width, elipse.height);
+			mFlashlightBeam.graphics.endFill();
 			
 			for (var i:int = 0, endi:int = mPictureMaskList.length; i < endi; ++i)
 			{
+				mPictureMaskList[i].x = mFlashlightBeam.x;
+				mPictureMaskList[i].y = mFlashlightBeam.y;
 				mPictureMaskList[i].graphics.clear();
 				mPictureMaskList[i].graphics.lineStyle();
 				mPictureMaskList[i].graphics.beginFill(0x000000);
-				mPictureMaskList[i].graphics.moveTo(origin.x, origin.y);
-				mPictureMaskList[i].graphics.lineTo(targetA.x, targetA.y);
-				mPictureMaskList[i].graphics.lineTo(targetB.x, targetB.y);
-				mPictureMaskList[i].graphics.lineTo(origin.x, origin.y);
+				mPictureMaskList[i].graphics.drawEllipse(-elipse.width / 2, -elipse.height / 2, elipse.width, elipse.height);
 				mPictureMaskList[i].graphics.endFill();
 			}
 		}
@@ -271,12 +286,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		private function OnRollOverPicture(aEvent:MouseEvent):void
 		{
 			var picture:Sprite = aEvent.currentTarget as Sprite;
-			picture.filters = [new GlowFilter(0xFFFFFF, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-			picture.mask = null;
-			if (contains(mPictureMaskList[mPictureList.indexOf(picture)]))
-			{
-				removeChild(mPictureMaskList[mPictureList.indexOf(picture)]);
-			}
+			picture.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 		}
 		
 		private function OnRollOutPicture(aEvent:MouseEvent):void
@@ -285,8 +295,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			{
 				var picture:Sprite = aEvent.currentTarget as Sprite;
 				picture.filters = [];
-				picture.mask = mPictureMaskList[mPictureList.indexOf(picture)];
-				addChild(mPictureMaskList[mPictureList.indexOf(picture)]);
 			}
 		}
 		
@@ -358,9 +366,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				mPictureList[mAnswer].filters =
 					[new GlowFilter(Palette.WRONG_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				
-				var target:Number = ((((mTemplate.PictureAssetList.length - 1) - mTemplate.Answer) /
-					(mTemplate.PictureAssetList.length - 1)) * 30) + 2.5;
-				TweenLite.to(mFlashlight, 0.7, { onComplete:OnTweenFlashlightToAnswer, rotation:target });
+				var origin:Point = DisplayObjectUtil.GetPosition(mFlashlight);
+				var axis:Point = origin.subtract(DisplayObjectUtil.GetPosition(mPictureList[mTemplate.Answer]));
+				var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
+				
+				TweenLite.to(mFlashlightBeam, 0.7, { x:mPictureList[mTemplate.Answer].x, y:mPictureList[mTemplate.Answer].y });
+				TweenLite.to(mFlashlight, 0.7, { onComplete:OnTweenFlashlightToAnswer, rotation:angle });
 			}
 		}
 		
@@ -402,10 +413,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			successLabel.selectable = false;
 			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
 			successLabel.text = (mResult == Result.GREAT ? "Great!\nClick to continue." : "Almost!\nClick to continue.");
-			successLabel.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 72, mResult.Color,
+			successLabel.embedFonts = true;
+			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
 				null, null, null, null, null, "center"));
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
+			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
+			successBox.alpha = 0.7;
+			successBox.x = 512;
+			successBox.y = 384;
+			mSuccessFeedback.addChild(successBox);
 			mSuccessFeedback.addChild(successLabel);
 			addChild(mSuccessFeedback);
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });

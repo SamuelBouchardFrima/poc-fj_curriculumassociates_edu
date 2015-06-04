@@ -31,6 +31,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 	public class Circuit extends Activity
 	{
 		private var mTemplate:CircuitTemplate;
+		private var mCircuitConnection:Bitmap;
 		private var mCircuitList:Vector.<Sprite>;
 		private var mWordList:Vector.<CurvedBox>;
 		private var mCurrentCircuit:int;
@@ -70,10 +71,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			table.graphics.endFill();
 			addChild(table);
 			
-			var circuitConnection:Bitmap = new Asset.CircuitConnection();
-			circuitConnection.x = 155;
-			circuitConnection.y = 430;
-			addChild(circuitConnection);
+			mCircuitConnection = new Asset.CircuitConnection();
+			mCircuitConnection.x = 155;
+			mCircuitConnection.y = 430;
+			addChild(mCircuitConnection);
 			
 			mCircuitList = new Vector.<Sprite>();
 			var circuit:Sprite;
@@ -83,7 +84,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				circuit = new Sprite();
 				circuit.x = (i * 330) + 175;
 				circuit.y = 208;
-				circuitBitmap = new Asset.CircuitOff();
+				circuitBitmap = new Asset.CircuitDisabled();
 				circuitBitmap.x = -circuitBitmap.width / 2;
 				circuitBitmap.y = -circuitBitmap.height / 2;
 				circuit.addChild(circuitBitmap);
@@ -97,7 +98,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			{
 				word = new CurvedBox(new Point(188, 66), Palette.DIALOG_BOX,
 					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
-				word.x = ((i % 3) * 240) + 190;
+				word.x = ((i % 3) * 220) + 190;
 				word.y = (Math.floor(i / 3) * 90) + 620 + 300;
 				TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 1.2), y:(word.y - 300) });
 				word.addEventListener(MouseEvent.CLICK, OnClickWord);
@@ -106,9 +107,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				mWordList.push(word);
 			}
 			
-			var lucu:Bitmap = new Asset.CircuitLucuBitmap();
-			lucu.x = 788;
-			lucu.y = 438;
+			var lucu:Bitmap = new Asset.NewCircuitLucuBitmap();
+			lucu.x = 758;
+			lucu.y = 508;
 			addChild(lucu);
 			
 			mResultList = new Vector.<Result>();
@@ -166,6 +167,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		
 		private function ShowPicture():void
 		{
+			mCircuitList[mCurrentCircuit].removeChildAt(0);
+			var circuitBitmap:Bitmap = new Asset.CircuitOff();
+			circuitBitmap.x = -circuitBitmap.width / 2;
+			circuitBitmap.y = -circuitBitmap.height / 2;
+			mCircuitList[mCurrentCircuit].addChild(circuitBitmap);
+			
 			var picture:Sprite = new Sprite();
 			picture.x = 5;
 			picture.y = 30;
@@ -191,7 +198,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			mSlot.filters = [filter];
 			mSlot.alpha = 0;
 			addChild(mSlot);
-			TweenLite.to(mSlot, 0.5, { ease:Strong.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 });
+			TweenLite.to(mSlot, 0.5, { ease:Strong.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 } );
+			
+			(new mTemplate.AudioAssetList[mTemplate.AnswerList[mCurrentCircuit]]() as Sound).play();
 			
 			removeChild(mBlocker);
 		}
@@ -292,7 +301,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			answerBtn.filters = [new GlowFilter(btnColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			
 			aWordBtn.alpha = 0;
-			aWordBtn.x = ((mAnswer % 3) * 240) + 190;
+			aWordBtn.x = ((mAnswer % 3) * 220) + 190;
 			aWordBtn.y = (Math.floor(mAnswer / 3) * 90) + 620;
 			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 			
@@ -349,7 +358,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenShowAnswer, onCompleteParams:[answerBtn] });
 			
 			aWordBtn.alpha = 0;
-			aWordBtn.x = ((answer % 3) * 240) + 190;
+			aWordBtn.x = ((answer % 3) * 220) + 190;
 			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
 			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 		}
@@ -402,10 +411,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 						successLabel.text = "Almost!\nClick to continue.";
 						break;
 				}
-				successLabel.setTextFormat(new TextFormat(FontList.SEMI_BOLD, 72, mResult.Color,
+				successLabel.embedFonts = true;
+				successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
 					null, null, null, null, null, "center"));
 				successLabel.x = 512 - (successLabel.width / 2);
 				successLabel.y = 384 - (successLabel.height / 2);
+				var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
+				successBox.alpha = 0.7;
+				successBox.x = 512;
+				successBox.y = 384;
+				mSuccessFeedback.addChild(successBox);
 				mSuccessFeedback.addChild(successLabel);
 				addChild(mSuccessFeedback);
 				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, delay:1.2,
@@ -424,6 +439,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			{
 				case Result.GREAT:
 					(new Asset.CrescendoSound() as Sound).play();
+					
+					var connection:Bitmap = new Asset.CircuitConnectionOn();
+					connection.x = 155;
+					connection.y = 430;
+					addChildAt(connection, getChildIndex(mCircuitConnection));
+					removeChild(mCircuitConnection);
+					mCircuitConnection = connection;
 					break;
 				case Result.VALID:
 					(new Asset.ValidationSound() as Sound).play();

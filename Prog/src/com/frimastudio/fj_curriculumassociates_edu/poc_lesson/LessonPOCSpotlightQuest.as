@@ -11,7 +11,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
 			
-			mStepList.push(new SpotlightTemplate("Sports", "or", 1,
+			mStepList.push(new SpotlightTemplate("sports", "", 1,
 				new <Class>[Asset.ThornSound, Asset.SportsSound, Asset.StoreSound]));
 			
 			super();

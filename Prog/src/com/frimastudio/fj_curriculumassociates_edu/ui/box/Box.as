@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui.box
 {
+	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
@@ -210,6 +211,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				label.selectable = false;
 				label.width = mSize.width - (mMargin * 2);
 				label.text = labelTemplate.Label;
+				label.embedFonts = true;
 				if (labelTemplate.DropShadow)
 				{
 					label.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
@@ -217,16 +219,18 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				switch (mAutoSizeAxis)
 				{
 					case Axis.HORIZONTAL:
-						label.setTextFormat(new TextFormat(FontList.SEMI_BOLD, Math.min(mSize.height - (mMargin * 1.5),
-							labelTemplate.Size), labelTemplate.ContentColor, null, null, null, null, null, "center"));
+						label.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
+							Math.min(mSize.height - (mMargin * 1.5), labelTemplate.Size), labelTemplate.ContentColor,
+							null, null, null, null, null, "center"));
 						label.height = mSize.height - (mMargin * 1.5);
 						label.autoSize = TextFieldAutoSize.CENTER;
 						label.x = -label.width / 2;
 						label.y = -label.height / 2 - (mMargin * 0.5);
 						break;
 					case Axis.VERTICAL:
-						label.setTextFormat(new TextFormat(FontList.SEMI_BOLD, Math.min(mSize.height * 0.75, labelTemplate.Size),
-							labelTemplate.ContentColor, null, null, null, null, null, "center"));
+						label.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
+							Math.min(mSize.height * 0.75, labelTemplate.Size), labelTemplate.ContentColor,
+							null, null, null, null, null, "center"));
 						label.wordWrap = true;
 						label.multiline = true;
 						label.autoSize = TextFieldAutoSize.CENTER;
@@ -234,8 +238,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 						label.y = -label.height / 2;
 						break;
 					default:
-						label.setTextFormat(new TextFormat(FontList.SEMI_BOLD, Math.min(mSize.height * 0.75, labelTemplate.Size),
-							labelTemplate.ContentColor, null, null, null, null, null, "center"));
+						label.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
+							Math.min(mSize.height * 0.75, labelTemplate.Size), labelTemplate.ContentColor,
+							null, null, null, null, null, "center"));
 						label.height = mSize.height - (mMargin * 2);
 						label.autoSize = TextFieldAutoSize.CENTER;
 						label.x = -label.width / 2;

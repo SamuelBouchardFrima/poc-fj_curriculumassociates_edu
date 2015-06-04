@@ -11,7 +11,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
 			
-			mStepList.push(new CircuitTemplate(new <String>["Store", "Thorn", "Sports", "Throne", "Start", "Score"],
+			mStepList.push(new CircuitTemplate(new <String>["store", "thorn", "sports", "throne", "start", "score"],
 				new <int>[1, 2, 0], new <Class>[Asset.ThornBitmap, Asset.SportsBitmap, Asset.StoreBitmap],
 				new <Class>[Asset.StoreSound, Asset.ThornSound, Asset.SportsSound,
 				Asset.ThroneSound, Asset.StartSound, Asset.ScoreSound]));
