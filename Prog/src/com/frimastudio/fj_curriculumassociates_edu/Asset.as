@@ -80,6 +80,14 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var NewLucu3:Class;
 		public static var NewLucuBitmap:Object = [NewLucu1, NewLucu2, NewLucu3];
 		
+		[Embed(source = "../../../../art/lesson/newLucuAngry_1.png")]
+		private static var NewLucuAngry1:Class;
+		[Embed(source = "../../../../art/lesson/newLucuAngry_2.png")]
+		private static var NewLucuAngry2:Class;
+		[Embed(source = "../../../../art/lesson/newLucuAngry_3.png")]
+		private static var NewLucuAngry3:Class;
+		public static var NewLucuAngryBitmap:Object = [NewLucuAngry1, NewLucuAngry2, NewLucuAngry3];
+		
 		[Embed(source = "../../../../art/lesson/thorn.png")]
 		public static var ThornBitmap:Class;
 		[Embed(source = "../../../../art/lesson/sports.png")]

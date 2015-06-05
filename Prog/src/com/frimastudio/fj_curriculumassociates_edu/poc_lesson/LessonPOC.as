@@ -26,6 +26,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	
 	public class LessonPOC extends Sprite
 	{
+		private static const VERSION:String = "v0.7";
+		
 		private var mContainer:Sprite;
 		private var mQuestList:Vector.<Class>;
 		private var mQuestNameList:Vector.<String>;
@@ -151,7 +153,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mContainer.addChild(mBlocker);
 			
 			mVersion = new TextField();
-			mVersion.text = "v0.6";
+			mVersion.text = VERSION;
 			mVersion.selectable = false;
 			mVersion.x = 5;
 			mVersion.y = 5;

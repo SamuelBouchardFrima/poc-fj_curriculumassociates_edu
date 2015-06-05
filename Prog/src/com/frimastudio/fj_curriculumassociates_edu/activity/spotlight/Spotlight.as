@@ -39,6 +39,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private var mLucuList:Vector.<Sprite>;
 		private var mRequest:TextField;
 		private var mAnswer:int;
+		private var mAttempt:int;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
@@ -67,7 +68,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			{
 				lamp = new Asset.LampOffBitmap[i]();
 				lamp.x = ((i + 0.5) * offset) - (lamp.width / 2);
-				lamp.y = 340 - (lamp.height / 2);
+				lamp.y = 360 - (lamp.height / 2);
 				addChild(lamp);
 				mLampList.push(lamp);
 			}
@@ -84,9 +85,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 				lucuBitmap.y = -lucuBitmap.height / 2;
 				lucu.addChild(lucuBitmap);
 				lucu.x = (i + 0.5) * offset;
-				lucu.y = 545;
-				lucu.addEventListener(MouseEvent.ROLL_OVER, OnRollOverLucu);
-				lucu.addEventListener(MouseEvent.ROLL_OUT, OnRollOutLucu);
+				lucu.y = 565;
+				lucu.addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverLucu);
+				lucu.addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutLucu);
 				lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
 				lucu.transform.colorTransform = colorTransform;
 				addChild(lucu);
@@ -176,8 +177,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var i:int, endi:int;
 			for (i = 0, endi = mLucuList.length; i < endi; ++i)
 			{
-				mLucuList[i].removeEventListener(MouseEvent.ROLL_OVER, OnRollOverLucu);
-				mLucuList[i].removeEventListener(MouseEvent.ROLL_OUT, OnRollOutLucu);
+				mLucuList[i].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverLucu);
+				mLucuList[i].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutLucu);
 				mLucuList[i].removeEventListener(MouseEvent.CLICK, OnClickLucu);
 			}
 			
@@ -216,7 +217,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		{
 		}
 		
-		private function OnRollOverLucu(aEvent:MouseEvent):void
+		private function OnMouseOverLucu(aEvent:MouseEvent):void
 		{
 			var lucu:Sprite = aEvent.currentTarget as Sprite;
 			lucu.transform.colorTransform = new ColorTransform();
@@ -226,13 +227,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var index:int = mLucuList.indexOf(lucu);
 			var lamp:Bitmap = new Asset.LampOnBitmap[index]();
 			lamp.x = ((index + 0.5) * offset) - (lamp.width / 2);
-			lamp.y = 340 - (lamp.height / 2);
+			lamp.y = 360 - (lamp.height / 2);
 			addChildAt(lamp, getChildIndex(mLampList[index]));
 			removeChild(mLampList[index]);
 			mLampList[index] = lamp;
 		}
 		
-		private function OnRollOutLucu(aEvent:MouseEvent):void
+		private function OnMouseOutLucu(aEvent:MouseEvent):void
 		{
 			if (!contains(mBlocker) && !mSuccessFeedback)
 			{
@@ -243,7 +244,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 				var index:int = mLucuList.indexOf(lucu);
 				var lamp:Bitmap = new Asset.LampOffBitmap[index]();
 				lamp.x = ((index + 0.5) * offset) - (lamp.width / 2);
-				lamp.y = 340 - (lamp.height / 2);
+				lamp.y = 360 - (lamp.height / 2);
 				addChildAt(lamp, getChildIndex(mLampList[index]));
 				removeChild(mLampList[index]);
 				mLampList[index] = lamp;
@@ -253,6 +254,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private function OnClickLucu(aEvent:MouseEvent):void
 		{
 			addChild(mBlocker);
+			
+			++mAttempt;
 			
 			mAnswer = mLucuList.indexOf(aEvent.currentTarget as Sprite);
 			(new Asset.ClickSound() as Sound).play();
@@ -267,23 +270,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		{
 			mValidateAnswerTimer.reset();
 			
-			var endi:int = mTemplate.AudioAssetList.length;
-			var colorTransform:ColorTransform = new ColorTransform(0.3, 0.3, 0.3);
-			var offset:Number = 1024 / (endi + 0.2);
-			var lamp:Bitmap;
-			for (var i:int = 0; i < endi; ++i)
+			if (mResult != Result.GREAT)
 			{
-				if (mResult == Result.WRONG || i != mTemplate.Answer)
-				{
-					lamp = new Asset.LampOffBitmap[i]();
-					lamp.x = ((i + 0.5) * offset) - (lamp.width / 2);
-					lamp.y = 340 - (lamp.height / 2);
-					addChildAt(lamp, getChildIndex(mLampList[i]));
-					removeChild(mLampList[i]);
-					mLampList[i] = lamp;
-					
-					mLucuList[i].transform.colorTransform = colorTransform;
-				}
+				var lamp:Bitmap = new Asset.LampOffBitmap[mAnswer]();
+				lamp.x = ((mAnswer + 0.5) * (1024 / (mTemplate.AudioAssetList.length + 0.2))) - (lamp.width / 2);
+				lamp.y = 360 - (lamp.height / 2);
+				addChildAt(lamp, getChildIndex(mLampList[mAnswer]));
+				removeChild(mLampList[mAnswer]);
+				mLampList[mAnswer] = lamp;
+				
+				mLucuList[mAnswer].transform.colorTransform = new ColorTransform(0.3, 0.3, 0.3);
 			}
 			
 			if (mResult == Result.GREAT)
@@ -295,8 +291,26 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			else
 			{
 				(new Asset.ErrorSound() as Sound).play();
-				mShowAnswerTimer.reset();
-				mShowAnswerTimer.start();
+				
+				mLucuList[mAnswer].removeChildAt(0);
+				var lucuBitmap:Bitmap = new Asset.NewLucuAngryBitmap[mAnswer]();
+				lucuBitmap.x = -lucuBitmap.width / 2;
+				lucuBitmap.y = -lucuBitmap.height / 2;
+				mLucuList[mAnswer].addChild(lucuBitmap);
+				
+				if (mAttempt < 2)
+				{
+					mLucuList[mAnswer].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverLucu);
+					mLucuList[mAnswer].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutLucu);
+					mLucuList[mAnswer].removeEventListener(MouseEvent.CLICK, OnClickLucu);
+					
+					removeChild(mBlocker);
+				}
+				else
+				{
+					mShowAnswerTimer.reset();
+					mShowAnswerTimer.start();
+				}
 			}
 		}
 		
@@ -307,7 +321,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
 			var lamp:Bitmap = new Asset.LampOnBitmap[mTemplate.Answer]();
 			lamp.x = ((mTemplate.Answer + 0.5) * offset) - (lamp.width / 2);
-			lamp.y = 340 - (lamp.height / 2);
+			lamp.y = 360 - (lamp.height / 2);
 			addChildAt(lamp, getChildIndex(mLampList[mTemplate.Answer]));
 			removeChild(mLampList[mTemplate.Answer]);
 			mLampList[mTemplate.Answer] = lamp;

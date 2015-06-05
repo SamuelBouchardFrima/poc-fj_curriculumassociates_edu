@@ -37,6 +37,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		private var mCurrentCircuit:int;
 		private var mSlot:CurvedBox;
 		private var mAnswer:int;
+		private var mAttempt:int;
 		private var mResultList:Vector.<Result>;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
@@ -167,6 +168,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		
 		private function ShowPicture():void
 		{
+			mAttempt = 0;
+			
 			mCircuitList[mCurrentCircuit].removeChildAt(0);
 			var circuitBitmap:Bitmap = new Asset.CircuitOff();
 			circuitBitmap.x = -circuitBitmap.width / 2;
@@ -189,6 +192,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			{
 				mWordList[i].BoxColor = Palette.DIALOG_BOX;
 				mWordList[i].filters = [];
+				if (!contains(mWordList[i]))
+				{
+					mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
+					TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
+					addChild(mWordList[i]);
+				}
 			}
 			
 			mSlot = new CurvedBox(new Point(188, 66), 0xFF000000);
@@ -231,6 +240,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			(new Asset.ClickSound() as Sound).play();
 			(new Asset.SlideSound() as Sound).play();
 			
+			++mAttempt;
+			
 			var wordBtn:CurvedBox = aEvent.currentTarget as CurvedBox;
 			TweenLite.to(wordBtn, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendAnswer, onCompleteParams:[wordBtn],
 				x:(mCircuitList[mCurrentCircuit].x - 5), y:(mCircuitList[mCurrentCircuit].y + 202) } );
@@ -258,6 +269,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			answerBtn.x = aWordBtn.x;
 			answerBtn.y = aWordBtn.y;
 			addChild(answerBtn);
+			addChild(mBlocker);
 			
 			var btnColor:int;
 			if (mAnswer == mTemplate.AnswerList[mCurrentCircuit])
@@ -291,21 +303,27 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			else
 			{
 				(new Asset.ErrorSound() as Sound).play();
-				
-				mResultList.push(Result.WRONG);
 				btnColor = Palette.WRONG_BTN;
 				
-				TweenLite.to(answerBtn, 0.5, { delay:0.2, onComplete:OnTweenShowWrongAnswer, onCompleteParams:[answerBtn] });
+				
+				if (mAttempt < 2)
+				{
+					TweenLite.to(answerBtn, 0.3, { ease:Quad.easeIn, delay:0.7, onComplete:OnTweenHideWrongAnswer,
+						onCompleteParams:[answerBtn], y:825 });
+					
+					removeChild(mBlocker);
+				}
+				else
+				{
+					mResultList.push(Result.WRONG);
+					TweenLite.to(answerBtn, 0.5, { delay:0.2, onComplete:OnTweenShowWrongAnswer, onCompleteParams:[answerBtn] });
+				}
 			}
 			answerBtn.BoxColor = btnColor;
 			answerBtn.filters = [new GlowFilter(btnColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			
-			aWordBtn.alpha = 0;
+			removeChild(aWordBtn);
 			aWordBtn.x = ((mAnswer % 3) * 220) + 190;
-			aWordBtn.y = (Math.floor(mAnswer / 3) * 90) + 620;
-			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
-			
-			addChild(mBlocker);
 		}
 		
 		private function OnTweenShowWrongAnswer(aWrongAnswerBtn:CurvedBox):void
@@ -357,10 +375,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			addChild(answerBtn);
 			TweenLite.to(answerBtn, 0.5, { ease:Elastic.easeOut, onComplete:OnTweenShowAnswer, onCompleteParams:[answerBtn] });
 			
-			aWordBtn.alpha = 0;
+			removeChild(aWordBtn);
 			aWordBtn.x = ((answer % 3) * 220) + 190;
-			aWordBtn.y = (Math.floor(answer / 3) * 90) + 620;
-			TweenLite.to(aWordBtn, 1.5, { ease:Strong.easeOut, alpha:1 });
 		}
 		
 		private function OnTweenShowAnswer(aAnswerBtn:CurvedBox):void
@@ -386,6 +402,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				else
 				{
 					mResult = Result.GREAT;
+				}
+				
+				for (var i:int = 0, endi:int = mWordList.length; i < endi; ++i)
+				{
+					mWordList[i].BoxColor = Palette.DIALOG_BOX;
+					mWordList[i].filters = [];
+					if (!contains(mWordList[i]))
+					{
+						mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
+						TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
+						addChild(mWordList[i]);
+					}
 				}
 				
 				mSuccessFeedback = new Sprite();

@@ -41,6 +41,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		private var mPictureList:Vector.<Sprite>;
 		private var mRequest:TextField;
 		private var mAnswer:int;
+		private var mAttempt:int;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
@@ -99,8 +100,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				pictureBitmap.y = -pictureBitmap.height / 2;
 				picture.addChild(pictureBitmap);
 				picture.mask = mPictureMaskList[i];
-				picture.addEventListener(MouseEvent.ROLL_OVER, OnRollOverPicture);
-				picture.addEventListener(MouseEvent.ROLL_OUT, OnRollOutPicture);
+				picture.addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverPicture);
+				picture.addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutPicture);
 				picture.addEventListener(MouseEvent.CLICK, OnClickPicture);
 				addChild(picture);
 				mPictureList.push(picture);
@@ -194,6 +195,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			TweenLite.killTweensOf(mFlashlight);
 			
+			var i:int, endi:int;
+			for (i = 0, endi = mPictureList.length; i < endi; ++i)
+			{
+				TweenLite.killTweensOf(mPictureList[i]);
+				mPictureList[i].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverPicture);
+				mPictureList[i].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutPicture);
+				mPictureList[i].removeEventListener(MouseEvent.CLICK, OnClickPicture);
+			}
+			
 			removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			
@@ -283,13 +293,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			}
 		}
 		
-		private function OnRollOverPicture(aEvent:MouseEvent):void
+		private function OnMouseOverPicture(aEvent:MouseEvent):void
 		{
 			var picture:Sprite = aEvent.currentTarget as Sprite;
 			picture.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 		}
 		
-		private function OnRollOutPicture(aEvent:MouseEvent):void
+		private function OnMouseOutPicture(aEvent:MouseEvent):void
 		{
 			if (!contains(mBlocker) && !mSuccessFeedback)
 			{
@@ -302,14 +312,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			addChild(mBlocker);
 			
-			var i:int, endi:int;
-			for (i = 0, endi = mPictureList.length; i < endi; ++i)
-			{
-				TweenLite.killTweensOf(mPictureList[i]);
-				mPictureList[i].removeEventListener(MouseEvent.ROLL_OVER, OnRollOverPicture);
-				mPictureList[i].removeEventListener(MouseEvent.ROLL_OUT, OnRollOutPicture);
-				mPictureList[i].removeEventListener(MouseEvent.CLICK, OnClickPicture);
-			}
+			++mAttempt;
 			
 			TweenLite.killTweensOf(mFlashlight);
 			
@@ -366,12 +369,23 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				mPictureList[mAnswer].filters =
 					[new GlowFilter(Palette.WRONG_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				
-				var origin:Point = DisplayObjectUtil.GetPosition(mFlashlight);
-				var axis:Point = origin.subtract(DisplayObjectUtil.GetPosition(mPictureList[mTemplate.Answer]));
-				var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
-				
-				TweenLite.to(mFlashlightBeam, 0.7, { x:mPictureList[mTemplate.Answer].x, y:mPictureList[mTemplate.Answer].y });
-				TweenLite.to(mFlashlight, 0.7, { onComplete:OnTweenFlashlightToAnswer, rotation:angle });
+				if (mAttempt < 2)
+				{
+					TweenLite.killTweensOf(mPictureList[mAnswer]);
+					mPictureList[mAnswer].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverPicture);
+					mPictureList[mAnswer].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutPicture);
+					mPictureList[mAnswer].removeEventListener(MouseEvent.CLICK, OnClickPicture);
+					
+					removeChild(mBlocker);
+				}
+				else
+				{
+					var origin:Point = DisplayObjectUtil.GetPosition(mFlashlight);
+					var axis:Point = origin.subtract(DisplayObjectUtil.GetPosition(mPictureList[mTemplate.Answer]));
+					var angle:Number = (Math.atan2(axis.y, axis.x) * 180 / Math.PI) - 90;
+					TweenLite.to(mFlashlightBeam, 0.7, { x:mPictureList[mTemplate.Answer].x, y:mPictureList[mTemplate.Answer].y });
+					TweenLite.to(mFlashlight, 0.7, { onComplete:OnTweenFlashlightToAnswer, rotation:angle });
+				}
 			}
 		}
 		
