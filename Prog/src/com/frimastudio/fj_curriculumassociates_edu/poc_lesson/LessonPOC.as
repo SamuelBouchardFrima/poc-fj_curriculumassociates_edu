@@ -26,7 +26,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	
 	public class LessonPOC extends Sprite
 	{
-		private static const VERSION:String = "v0.7";
+		private static const VERSION:String = "v1.0";
 		
 		private var mContainer:Sprite;
 		private var mQuestList:Vector.<Class>;

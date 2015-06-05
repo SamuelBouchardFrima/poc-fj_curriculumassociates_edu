@@ -317,6 +317,21 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		{
 			mShowFeedbackTimer.reset();
 			
+			var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
+			for (var i:int = 0, endi:int = mLampList.length; i < endi; ++i)
+			{
+				if (i != mTemplate.Answer)
+				{
+					var lamp:Bitmap = new Asset.LampOffBitmap[i]();
+					lamp.x = ((i + 0.5) * offset) - (lamp.width / 2);
+					lamp.y = 360 - (lamp.height / 2);
+					addChildAt(lamp, getChildIndex(mLampList[i]));
+					removeChild(mLampList[i]);
+					mLampList[i] = lamp;
+					mLucuList[i].transform.colorTransform = new ColorTransform(0.3, 0.3, 0.3);
+				}
+			}
+			
 			mSuccessFeedback = new Sprite();
 			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			mSuccessFeedback.graphics.beginFill(0x000000, 0);
