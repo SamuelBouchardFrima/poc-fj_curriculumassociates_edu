@@ -281,14 +281,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		
 		public function EnableMouseOver():void
 		{
-			addEventListener(MouseEvent.ROLL_OVER, OnRollOver);
-			addEventListener(MouseEvent.ROLL_OUT, OnRollOut);
+			addEventListener(MouseEvent.MOUSE_OVER, OnMouseOver);
+			addEventListener(MouseEvent.MOUSE_OUT, OnMouseOut);
 		}
 		
 		public function DisableMouseOver():void
 		{
-			removeEventListener(MouseEvent.ROLL_OVER, OnRollOver);
-			removeEventListener(MouseEvent.ROLL_OUT, OnRollOut);
+			removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOver);
+			removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOut);
 		}
 		
 		public function HideLabelSubString(aSubString:String):void
@@ -331,12 +331,12 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			return Geometry.RectangleAdd(leftBoundary.union(rightBoundary), DisplayObjectUtil.GetPosition(field));
 		}
 		
-		private function OnRollOver(aEvent:MouseEvent):void
+		private function OnMouseOver(aEvent:MouseEvent):void
 		{
 			filters = [new GlowFilter(BoxColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 		}
 		
-		private function OnRollOut(aEvent:MouseEvent):void
+		private function OnMouseOut(aEvent:MouseEvent):void
 		{
 			filters = [];
 		}

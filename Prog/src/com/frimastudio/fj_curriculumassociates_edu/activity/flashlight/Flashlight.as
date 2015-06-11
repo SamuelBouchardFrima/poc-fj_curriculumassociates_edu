@@ -90,12 +90,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				addChild(mPictureMaskList[i]);
 				
 				picture = new Sprite();
-				picture.x = (i + 0.75) * (1024 / (endi + 0.5))
-				picture.y = 300 + (50 * Math.abs((i - ((endi / 2) - 0.5)) / ((endi / 2) - 0.5)));
+				picture.x = mTemplate.PicturePositionList[i].x;
+				picture.y = mTemplate.PicturePositionList[i].y;
 				pictureBitmap = new mTemplate.PictureAssetList[i]();
 				pictureBitmap.smoothing = true;
-				pictureBitmap.height = (400 - ((endi - 1) * 10)) / endi;
-				pictureBitmap.scaleX = pictureBitmap.scaleY;
 				pictureBitmap.x = -pictureBitmap.width / 2;
 				pictureBitmap.y = -pictureBitmap.height / 2;
 				picture.addChild(pictureBitmap);
@@ -125,12 +123,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
 			mRequest.x = 512 - (mRequest.width / 2);
 			mRequest.y = 52;
-			
 			var requestLabel:CurvedBox = new CurvedBox(new Point(mRequest.width + 24, mRequest.height), Palette.DIALOG_BOX);
 			requestLabel.x = 512;
 			requestLabel.y = 106;
 			addChild(requestLabel);
-			
 			addChild(mRequest);
 			
 			var requestLetter:TextField;
@@ -138,7 +134,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			for (i = 0, endi = mTemplate.Request.length; i < endi; ++i)
 			{
 				boundaries = mRequest.getCharBoundaries(i);
-				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 4, 52 - 2));
+				Geometry.RectangleAdd(boundaries, new Point(407, 50));
 				boundaries.height = Math.max(boundaries.height, mRequest.height);
 				requestLetter = new TextField();
 				requestLetter.selectable = false;
@@ -324,8 +320,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mEarAnswerTimer.reset();
 			mEarAnswerTimer.start();
 			
-			mValidateAnswerTimer.reset();
-			mValidateAnswerTimer.start();
+			//mValidateAnswerTimer.reset();
+			//mValidateAnswerTimer.start();
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
@@ -336,7 +332,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			mEarAnswerTimer.reset();
 			
-			(new mTemplate.AudioAssetList[mAnswer] as Sound).play();
+			//(new mTemplate.AudioAssetList[mAnswer] as Sound).play();
+			var sound:Sound = (new mTemplate.AudioAssetList[mAnswer] as Sound);
+			sound.play();
+			
+			mValidateAnswerTimer.delay = sound.length;
+			mValidateAnswerTimer.reset();
+			mValidateAnswerTimer.start();
 		}
 		
 		private function OnValidateAnswerTimerComplete(aEvent:TimerEvent):void
@@ -359,6 +361,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				addChild(mPictureList[mTemplate.Answer]);
 				TweenLite.to(mPictureList[mTemplate.Answer], 1, { ease:Elastic.easeOut, scaleX:3, scaleY:3, x:512, y:434 } );
 				
+				mShowFeedbackTimer.delay = 500;
 				mShowFeedbackTimer.reset();
 				mShowFeedbackTimer.start();
 			}
@@ -399,7 +402,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			mShowAnswerTimer.reset();
 			
-			(new mTemplate.AudioAssetList[mTemplate.Answer] as Sound).play();
+			//(new mTemplate.AudioAssetList[mTemplate.Answer] as Sound).play();
+			//(new mTemplate.CorrectAudio as Sound).play();
+			var sound:Sound = (new mTemplate.CorrectAudio as Sound);
+			sound.play();
 			
 			mPictureList[mTemplate.Answer].mask = null;
 			removeChild(mPictureMaskList[mTemplate.Answer]);
@@ -408,6 +414,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			TweenLite.to(mPictureList[mTemplate.Answer], 1, { ease:Elastic.easeOut, scaleX:3, scaleY:3, x:512, y:434 });
 			
+			mShowFeedbackTimer.delay = sound.length;
 			mShowFeedbackTimer.reset();
 			mShowFeedbackTimer.start();
 		}

@@ -123,7 +123,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			for (i = 0, endi = mTemplate.Request.length; i < endi; ++i)
 			{
 				boundaries = mRequest.getCharBoundaries(i);
-				Geometry.RectangleAdd(boundaries, new Point(512 - (mRequest.width / 2) + 4, 52 - 2));
+				Geometry.RectangleAdd(boundaries, new Point(407, 50));
 				boundaries.height = Math.max(boundaries.height, mRequest.height);
 				requestLetter = new TextField();
 				requestLetter.selectable = false;

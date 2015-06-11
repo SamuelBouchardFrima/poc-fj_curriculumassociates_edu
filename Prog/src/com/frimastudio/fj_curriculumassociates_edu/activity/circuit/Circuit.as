@@ -194,6 +194,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				mWordList[i].filters = [];
 				if (!contains(mWordList[i]))
 				{
+					if (i == mTemplate.AnswerList[mCurrentCircuit - 1])
+					{
+						mWordList[i].Content = new BoxLabel(mTemplate.DistractorList[mCurrentCircuit - 1], 52.5,
+							Palette.DIALOG_CONTENT);
+					}
 					mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
 					TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
 					addChild(mWordList[i]);
@@ -259,7 +264,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		{
 			mEarWordTimer.reset();
 			
-			(new mTemplate.AudioAssetList[mAnswer]() as Sound).play();
+			var index:int = mTemplate.DistractorList.indexOf(mWordList[mAnswer].Label);
+			if (index > -1)
+			{
+				(new mTemplate.DistractorAudioList[index]() as Sound).play();
+			}
+			else
+			{
+				(new mTemplate.AudioAssetList[mAnswer]() as Sound).play();
+			}
 		}
 		
 		private function OnTweenSendAnswer(aWordBtn:CurvedBox):void
@@ -410,9 +423,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 					mWordList[i].filters = [];
 					if (!contains(mWordList[i]))
 					{
-						mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
-						TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
-						addChild(mWordList[i]);
+						if (i == mTemplate.AnswerList[mCurrentCircuit - 1])
+						{
+							//mWordList[i].Content = new BoxLabel(mTemplate.DistractorList[mCurrentCircuit - 1], 52.5,
+								//Palette.DIALOG_CONTENT);
+						}
+						else
+						{
+							mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
+							TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
+							addChild(mWordList[i]);
+						}
 					}
 				}
 				
@@ -452,7 +473,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				mSuccessFeedback.addChild(successLabel);
 				addChild(mSuccessFeedback);
 				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, delay:1.2,
-					onComplete:OnTweenShowSuccessFeedback, alpha:1 } );
+					onComplete:OnTweenShowSuccessFeedback, alpha:1 });
 				
 				mSuccessFeedbackAudioTimer.reset();
 				mSuccessFeedbackAudioTimer.start();

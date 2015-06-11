@@ -2,6 +2,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
+	import com.greensock.easing.Bounce;
+	import com.greensock.easing.Elastic;
+	import com.greensock.easing.Strong;
+	import com.greensock.TweenLite;
+	import flash.display.Bitmap;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
@@ -10,6 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	
 	public class PieceTray extends Sprite
 	{
+		private var mTrayExplosion:MovieClip;
 		protected static const OFFSET:Number = 5;
 		protected static const DEADZONE:Number = 50;
 		
@@ -58,6 +66,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 		}
 		
+		public function set ContentColor(aValue:int):void
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				piece.Content = new BoxLabel(piece.Label, 60, aValue);
+				piece = piece.NextPiece;
+			}
+		}
+		
 		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
 		{
 			super();
@@ -102,6 +120,46 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 		}
 		
+		public function BounceInSequence():Number
+		{
+			var piece:Piece = mFirstPiece;
+			var i:int = 0;
+			while (piece)
+			{
+				//TweenLite.to(piece, 0.5, { ease:Strong.easeOut, delay:(i * 0.1), onComplete:OnTweenBouncePiece,
+					//onCompleteParams:[piece], y:piece.y - 30, scaleX:1.15, scaleY:0.7 });
+				
+				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
+					onCompleteParams:[piece, OnTweenBouncePiece], x:(piece.x - (i * 4 * OFFSET)), y:(piece.height * 0.15),
+					scaleX:1.15, scaleY:0.7 });
+				
+				++i;
+				piece = piece.NextPiece;
+			}
+			return (0.7 + ((i - 1) * 0.05));
+		}
+		
+		public function FizzleAndExplode():Number
+		{
+			var piece:Piece = mFirstPiece;
+			var i:int = 0;
+			while (piece)
+			{
+				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
+					onCompleteParams:[piece, (i % 2 ? OnTweenFizzleUpPiece : OnTweenFizzleDownPiece)],
+					x:(piece.x - (i * 4 * OFFSET)) });
+				
+				++i;
+				piece = piece.NextPiece;
+			}
+			
+			var explodeTimer:Timer = new Timer(700, 1);
+			explodeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeTimerComplete);
+			explodeTimer.start();
+			
+			return 2;
+		}
+		
 		public function Add(aContent:String, aStartPosition:Number):void
 		{
 			InsertLast(aContent, new Point(aStartPosition));
@@ -109,6 +167,12 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		
 		public function Clear(aContentList:Vector.<String> = null):void
 		{
+			if (mTrayExplosion)
+			{
+				removeChild(mTrayExplosion);
+				mTrayExplosion = null;
+			}
+			
 			var piece:Piece = mFirstPiece;
 			while (piece)
 			{
@@ -119,6 +183,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 					piece.PreviousPiece.NextPiece = null;
 					piece.PreviousPiece = null;
 				}
+				piece.DisableMouseOver();
 				piece.Dispose();
 				removeChild(piece);
 				piece = piece.NextPiece;
@@ -286,6 +351,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		public function InsertFirst(aContent:String):void
 		{
 			mFirstPiece = new Piece(null, mFirstPiece, aContent);
+			mFirstPiece.EnableMouseOver();
 			if (!mLastPiece)
 			{
 				mLastPiece = mFirstPiece;
@@ -303,6 +369,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		public function InsertLast(aContent:String, aStartPosition:Point, aSkipSound:Boolean = false):void
 		{
 			mLastPiece = new Piece(mLastPiece, null, aContent, aStartPosition);
+			mLastPiece.EnableMouseOver();
 			if (!mFirstPiece)
 			{
 				mFirstPiece = mLastPiece;
@@ -329,6 +396,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 			
 			var piece:Piece = new Piece(aPiece.PreviousPiece, aPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
+			piece.EnableMouseOver();
 			aPiece.PreviousPiece = piece;
 			if (mFirstPiece == aPiece)
 			{
@@ -353,6 +421,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 			
 			var piece:Piece = new Piece(aPiece, aPiece.NextPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
+			piece.EnableMouseOver();
 			aPiece.NextPiece = piece;
 			if (mLastPiece == aPiece)
 			{
@@ -390,6 +459,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			aPiece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			aPiece.Deactivate();
+			aPiece.DisableMouseOver();
 			aPiece.Dispose();
 			removeChild(aPiece);
 			
@@ -415,6 +485,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			piece.Deactivate();
+			piece.DisableMouseOver();
 			piece.Dispose();
 			removeChild(piece);
 			
@@ -445,6 +516,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemovePiece);
 			piece.Deactivate();
+			piece.DisableMouseOver();
 			piece.Dispose();
 			removeChild(piece);
 			
@@ -536,6 +608,109 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		protected function OnAttentionCallingTimerComplete(aEvent:TimerEvent):void
 		{
 			CallAttention();
+		}
+		
+		private function OnTweenFusePiece(aPiece:Piece, aNextTweenHandler:Function):void
+		{
+			switch (aNextTweenHandler)
+			{
+				case OnTweenBouncePiece:
+					TweenLite.to(aPiece, 0.25, { ease:Strong.easeOut, onComplete:OnTweenBouncePiece,
+						onCompleteParams:[aPiece], y:-50, scaleX:0.85, scaleY:1.15 });
+					break;
+				case OnTweenFizzleUpPiece:
+					TweenLite.to(aPiece, 0.05, { ease:Strong.easeOut, onComplete:OnTweenFizzleUpPiece,
+						onCompleteParams:[aPiece], y:-2, scaleX:1, scaleY:1 });
+					break;
+				case OnTweenFizzleDownPiece:
+					TweenLite.to(aPiece, 0.05, { ease:Strong.easeOut, onComplete:OnTweenFizzleDownPiece,
+						onCompleteParams:[aPiece], y:2, scaleX:1, scaleY:1 });
+					break;
+				default:
+					break;
+			}
+		}
+		
+		private function OnTweenBouncePiece(aPiece:Piece):void
+		{
+			TweenLite.to(aPiece, 0.3, { ease:Bounce.easeOut, y:0, scaleX:1, scaleY:1 });
+		}
+		
+		private function OnTweenFizzleUpPiece(aPiece:Piece):void
+		{
+			TweenLite.to(aPiece, 0.05, { ease:Strong.easeOut, onComplete:OnTweenFizzleDownPiece,
+				onCompleteParams:[aPiece], y:2, scaleX:1, scaleY:1 });
+		}
+		
+		private function OnTweenFizzleDownPiece(aPiece:Piece):void
+		{
+			TweenLite.to(aPiece, 0.05, { ease:Strong.easeOut, onComplete:OnTweenFizzleUpPiece,
+				onCompleteParams:[aPiece], y:-2, scaleX:1, scaleY:1 });
+		}
+		
+		private function OnExplodeTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeTimerComplete);
+			
+			var piece:Piece = mFirstPiece;
+			var i:int = 0;
+			var whiteBox:CurvedBox;
+			while (piece)
+			{
+				TweenLite.killTweensOf(piece);
+				TweenLite.to(piece, 0.05, { ease:Strong.easeOut, y:0 });
+				
+				whiteBox = new CurvedBox(piece.Size, 0xFFFFFF);
+				whiteBox.x = piece.x;
+				whiteBox.alpha = 0;
+				addChild(whiteBox);
+				TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:((i * 0.07) + 0.05), onComplete:OnTweenWhitenPiece,
+					onCompleteParams:[piece, whiteBox], alpha:1 });
+				
+				++i;
+				piece = piece.NextPiece;
+			}
+			
+			TweenLite.to(this, 0.3, { onComplete:OnTweenExplodeTray });
+		}
+		
+		private function OnTweenWhitenPiece(aPiece:Piece, aWhiteBox:CurvedBox):void
+		{
+			aPiece.alpha = 0;
+			
+			TweenLite.to(aWhiteBox, 0.15, { ease:Strong.easeIn, onComplete:OnTweenExplodePiece,
+				onCompleteParams:[aWhiteBox], scaleX:1.2, scaleY:1.2 });
+		}
+		
+		private function OnTweenExplodePiece(aWhiteBox:CurvedBox):void
+		{
+			var explosion:MovieClip = new Asset.PieceExplosionClip() as MovieClip;
+			explosion.x = aWhiteBox.x;
+			explosion.y = aWhiteBox.y;
+			addChild(explosion);
+			if (mTrayExplosion)
+			{
+				addChild(mTrayExplosion);
+			}
+			
+			TweenLite.to(aWhiteBox, 0.3, { ease:Strong.easeOut, delay:0.2, onComplete:OnTweenHideExplosion,
+				onCompleteParams:[aWhiteBox, explosion], scaleX:2, scaleY:2, alpha:0 });
+			
+			(new Asset.PieceExplosionSound() as Sound).play();
+		}
+		
+		private function OnTweenHideExplosion(aWhiteBox:CurvedBox, aExplosion:MovieClip):void
+		{
+			removeChild(aWhiteBox);
+			removeChild(aExplosion);
+		}
+		
+		private function OnTweenExplodeTray():void
+		{
+			mTrayExplosion = new Asset.TrayExplosionClip() as MovieClip;
+			addChild(mTrayExplosion);
+			
+			(new Asset.TrayExplosionSound() as Sound).play();
 		}
 		
 		protected function OnRemovePiece(aEvent:PieceEvent):void

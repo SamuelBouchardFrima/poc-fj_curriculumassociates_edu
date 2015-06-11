@@ -41,9 +41,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mTemporaryPosition.x, y:mTemporaryPosition.y });
 		}
 		
-		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Point = null)
+		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Point = null, aColor:int = 0xFFFFFF)
 		{
-			super(aContent, 0x99EEFF);
+			//super(aContent, 0x99EEFF);
+			super(aContent, aColor);
 			
 			mPrevious = aPrevious;
 			mNext = aNext;

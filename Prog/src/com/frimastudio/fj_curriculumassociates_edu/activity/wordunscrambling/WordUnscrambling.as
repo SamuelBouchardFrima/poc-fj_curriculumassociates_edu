@@ -25,15 +25,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	public class WordUnscrambling extends Activity
 	{
@@ -48,6 +52,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		private var mDraggedPiece:Piece;
 		private var mLearnedWordList:Object;
 		private var mSubmitedWord:UIButton;
+		private var mSubmissionHighlight:Sprite;
+		private var mAnswer:String;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
@@ -151,6 +157,67 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
+		private function ShowSuccessFeedback():void
+		{
+			mSubmitBtn.BoxColor = mResult.Color;
+			
+			mSuccessFeedback = new Sprite();
+			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
+			mSuccessFeedback.graphics.beginFill(0x000000, 0);
+			mSuccessFeedback.graphics.drawRect(0, 0, 1024, 768);
+			mSuccessFeedback.graphics.endFill();
+			mSuccessFeedback.alpha = 0;
+			addChild(mSuccessFeedback);
+			
+			addChild(mBlocker);
+			
+			var successLabel:TextField = new TextField();
+			successLabel.autoSize = TextFieldAutoSize.CENTER;
+			successLabel.selectable = false;
+			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
+			
+			switch (mResult)
+			{
+				case Result.GREAT:
+					successLabel.text = "Click to continue.";
+					(new Asset.CrescendoSound() as Sound).play();
+					break;
+				case Result.VALID:
+					successLabel.text = "Great word!\nClick to try again";
+					(new Asset.ValidationSound() as Sound).play();
+					break;
+				case Result.WRONG:
+					successLabel.text = "Click to try again";
+					(new Asset.ErrorSound() as Sound).play();
+					break;
+				default:
+					throw new Error(mResult ? "Result " + mResult.Description + " is not handled" : "No result to handle.");
+					return;
+			}
+			
+			successLabel.embedFonts = true;
+			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
+				null, null, null, null, null, "center"));
+			successLabel.x = 512 - (successLabel.width / 2);
+			successLabel.y = 384 - (successLabel.height / 2);
+			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
+			successBox.alpha = 0.7;
+			successBox.x = 512;
+			successBox.y = 384;
+			mSuccessFeedback.addChild(successBox);
+			mSuccessFeedback.addChild(successLabel);
+			
+			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
+			if (mSubmitedWord)
+			{
+				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+			}
+			if (mSubmissionHighlight)
+			{
+				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmissionHighlight, alpha:0 });
+			}
+		}
+		
 		private function OnPieceFreedToolTray(aEvent:PieceTrayEvent):void
 		{
 			if (aEvent.Dragged)
@@ -159,6 +226,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				
 				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
 				mDraggedPiece.y = mToolTray.y;
+				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
@@ -183,6 +251,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				
 				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
 				mDraggedPiece.y = mCraftingTray.y;
+				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				addChild(mDraggedPiece);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
@@ -263,38 +332,48 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			var answer:String = mCraftingTray.AssembleWord();
 			if (answer.length)
 			{
-				answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-				if (answer == mTemplate.Answer)
+				mAnswer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				if (mAnswer == mTemplate.Answer)
 				{
 					mResult = Result.GREAT;
-					mLearnedWordList[answer] = answer;
+					mLearnedWordList[answer] = mAnswer;
 				}
-				else if (WordDictionary.Validate(answer, 1))
+				else if (WordDictionary.Validate(mAnswer, 1))
 				{
 					mResult = Result.VALID;
-					mLearnedWordList[answer] = answer;
+					mLearnedWordList[answer] = mAnswer;
 				}
-				else if (WordDictionary.Validate(answer.toLowerCase(), 1))
+				else if (WordDictionary.Validate(mAnswer.toLowerCase(), 1))
 				{
 					mResult = Result.VALID;
-					mLearnedWordList[answer.toLowerCase()] = answer.toLowerCase();
+					mLearnedWordList[mAnswer.toLowerCase()] = mAnswer.toLowerCase();
 				}
 				else
 				{
 					mResult = Result.WRONG;
 				}
 				
-				mSubmitedWord = new UIButton(answer, mResult.Color);
-				mSubmitedWord.x = mCraftingTray.Center;
-				mSubmitedWord.y = mCraftingTray.y;
-				mSubmitedWord.width = mCraftingTray.width;
-				addChild(mSubmitedWord);
-				
-				mCraftingTray.visible = false;
-				
 				addChild(mBlocker);
 				
-				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeIn, onComplete:OnTweenSquashSubmitedWord, scaleX:1 });
+				mCraftingTray.Color = mResult.Color;
+				mCraftingTray.ContentColor = Palette.BTN_CONTENT;
+				
+				if (mResult == Result.WRONG)
+				{
+					var explodeDuration:Number = mCraftingTray.FizzleAndExplode();
+					var explodeWordTimer:Timer = new Timer(explodeDuration * 1000, 1);
+					explodeWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeWordTimerComplete);
+					explodeWordTimer.start();
+				}
+				else
+				{
+					var bounceDuration:Number = mCraftingTray.BounceInSequence();
+					var submitWordTimer:Timer = new Timer(bounceDuration * 1000, 1);
+					submitWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitWordTimerComplete);
+					submitWordTimer.start();
+				}
+				
+				(new Asset.SnappingSound() as Sound).play();
 			}
 			else
 			{
@@ -307,78 +386,73 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		{
 		}
 		
-		private function OnTweenSquashSubmitedWord():void
+		private function OnExplodeWordTimerComplete(aEvent:TimerEvent):void
 		{
-			(new Asset.SnappingSound() as Sound).play();
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeWordTimerComplete);
 			
-			TweenLite.to(mSubmitedWord, 1, { ease:Elastic.easeOut, onComplete:OnTweenStretchSubmitedWord, scaleX:1.2, scaleY:1.2 });
+			mCraftingTray.visible = false;
+			
+			ShowSuccessFeedback();
 		}
 		
-		private function OnTweenStretchSubmitedWord():void
+		private function OnSumbitWordTimerComplete(aEvent:TimerEvent):void
 		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitWordTimerComplete);
+			
+			mSubmitedWord = new UIButton(mAnswer, mResult.Color);
+			mSubmitedWord.x = mCraftingTray.Center;
+			mSubmitedWord.y = mCraftingTray.y;
+			mSubmitedWord.width = mCraftingTray.width;
+			if (mResult == Result.GREAT)
+			{
+				mSubmissionHighlight = new Sprite();
+				mSubmissionHighlight.x = mSubmitedWord.x;
+				mSubmissionHighlight.y = mSubmitedWord.y;
+				mSubmissionHighlight.addEventListener(Event.ENTER_FRAME, OnEnterFrameSubmissionHighlight);
+				var highlightBitmap:Bitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
+				highlightBitmap.smoothing = true;
+				highlightBitmap.x = -highlightBitmap.width / 2;
+				highlightBitmap.y = -highlightBitmap.height / 2;
+				mSubmissionHighlight.addChild(highlightBitmap);
+				addChild(mSubmissionHighlight);
+				
+				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:mAnswerField.x, y:mAnswerField.y,
+					scaleX:1, scaleY:1 });
+			}
+			addChild(mSubmitedWord);
+			
+			mCraftingTray.visible = false;
+			
+			// TODO:	don't send submited word to answer field if it is valid but incorrect
+			
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
-				x:mAnswerField.x, y:mAnswerField.y, scaleX:1, scaleY:1 });
+				x:mAnswerField.x, y:mAnswerField.y, scaleX:1 });
+		}
+		
+		private function OnEnterFrameSubmissionHighlight(aEvent:Event):void
+		{
+			mSubmissionHighlight.rotation += 3;
 		}
 		
 		private function OnTweenSendSubmitedWord():void
 		{
-			mSuccessFeedback = new Sprite();
-			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-			mSuccessFeedback.graphics.beginFill(0x000000, 0);
-			mSuccessFeedback.graphics.drawRect(0, 0, 1024, 768);
-			mSuccessFeedback.graphics.endFill();
-			mSuccessFeedback.alpha = 0;
-			addChild(mSuccessFeedback);
-			
-			addChild(mBlocker);
-			
 			var answer:String = mCraftingTray.AssembleWord();
 			answer = answer.charAt(0).toUpperCase() + answer.substring(1);
 			mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
-			mSubmitBtn.BoxColor = mSubmitedWord.BoxColor = mResult.Color;
 			
-			var successLabel:TextField = new TextField();
-			successLabel.autoSize = TextFieldAutoSize.CENTER;
-			successLabel.selectable = false;
-			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
-			
-			switch (mResult)
-			{
-				case Result.GREAT:
-					successLabel.text = "Click to continue.";
-					(new Asset.CrescendoSound() as Sound).play();
-					break;
-				case Result.VALID:
-					successLabel.text = "Great word!\nClick to try again";
-					(new Asset.ValidationSound() as Sound).play();
-					break;
-				case Result.WRONG:
-					successLabel.text = "Click to try again";
-					(new Asset.ErrorSound() as Sound).play();
-					break;
-				default:
-					throw new Error(mResult ? "Result " + mResult.Description + " is not handled" : "No result to handle.");
-					return;
-			}
-			
-			successLabel.embedFonts = true;
-			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-				null, null, null, null, null, "center"));
-			successLabel.x = 512 - (successLabel.width / 2);
-			successLabel.y = 384 - (successLabel.height / 2);
-			mSuccessFeedback.addChild(successLabel);
-			
-			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, alpha:1 } );
-			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenDisappearSubmitedWord, alpha:0 });
+			ShowSuccessFeedback();
 		}
 		
-		private function OnTweenDisappearSubmitedWord():void
+		private function OnTweenShowSuccessFeedback():void
+		{
+			removeChild(mBlocker);
+		}
+		
+		private function OnTweenHideSubmitedWord():void
 		{
 			mSubmitedWord.Dispose();
 			removeChild(mSubmitedWord);
 			mSubmitedWord = null;
-			
-			removeChild(mBlocker);
 			
 			if (mResult == Result.GREAT)
 			{
@@ -386,19 +460,28 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			}
 		}
 		
+		private function OnTweenHideSubmissionHighlight():void
+		{
+			removeChild(mSubmissionHighlight);
+			mSubmissionHighlight.removeEventListener(Event.ENTER_FRAME, OnEnterFrameSubmissionHighlight);
+			mSubmissionHighlight = null;
+		}
+		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
 		{
+			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 });
 			
 			if (mResult != Result.GREAT)
 			{
+				mCraftingTray.Clear();
+				mToolTray.Clear(mTemplate.LetterList);
 				mCraftingTray.visible = true;
 			}
 		}
 		
 		private function OnTweenHideSuccessFeedback():void
 		{
-			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			removeChild(mSuccessFeedback);
 			mSuccessFeedback = null;
 			

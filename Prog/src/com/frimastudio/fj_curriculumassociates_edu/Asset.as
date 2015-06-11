@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu
 {
+	import flash.display.MovieClip;
 	import flash.text.Font;
 	public class Asset
 	{
@@ -37,8 +38,12 @@ package com.frimastudio.fj_curriculumassociates_edu
 		
 		[Embed(source = "../../../../art/POC/NPC.png")]
 		public static var NPCBitmap:Class;
+		[Embed(source = "../../../../art/POC/LucuSentenceUnscrambling.png")]
+		public static var LucuSentenceUnscramblingBitmap:Class;
 		[Embed(source = "../../../../art/POC/Mini.png")]
 		public static var MiniBitmap:Class;
+		[Embed(source = "../../../../art/POC/MiniOpen.png")]
+		public static var MiniOpenBitmap:Class;
 		[Embed(source = "../../../../art/POC/Cup.png")]
 		public static var CupBitmap:Class;
 		[Embed(source = "../../../../art/POC/Field.png")]
@@ -94,6 +99,24 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var SportsBitmap:Class;
 		[Embed(source = "../../../../art/lesson/store.png")]
 		public static var StoreBitmap:Class;
+		[Embed(source = "../../../../art/lesson/fork.png")]
+		public static var ForkBitmap:Class;
+		[Embed(source = "../../../../art/lesson/park.png")]
+		public static var ParkBitmap:Class;
+		[Embed(source = "../../../../art/lesson/fish.png")]
+		public static var FishBitmap:Class;
+		[Embed(source = "../../../../art/lesson/horse.png")]
+		public static var HorseBitmap:Class;
+		[Embed(source = "../../../../art/lesson/horn.png")]
+		public static var HornBitmap:Class;
+		[Embed(source = "../../../../art/lesson/card.png")]
+		public static var CardBitmap:Class;
+		[Embed(source = "../../../../art/lesson/torch.png")]
+		public static var TorchBitmap:Class;
+		[Embed(source = "../../../../art/lesson/top.png")]
+		public static var TopBitmap:Class;
+		[Embed(source = "../../../../art/lesson/barn.png")]
+		public static var BarnBitmap:Class;
 		
 		[Embed(source = "../../../../art/lesson/lamp1_on.png")]
 		private static var Lamp1On:Class;
@@ -121,6 +144,24 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var CircuitConnectionOn:Class;
 		[Embed(source = "../../../../art/lesson/circuitConnection.png")]
 		public static var CircuitConnection:Class;
+		
+		[Embed(source = "../../../../art/lesson/familyBox_1.png")]
+		private static var FamilyBox1:Class;
+		[Embed(source = "../../../../art/lesson/familyBox_2.png")]
+		private static var FamilyBox2:Class;
+		[Embed(source = "../../../../art/lesson/familyBox_3.png")]
+		private static var FamilyBox3:Class;
+		[Embed(source = "../../../../art/lesson/familyBox_4.png")]
+		private static var FamilyBox4:Class;
+		public static var FamilyBoxBitmap:Object = [FamilyBox1, FamilyBox2, FamilyBox3, FamilyBox4];
+		
+		[Embed(source = "../../../../art/POC/SubmissionHighlight.png")]
+		public static var SubmissionHighlightBitmap:Class;
+		
+		[Embed(source = "../../../../anim/PieceExplosion.swf")]
+		public static var PieceExplosionClip:Class;
+		[Embed(source = "../../../../anim/TrayExplosion.swf")]
+		public static var TrayExplosionClip:Class;
 		
 		[Embed(source = "../../../../audio/click.mp3")]
 		public static var ClickSound:Class;
@@ -254,6 +295,52 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var StartSound:Class;
 		[Embed(source = "../../../../audio/lesson/score.mp3")]
 		public static var ScoreSound:Class;
+		[Embed(source = "../../../../audio/lesson/fork.mp3")]
+		public static var ForkSound:Class;
+		[Embed(source = "../../../../audio/lesson/park.mp3")]
+		public static var ParkSound:Class;
+		[Embed(source = "../../../../audio/lesson/fish.mp3")]
+		public static var FishSound:Class;
+		[Embed(source = "../../../../audio/lesson/forkCorrect.mp3")]
+		public static var ForkCorrectSound:Class;
+		[Embed(source = "../../../../audio/lesson/horse.mp3")]
+		public static var HorseSound:Class;
+		[Embed(source = "../../../../audio/lesson/horn.mp3")]
+		public static var HornSound:Class;
+		[Embed(source = "../../../../audio/lesson/card.mp3")]
+		public static var CardSound:Class;
+		[Embed(source = "../../../../audio/lesson/hornCorrect.mp3")]
+		public static var HornCorrectSound:Class;
+		[Embed(source = "../../../../audio/lesson/torch.mp3")]
+		public static var TorchSound:Class;
+		[Embed(source = "../../../../audio/lesson/top.mp3")]
+		public static var TopSound:Class;
+		[Embed(source = "../../../../audio/lesson/barn.mp3")]
+		public static var BarnSound:Class;
+		[Embed(source = "../../../../audio/lesson/torchCorrect.mp3")]
+		public static var TorchCorrectSound:Class;
+		//[Embed(source = "../../../../audio/lesson/glow.mp3")]
+		//public static var GlowSound:Class;
+		//[Embed(source = "../../../../audio/lesson/jar.mp3")]
+		//public static var JarSound:Class;
+		//[Embed(source = "../../../../audio/lesson/snore.mp3")]
+		//public static var SnoreSound:Class;
+		//[Embed(source = "../../../../audio/lesson/car.mp3")]
+		//public static var CarSound:Class;
+		//[Embed(source = "../../../../audio/lesson/card.mp3")]
+		//public static var CardSound:Class;
+		//[Embed(source = "../../../../audio/lesson/core.mp3")]
+		//public static var CoreSound:Class;
+		//[Embed(source = "../../../../audio/lesson/throne.mp3")]
+		//public static var ThroneSound:Class;
+		//[Embed(source = "../../../../audio/lesson/start.mp3")]
+		//public static var StartSound:Class;
+		//[Embed(source = "../../../../audio/lesson/score.mp3")]
+		//public static var ScoreSound:Class;
+		[Embed(source = "../../../../audio/lesson/throne.mp3")]
+		public static var CornSound:Class;
+		[Embed(source = "../../../../audio/lesson/start.mp3")]
+		public static var SortSound:Class;
 		
 		[Embed(source = "../../../../audio/lesson/hubInstruction.mp3")]
 		public static var HUBInstructionSound:Class;
@@ -263,6 +350,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightInstructionSound:Class;
 		[Embed(source = "../../../../audio/lesson/circuitInstruction.mp3")]
 		public static var CircuitInstructionSound:Class;
+		[Embed(source = "../../../../audio/lesson/familyInstruction.mp3")]
+		public static var FamilyInstructionSound:Class;
 		
 		[Embed(source = "../../../../audio/lesson/spotlightTitle.mp3")]
 		public static var SpotlightTitleSound:Class;
@@ -270,6 +359,52 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightTitleSound:Class;
 		[Embed(source = "../../../../audio/lesson/circuitTitle.mp3")]
 		public static var CircuitTitleSound:Class;
+		[Embed(source = "../../../../audio/lesson/familyTitle.mp3")]
+		public static var FamilySortTitleSound:Class;
+		
+		[Embed(source = "../../../../audio/lesson/family/ow.mp3")]
+		private static var Ow:Class;
+		[Embed(source = "../../../../audio/lesson/family/oat.mp3")]
+		private static var Oat:Class;
+		[Embed(source = "../../../../audio/lesson/family/orch.mp3")]
+		private static var Orch:Class;
+		[Embed(source = "../../../../audio/lesson/family/ar.mp3")]
+		private static var Ar:Class;
+		public static var FamilySound:Object = { _ow:Ow, _oat:Oat, _orch:Orch, _ar:Ar };
+		
+		[Embed(source = "../../../../audio/lesson/family/snow.mp3")]
+		private static var Snow:Class;
+		[Embed(source = "../../../../audio/lesson/family/goat.mp3")]
+		private static var Goat:Class;
+		[Embed(source = "../../../../audio/lesson/family/scorch.mp3")]
+		private static var Scorch:Class;
+		[Embed(source = "../../../../audio/lesson/family/far.mp3")]
+		private static var Far:Class;
+		public static var FamilyExampleSound:Object = { _snow:Snow, _goat:Goat, _scorch:Scorch, _far:Far };
+		
+		[Embed(source = "../../../../audio/lesson/family/low.mp3")]
+		private static var Low:Class;
+		[Embed(source = "../../../../audio/lesson/family/glow.mp3")]
+		private static var Glow:Class;
+		[Embed(source = "../../../../audio/lesson/family/coat.mp3")]
+		private static var Coat:Class;
+		[Embed(source = "../../../../audio/lesson/family/boat.mp3")]
+		private static var Boat:Class;
+		[Embed(source = "../../../../audio/lesson/family/torch.mp3")]
+		private static var Torch:Class;
+		[Embed(source = "../../../../audio/lesson/family/porch.mp3")]
+		private static var Porch:Class;
+		[Embed(source = "../../../../audio/lesson/family/star.mp3")]
+		private static var Star:Class;
+		[Embed(source = "../../../../audio/lesson/family/jar.mp3")]
+		private static var Jar:Class;
+		public static var FamilyWordSound:Object = { _low:Low, _glow:Glow, _coat:Coat, _boat:Boat,
+			_torch:Torch, _porch:Porch, _star:Star, _jar:Jar };
+		
+		[Embed(source = "../../../../audio/pieceExplosion.mp3")]
+		public static var PieceExplosionSound:Class;
+		[Embed(source = "../../../../audio/trayExplosion.mp3")]
+		public static var TrayExplosionSound:Class;
 		
 		[Embed(source = "../../../../font/sweater school rg.otf", fontName = "SweaterSchoolRg-Regular",
 			mimeType = "application/x-font", fontWeight = "normal", fontStyle = "normal", embedAsCFF = "false")]
