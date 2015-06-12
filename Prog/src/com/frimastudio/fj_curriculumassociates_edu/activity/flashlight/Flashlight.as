@@ -11,6 +11,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MathUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
@@ -46,6 +47,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
 		private var mEarAnswerTimer:Timer;
+		private var mPositiveFeedbackTimer:Timer;
 		private var mValidateAnswerTimer:Timer;
 		private var mShowAnswerTimer:Timer;
 		private var mShowFeedbackTimer:Timer;
@@ -168,6 +170,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mEarAnswerTimer = new Timer(300, 1);
 			mEarAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
 			
+			mPositiveFeedbackTimer = new Timer(1000, 1);
+			mPositiveFeedbackTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPositiveFeedbackTimerComplete);
+			
 			mValidateAnswerTimer = new Timer(1000, 1);
 			mValidateAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
@@ -180,11 +185,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			addEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			
-			var instruction:Sound = new Asset.FlashlightInstructionSound() as Sound;
-			instruction.play();
-			var instructionTimer:Timer = new Timer(instruction.length, 1);
-			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
-			instructionTimer.start();
+			var startLessonTimer:Timer = new Timer((mTemplate.Request.length * 100) + 500, 1);
+			if (!mTemplate.SkipInstruction)
+			{
+				var instruction:Sound = new Asset.FlashlightInstructionSound() as Sound;
+				instruction.play();
+				startLessonTimer.delay = Math.max(startLessonTimer.delay, instruction.length);
+			}
+			startLessonTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
+			startLessonTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -208,6 +217,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mEarAnswerTimer.reset();
 			mEarAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
 			
+			mPositiveFeedbackTimer.reset();
+			mPositiveFeedbackTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPositiveFeedbackTimerComplete);
+			
 			mValidateAnswerTimer.reset();
 			mValidateAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
@@ -220,9 +232,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			super.Dispose();
 		}
 		
-		private function OnInstructionTimerComplete(aEvent:TimerEvent):void
+		private function OnStartLessonTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
 			
 			removeChild(mBlocker);
 			
@@ -319,9 +331,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			
 			mEarAnswerTimer.reset();
 			mEarAnswerTimer.start();
-			
-			//mValidateAnswerTimer.reset();
-			//mValidateAnswerTimer.start();
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
@@ -332,8 +341,26 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			mEarAnswerTimer.reset();
 			
-			//(new mTemplate.AudioAssetList[mAnswer] as Sound).play();
-			var sound:Sound = (new mTemplate.AudioAssetList[mAnswer] as Sound);
+			var sound:Sound = (new Asset.FlashlightSound["_" + mTemplate.AudioList[mAnswer]]() as Sound);
+			sound.play();
+			
+			if (mResult == Result.GREAT)
+			{
+				mPositiveFeedbackTimer.delay = sound.length;
+				mPositiveFeedbackTimer.reset();
+				mPositiveFeedbackTimer.start();
+			}
+			else
+			{
+				mValidateAnswerTimer.delay = sound.length;
+				mValidateAnswerTimer.reset();
+				mValidateAnswerTimer.start();
+			}
+		}
+		
+		private function OnPositiveFeedbackTimerComplete(aEvent:TimerEvent):void
+		{
+			var sound:Sound = (new (Random.FromList(Asset.PositiveFeedbackSound) as Class)() as Sound);
 			sound.play();
 			
 			mValidateAnswerTimer.delay = sound.length;
@@ -402,9 +429,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		{
 			mShowAnswerTimer.reset();
 			
-			//(new mTemplate.AudioAssetList[mTemplate.Answer] as Sound).play();
-			//(new mTemplate.CorrectAudio as Sound).play();
-			var sound:Sound = (new mTemplate.CorrectAudio as Sound);
+			var sound:Sound = (new Asset.FlashlightSound["_" + mTemplate.AudioList[mTemplate.Answer]]() as Sound);
 			sound.play();
 			
 			mPictureList[mTemplate.Answer].mask = null;
@@ -452,6 +477,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		private function OnTweenShowSuccessFeedback():void
 		{
 			removeChild(mBlocker);
+			
+			(new Asset.ClickToContinueSound() as Sound).play();
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void

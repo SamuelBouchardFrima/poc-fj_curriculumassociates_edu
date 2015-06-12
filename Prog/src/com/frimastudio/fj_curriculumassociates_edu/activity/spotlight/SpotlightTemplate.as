@@ -7,14 +7,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private var mRequest:String;
 		private var mHighlight:String;
 		private var mAnswer:int;
-		private var mAudioAssetList:Vector.<Class>;
+		private var mAudioList:Vector.<String>;
+		private var mSkipInstruction:Boolean;
 		
 		public function get Request():String	{	return mRequest;	}
 		public function get Highlight():String	{	return mHighlight;	}
 		public function get Answer():int	{	return mAnswer;	}
-		public function get AudioAssetList():Vector.<Class>	{	return mAudioAssetList;	}
+		public function get AudioList():Vector.<String>	{	return mAudioList;	}
+		public function get SkipInstruction():Boolean	{	return mSkipInstruction;	}
 		
-		public function SpotlightTemplate(aRequest:String, aHighlight:String, aAnswer:int, aAudioAssetList:Vector.<Class>)
+		public function SpotlightTemplate(aRequest:String, aHighlight:String, aAnswer:int, aAudioList:Vector.<String>,
+			aSkipInstruction:Boolean = false)
 		{
 			super();
 			
@@ -23,7 +26,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mRequest = aRequest;
 			mHighlight = aHighlight;
 			mAnswer = aAnswer;
-			mAudioAssetList = aAudioAssetList;
+			mAudioList = aAudioList;
+			mSkipInstruction = aSkipInstruction;
 		}
 	}
 }

@@ -256,6 +256,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				icon.smoothing = true;
 				icon.width = Math.min(icon.width, mSize.width - (mMargin * 2));
 				icon.height = Math.min(icon.height, mSize.height - (mMargin * 2));
+				icon.scaleX = icon.scaleY = Math.min(icon.scaleX, icon.scaleY);
 				icon.x = (-icon.width / 2);
 				icon.y = (-icon.height / 2);
 				var colorTransform:ColorTransform = new ColorTransform();

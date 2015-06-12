@@ -145,6 +145,26 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../art/lesson/circuitConnection.png")]
 		public static var CircuitConnection:Class;
 		
+		[Embed(source = "../../../../art/lesson/circuit/star.png")]
+		private static var CircuitStarBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/coat.png")]
+		private static var CircuitCoatBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/storm.png")]
+		private static var CircuitStormBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/fort.png")]
+		private static var CircuitFortBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/hand.png")]
+		private static var CircuitHandBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/snow.png")]
+		private static var CircuitSnowBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/horn.png")]
+		private static var CircuitHornBitmap:Class;
+		[Embed(source = "../../../../art/lesson/circuit/hat.png")]
+		private static var CircuitHatBitmap:Class;
+		public static var CircuitBitmap:Object = { _star:CircuitStarBitmap, _coat:CircuitCoatBitmap, _storm:CircuitStormBitmap,
+			_fort:CircuitFortBitmap, _hand:CircuitHandBitmap, _snow:CircuitSnowBitmap, _horn:CircuitHornBitmap,
+			_hat:CircuitHatBitmap };
+		
 		[Embed(source = "../../../../art/lesson/familyBox_1.png")]
 		private static var FamilyBox1:Class;
 		[Embed(source = "../../../../art/lesson/familyBox_2.png")]
@@ -283,64 +303,117 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var ChunkSound:Object = { _ill:Ill, _ll:Ll, _lt:Lt, _elt:Elt, _all:All, _cl:Cl, _am:Am, _af:Af,
 			_rf:Rf, _urf:Urf, _ir:Ir };
 		
-		[Embed(source = "../../../../audio/lesson/thorn.mp3")]
-		public static var ThornSound:Class;
-		[Embed(source = "../../../../audio/lesson/sports.mp3")]
-		public static var SportsSound:Class;
-		[Embed(source = "../../../../audio/lesson/store.mp3")]
-		public static var StoreSound:Class;
-		[Embed(source = "../../../../audio/lesson/throne.mp3")]
-		public static var ThroneSound:Class;
-		[Embed(source = "../../../../audio/lesson/start.mp3")]
-		public static var StartSound:Class;
-		[Embed(source = "../../../../audio/lesson/score.mp3")]
-		public static var ScoreSound:Class;
-		[Embed(source = "../../../../audio/lesson/fork.mp3")]
-		public static var ForkSound:Class;
-		[Embed(source = "../../../../audio/lesson/park.mp3")]
-		public static var ParkSound:Class;
-		[Embed(source = "../../../../audio/lesson/fish.mp3")]
-		public static var FishSound:Class;
-		[Embed(source = "../../../../audio/lesson/forkCorrect.mp3")]
-		public static var ForkCorrectSound:Class;
-		[Embed(source = "../../../../audio/lesson/horse.mp3")]
-		public static var HorseSound:Class;
-		[Embed(source = "../../../../audio/lesson/horn.mp3")]
-		public static var HornSound:Class;
-		[Embed(source = "../../../../audio/lesson/card.mp3")]
-		public static var CardSound:Class;
-		[Embed(source = "../../../../audio/lesson/hornCorrect.mp3")]
-		public static var HornCorrectSound:Class;
-		[Embed(source = "../../../../audio/lesson/torch.mp3")]
-		public static var TorchSound:Class;
-		[Embed(source = "../../../../audio/lesson/top.mp3")]
-		public static var TopSound:Class;
-		[Embed(source = "../../../../audio/lesson/barn.mp3")]
-		public static var BarnSound:Class;
-		[Embed(source = "../../../../audio/lesson/torchCorrect.mp3")]
-		public static var TorchCorrectSound:Class;
-		//[Embed(source = "../../../../audio/lesson/glow.mp3")]
-		//public static var GlowSound:Class;
-		//[Embed(source = "../../../../audio/lesson/jar.mp3")]
-		//public static var JarSound:Class;
-		//[Embed(source = "../../../../audio/lesson/snore.mp3")]
-		//public static var SnoreSound:Class;
-		//[Embed(source = "../../../../audio/lesson/car.mp3")]
-		//public static var CarSound:Class;
-		//[Embed(source = "../../../../audio/lesson/card.mp3")]
-		//public static var CardSound:Class;
-		//[Embed(source = "../../../../audio/lesson/core.mp3")]
-		//public static var CoreSound:Class;
-		//[Embed(source = "../../../../audio/lesson/throne.mp3")]
-		//public static var ThroneSound:Class;
-		//[Embed(source = "../../../../audio/lesson/start.mp3")]
-		//public static var StartSound:Class;
-		//[Embed(source = "../../../../audio/lesson/score.mp3")]
-		//public static var ScoreSound:Class;
-		[Embed(source = "../../../../audio/lesson/throne.mp3")]
-		public static var CornSound:Class;
-		[Embed(source = "../../../../audio/lesson/start.mp3")]
-		public static var SortSound:Class;
+		[Embed(source = "../../../../audio/lesson/thatSIt.mp3")]
+		private static var ThatSIt:Class;
+		[Embed(source = "../../../../audio/lesson/thatSRight.mp3")]
+		private static var ThatSRight:Class;
+		[Embed(source = "../../../../audio/lesson/right.mp3")]
+		private static var Right:Class;
+		public static var PositiveFeedbackSound:Object = [ThatSIt, ThatSRight, Right];
+		[Embed(source = "../../../../audio/lesson/clickToContinue.mp3")]
+		public static var ClickToContinueSound:Class;
+		
+		[Embed(source = "../../../../audio/lesson/spotlight/glow.mp3")]
+		private static var SpotlightGlow:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/snore.mp3")]
+		private static var SpotlightSnore:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/jar.mp3")]
+		private static var SpotlightJar:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/core.mp3")]
+		private static var SpotlightCore:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/car.mp3")]
+		private static var SpotlightCar:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/card.mp3")]
+		private static var SpotlightCard:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/throne.mp3")]
+		private static var SpotlightThrone:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/start.mp3")]
+		private static var SpotlightStart:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/score.mp3")]
+		private static var SpotlightScore:Class;
+		public static var SpotlightSound:Object = { _glow:SpotlightGlow, _snore:SpotlightSnore, _jar:SpotlightJar,
+			_core:SpotlightCore, _car:SpotlightCar, _card:SpotlightCard,
+			_score:SpotlightScore, _start:SpotlightStart, _throne:SpotlightThrone };
+		
+		[Embed(source = "../../../../audio/lesson/spotlight/snoreCorrect.mp3")]
+		private static var SpotlightCorrectSnore:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/coreCorrect.mp3")]
+		private static var SpotlightCorrectCore:Class;
+		[Embed(source = "../../../../audio/lesson/spotlight/scoreCorrect.mp3")]
+		private static var SpotlightCorrectScore:Class;
+		public static var SpotlightCorrectSound:Object = { _snore:SpotlightCorrectSnore,
+			_core:SpotlightCorrectCore, _score:SpotlightCorrectScore };
+		
+		[Embed(source = "../../../../audio/lesson/flashlight/thorn.mp3")]
+		private static var FlashlightThorn:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/sports.mp3")]
+		private static var FlashlightSports:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/store.mp3")]
+		private static var FlashlightStore:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/fork.mp3")]
+		private static var FlashlightFork:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/park.mp3")]
+		private static var FlashlightPark:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/fish.mp3")]
+		private static var FlashlightFish:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/torch.mp3")]
+		private static var FlashlightTorch:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/top.mp3")]
+		private static var FlashlightTop:Class;
+		[Embed(source = "../../../../audio/lesson/flashlight/barn.mp3")]
+		private static var FlashlightBarn:Class;
+		public static var FlashlightSound:Object = { _thorn:FlashlightThorn, _sports:FlashlightSports, _store:FlashlightStore,
+			_fork:FlashlightFork, _park:FlashlightPark, _fish:FlashlightFish,
+			_torch:FlashlightTorch, _top:FlashlightTop, _barn:FlashlightBarn };
+		
+		[Embed(source = "../../../../audio/lesson/circuit/bar.mp3")]
+		private static var CircuitBar:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/bark.mp3")]
+		private static var CircuitBark:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/boat.mp3")]
+		private static var CircuitBoat:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/bow.mp3")]
+		private static var CircuitBow:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/coat.mp3")]
+		private static var CircuitCoat:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/far.mp3")]
+		private static var CircuitFar:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/for.mp3")]
+		private static var CircuitFor:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/form.mp3")]
+		private static var CircuitForm:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/fort.mp3")]
+		private static var CircuitFort:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/hand.mp3")]
+		private static var CircuitHand:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/hat.mp3")]
+		private static var CircuitHat:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/horn.mp3")]
+		private static var CircuitHorn:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/march.mp3")]
+		private static var CircuitMarch:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/score.mp3")]
+		private static var CircuitScore:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/share.mp3")]
+		private static var CircuitShare:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/sharp.mp3")]
+		private static var CircuitSharp:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/short.mp3")]
+		private static var CircuitShort:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/show.mp3")]
+		private static var CircuitShow:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/snow.mp3")]
+		private static var CircuitSnow:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/star.mp3")]
+		private static var CircuitStar:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/storm.mp3")]
+		private static var CircuitStorm:Class;
+		[Embed(source = "../../../../audio/lesson/circuit/torn.mp3")]
+		private static var CircuitTorn:Class;
+		public static var CircuitSound:Object = { _bar:CircuitBar, _bark:CircuitBark, _boat:CircuitBoat, _bow:CircuitBow,
+			_coat:CircuitCoat, _far:CircuitFar, _for:CircuitFor, _form:CircuitForm, _fort:CircuitFort, _hand:CircuitHand,
+			_hat:CircuitHat, _horn:CircuitHorn, _march:CircuitMarch, _score:CircuitScore, _share:CircuitShare, _sharp:CircuitSharp,
+			_short:CircuitShort, _show:CircuitShow, _snow:CircuitSnow, _star:CircuitStar, _storm:CircuitStorm, _torn:CircuitTorn };
 		
 		[Embed(source = "../../../../audio/lesson/hubInstruction.mp3")]
 		public static var HUBInstructionSound:Class;

@@ -4,6 +4,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	import com.frimastudio.fj_curriculumassociates_edu.quest.Quest;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -26,13 +27,14 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	
 	public class LessonPOC extends Sprite
 	{
-		private static const VERSION:String = "v1.1";
+		private static const VERSION:String = "v2.0";
 		
 		private var mContainer:Sprite;
 		private var mQuestList:Vector.<Class>;
 		private var mQuestNameList:Vector.<String>;
 		private var mQuestTitleAudioList:Vector.<Class>;
 		private var mQuestIndex:int;
+		private var mCompletedQuest:Vector.<int>;
 		private var mQuest:Quest
 		private var mLessonList:Vector.<Sprite>;
 		private var mCurtainList:Vector.<Sprite>;
@@ -67,11 +69,13 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			counter.y = 600;
 			mContainer.addChild(counter);
 			
-			mQuestList = new <Class>[LessonPOCSpotlightQuest, LessonPOCFlashlightQuest, LessonPOCCircuitQuest,
-				LessonPOCFamilySortQuest, LessonPOCSpotlightQuest];
-			mQuestNameList = new <String>["LISTEN UP", "FLASHLIGHT", "MAKE A CIRCUIT", "FAMILY", "LISTEN UP"];
-			mQuestTitleAudioList = new <Class>[Asset.SpotlightTitleSound, Asset.FlashlightTitleSound, Asset.CircuitTitleSound,
-				Asset.FamilySortTitleSound, Asset.SpotlightTitleSound];
+			mQuestList = new <Class>[LessonPOCSpotlightQuest, LessonPOCFlashlightQuest, LessonPOCCircuitQuest];
+			mQuestNameList = new <String>["LISTEN UP", "FLASHLIGHT", "MAKE A CIRCUIT"];
+			mQuestTitleAudioList = new <Class>[Asset.SpotlightTitleSound, Asset.FlashlightTitleSound, Asset.CircuitTitleSound];
+			
+			//mQuestList = new <Class>[LessonPOCSpotlightQuest, LessonPOCFlashlightQuest, LessonPOCCircuitQuest, LessonPOCFamilySortQuest];
+			//mQuestNameList = new <String>["LISTEN UP", "FLASHLIGHT", "MAKE A CIRCUIT", "FAMILY"];
+			//mQuestTitleAudioList = new <Class>[Asset.SpotlightTitleSound, Asset.FlashlightTitleSound, Asset.CircuitTitleSound, Asset.FamilySortTitleSound];
 			
 			var i:int, endi:int;
 			
@@ -102,6 +106,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 				curtain = new Sprite();
 				curtain.x = 388 + (i * 135);
 				curtain.y = 285;
+				curtain.addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtain);
+				curtain.addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtain);
+				curtain.addEventListener(MouseEvent.CLICK, OnClickCurtain);
 				curtainBitmap = new Asset.CurtainBitmap();
 				curtainBitmap.x = -curtainBitmap.width / 2;
 				curtainBitmap.y = -curtainBitmap.height / 2;
@@ -119,10 +126,10 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 				sign = new Sprite();
 				sign.x = 388 + (i * 135);
 				sign.y = 255;
-				sign.addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtainSign);
-				sign.addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtainSign);
-				sign.addEventListener(MouseEvent.CLICK, OnClickCurtainSign);
-				signBox = new CurvedBox(new Point(96, 128), Palette.GENERIC_BTN, new BoxLabel("?", 96, Palette.BTN_CONTENT), 12);
+				sign.mouseEnabled = false;
+				sign.mouseChildren = false;
+				signBox = new CurvedBox(new Point(96, 128), Palette.GENERIC_BTN,
+					new BoxIcon(Asset.LessonBitmap[i], Palette.BTN_CONTENT), 12);
 				signBox.x = 0;
 				signBox.y = -325;
 				signBox.graphics.lineStyle(5, Palette.GENERIC_BTN);
@@ -133,14 +140,13 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 				sign.graphics.beginFill(0x000000, 0);
 				sign.graphics.drawRect(-signBox.width / 2, -1000, signBox.width, 1128);
 				sign.graphics.endFill();
-				TweenLite.to(signBox, 1, { ease:Elastic.easeOut, delay:(i * 0.15), y:Random.Range(0, 80) });
+				TweenLite.to(signBox, 1, { ease:Bounce.easeOut, delay:(i * 0.15), y:Random.Range(0, 80) });
 				mContainer.addChild(sign);
 				mCurtainSignList.push(sign);
 			}
 			
-			mDialog = new Box(new Point(914, 106), Palette.DIALOG_BOX,
-				new BoxLabel("Click on a curtain to choose an activity.", 48, Palette.DIALOG_CONTENT),
-				0, Direction.DOWN_LEFT, Axis.VERTICAL);
+			mDialog = new Box(new Point(914, 64), Palette.DIALOG_BOX,
+				new BoxLabel("Choose an activity.", 48, Palette.DIALOG_CONTENT), 0, Direction.DOWN_LEFT);
 			mDialog.x = 512;
 			mDialog.y = 80;
 			mContainer.addChild(mDialog);
@@ -158,6 +164,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			mVersion.x = 5;
 			mVersion.y = 5;
 			addChild(mVersion);
+			
+			mCompletedQuest = new Vector.<int>();
 			
 			var instruction:Sound = new Asset.HUBInstructionSound() as Sound;
 			instruction.play();
@@ -180,38 +188,39 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 		{
 		}
 		
-		private function OnMouseOverCurtainSign(aEvent:MouseEvent):void
+		private function OnMouseOverCurtain(aEvent:MouseEvent):void
 		{
-			TweenLite.to(aEvent.currentTarget as Sprite, 0.2, { ease:Strong.easeIn, y:375 });
+			var index:int = mCurtainList.indexOf(aEvent.currentTarget as Sprite);
+			TweenLite.to(mCurtainSignList[index], 0.2, { ease:Bounce.easeOut, y:375 });
 		}
 		
-		private function OnMouseOutCurtainSign(aEvent:MouseEvent):void
+		private function OnMouseOutCurtain(aEvent:MouseEvent):void
 		{
-			TweenLite.to(aEvent.currentTarget as Sprite, 0.5, { ease:Bounce.easeOut, y:255 });
+			var index:int = mCurtainList.indexOf(aEvent.currentTarget as Sprite);
+			TweenLite.to(mCurtainSignList[index], 0.5, { ease:Bounce.easeOut, y:255 });
 		}
 		
-		private function OnClickCurtainSign(aEvent:MouseEvent):void
+		private function OnClickCurtain(aEvent:MouseEvent):void
 		{
 			(new Asset.ClickSound() as Sound).play();
 			
 			mContainer.addChild(mBlocker);
 			
-			mQuestIndex = mCurtainSignList.indexOf(aEvent.currentTarget as Sprite);
+			mQuestIndex = mCurtainList.indexOf(aEvent.currentTarget as Sprite);
 			
-			for (var i:int = 0, endi:int = mCurtainSignList.length; i < endi; ++i)
-			{
-				mCurtainSignList[i].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtainSign);
-				mCurtainSignList[i].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtainSign);
-				mCurtainSignList[i].removeEventListener(MouseEvent.CLICK, OnClickCurtainSign);
-				TweenLite.to(mCurtainSignList[i], 1, { ease:Bounce.easeOut, y:mCurtainSignList[i].y - 769 });
-			}
+			TweenLite.to(mCurtainSignList[mQuestIndex], 1, { ease:Bounce.easeOut, y:(mCurtainSignList[mQuestIndex].y - 769) });
+			
+			mCurtainList[mQuestIndex].removeEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtain);
+			mCurtainList[mQuestIndex].removeEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtain);
+			mCurtainList[mQuestIndex].removeEventListener(MouseEvent.CLICK, OnClickCurtain);
+			
 			TweenLite.to(mCurtainList[mQuestIndex], 0.7, { ease:Strong.easeOut, delay:0.5,
 				onComplete:OnTweenRemoveCurtain, y:mCurtainList[mQuestIndex].y - 625 });
 		}
 		
 		private function OnTweenRemoveCurtain():void
 		{
-			mDialog.Content = new BoxLabel("You have selected...\n" + mQuestNameList[mQuestIndex], 96, Palette.DIALOG_CONTENT);
+			mDialog.Content = new BoxLabel("You chose... " + mQuestNameList[mQuestIndex] + "!", 48, Palette.DIALOG_CONTENT);
 			
 			(new mQuestTitleAudioList[mQuestIndex]() as Sound).play();
 			
@@ -226,13 +235,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			for (var i:int = 0, endi:int = mCurtainSignList.length; i < endi; ++i)
 			{
 				mCurtainSignList[i].y = 255;
-				mCurtainSignList[i].addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtainSign);
-				mCurtainSignList[i].addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtainSign);
-				mCurtainSignList[i].addEventListener(MouseEvent.CLICK, OnClickCurtainSign);
 				mCurtainSignBoxList[i].y = -325;
 			}
-			mCurtainList[mQuestIndex].y = 285;
-			mDialog.Content = new BoxLabel("Click on a curtain to choose an activity.", 48, Palette.DIALOG_CONTENT);
+			mDialog.Content = new BoxLabel("Choose an activity.", 48, Palette.DIALOG_CONTENT);
 			
 			mQuest = new mQuestList[mQuestIndex]();
 			mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
@@ -247,9 +252,27 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			removeChild(mQuest);
 			mQuest = null;
 			
-			for (var i:int = 0, endi:int = mCurtainSignBoxList.length; i < endi; ++i)
+			var i:int, endi:int;
+			
+			mCompletedQuest.push(mQuestIndex);
+			if (mCompletedQuest.length >= mQuestList.length)
 			{
-				TweenLite.to(mCurtainSignBoxList[i], 1, { ease:Elastic.easeOut, delay:(i * 0.15), y:Random.Range(0, 80) });
+				mCompletedQuest = new Vector.<int>();
+				for (i = 0, endi = mCurtainList.length; i < endi; ++i)
+				{
+					mCurtainList[i].y = 285;
+					mCurtainList[i].addEventListener(MouseEvent.MOUSE_OVER, OnMouseOverCurtain);
+					mCurtainList[i].addEventListener(MouseEvent.MOUSE_OUT, OnMouseOutCurtain);
+					mCurtainList[i].addEventListener(MouseEvent.CLICK, OnClickCurtain);
+				}
+			}
+			
+			for (i = 0, endi = mCurtainSignBoxList.length; i < endi; ++i)
+			{
+				if (mCompletedQuest.indexOf(i) == -1)
+				{
+					TweenLite.to(mCurtainSignBoxList[i], 1, { ease:Bounce.easeOut, delay:(i * 0.15), y:Random.Range(0, 80) });
+				}
 			}
 			addChild(mContainer);
 			

@@ -23,7 +23,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			addChild(quest);
 			
 			var version:TextField = new TextField();
-			version.text = "v0.4";
+			version.text = "v0.5";
 			version.selectable = false;
 			version.x = 5;
 			version.y = 5;

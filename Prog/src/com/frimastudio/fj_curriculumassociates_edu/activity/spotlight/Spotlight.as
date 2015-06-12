@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
@@ -43,6 +44,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
+		private var mPositiveFeedbackTimer:Timer;
 		private var mValidateAnswerTimer:Timer;
 		private var mShowAnswerTimer:Timer;
 		private var mShowFeedbackTimer:Timer;
@@ -54,7 +56,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mTemplate = aTemplate;
 			
 			var i:int, endi:int;
-			var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
+			var offset:Number = 1024 / (mTemplate.AudioList.length + 0.2);
 			
 			var background:Sprite = new Sprite();
 			background.graphics.beginFill(Palette.CRAFTING_BOX);
@@ -64,7 +66,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mLampList = new Vector.<Bitmap>();
 			var lamp:Bitmap;
-			for (i = 0, endi = mTemplate.AudioAssetList.length; i < endi; ++i)
+			for (i = 0, endi = mTemplate.AudioList.length; i < endi; ++i)
 			{
 				lamp = new Asset.LampOnBitmap[i]();
 				lamp.x = ((i + 0.5) * offset) - (lamp.width / 2);
@@ -76,7 +78,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mLucuList = new Vector.<Sprite>();
 			var lucu:Sprite;
 			var lucuBitmap:Bitmap;
-			for (i = 0, endi = mTemplate.AudioAssetList.length; i < endi; ++i)
+			for (i = 0, endi = mTemplate.AudioList.length; i < endi; ++i)
 			{
 				lucu = new Sprite();
 				lucuBitmap = new Asset.NewLucuBitmap[i]();
@@ -154,6 +156,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mBlocker.graphics.endFill();
 			addChild(mBlocker);
 			
+			mPositiveFeedbackTimer = new Timer(700, 1);
+			mPositiveFeedbackTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPositiveFeedbackTimerComplete);
+			
 			mValidateAnswerTimer = new Timer(700, 1);
 			mValidateAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
@@ -163,11 +168,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			mShowFeedbackTimer = new Timer(700, 1);
 			mShowFeedbackTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnShowFeedbackTimerComplete);
 			
-			var instruction:Sound = new Asset.SpotlightInstructionSound() as Sound;
-			instruction.play();
-			var instructionTimer:Timer = new Timer(instruction.length, 1);
-			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
-			instructionTimer.start();
+			var startLessonTimer:Timer = new Timer((mTemplate.Request.length * 100) + 500, 1);
+			if (!mTemplate.SkipInstruction)
+			{
+				var instruction:Sound = new Asset.SpotlightInstructionSound() as Sound;
+				instruction.play();
+				startLessonTimer.delay = Math.max(startLessonTimer.delay, instruction.length);
+			}
+			startLessonTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
+			startLessonTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -182,6 +191,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
 			
+			mPositiveFeedbackTimer.reset();
+			mPositiveFeedbackTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPositiveFeedbackTimerComplete);
+			
 			mValidateAnswerTimer.reset();
 			mValidateAnswerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnValidateAnswerTimerComplete);
 			
@@ -194,9 +206,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			super.Dispose();
 		}
 		
-		private function OnInstructionTimerComplete(aEvent:TimerEvent):void
+		private function OnStartLessonTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
 			
 			removeChild(mBlocker);
 		}
@@ -222,7 +234,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mLampList[mLucuList.indexOf(lucu)].alpha = 1.6;
 			
-			(new mTemplate.AudioAssetList[mLucuList.indexOf(lucu)]() as Sound).play();
+			(new Asset.SpotlightSound["_" + mTemplate.AudioList[mLucuList.indexOf(lucu)]]() as Sound).play();
 		}
 		
 		private function OnMouseOutLucu(aEvent:MouseEvent):void
@@ -247,6 +259,26 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mResult = (mAnswer == mTemplate.Answer ? Result.GREAT : Result.WRONG);
 			
+			if (mResult == Result.GREAT)
+			{
+				mPositiveFeedbackTimer.delay = 700;
+				mPositiveFeedbackTimer.reset();
+				mPositiveFeedbackTimer.start();
+			}
+			else
+			{
+				mValidateAnswerTimer.delay = 700;
+				mValidateAnswerTimer.reset();
+				mValidateAnswerTimer.start();
+			}
+		}
+		
+		private function OnPositiveFeedbackTimerComplete(aEvent:TimerEvent):void
+		{
+			var sound:Sound = (new (Random.FromList(Asset.PositiveFeedbackSound) as Class)() as Sound);
+			sound.play();
+			
+			mValidateAnswerTimer.delay = sound.length;
 			mValidateAnswerTimer.reset();
 			mValidateAnswerTimer.start();
 		}
@@ -258,7 +290,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			if (mResult != Result.GREAT)
 			{
 				var lamp:Bitmap = new Asset.LampOffBitmap[mAnswer]();
-				lamp.x = ((mAnswer + 0.5) * (1024 / (mTemplate.AudioAssetList.length + 0.2))) - (lamp.width / 2);
+				lamp.x = ((mAnswer + 0.5) * (1024 / (mTemplate.AudioList.length + 0.2))) - (lamp.width / 2);
 				lamp.y = 360 - (lamp.height / 2);
 				addChildAt(lamp, getChildIndex(mLampList[mAnswer]));
 				removeChild(mLampList[mAnswer]);
@@ -270,6 +302,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			if (mResult == Result.GREAT)
 			{
 				(new Asset.CrescendoSound() as Sound).play();
+				mShowFeedbackTimer.delay = 700;
 				mShowFeedbackTimer.reset();
 				mShowFeedbackTimer.start();
 			}
@@ -307,8 +340,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 			
 			mLucuList[mTemplate.Answer].transform.colorTransform = new ColorTransform(1.3, 1.3, 1.3);
 			
-			(new mTemplate.AudioAssetList[mTemplate.Answer] as Sound).play();
+			var sound:Sound = (new Asset.SpotlightCorrectSound["_" + mTemplate.AudioList[mTemplate.Answer]]() as Sound);
+			sound.play();
 			
+			mShowFeedbackTimer.delay = sound.length;
 			mShowFeedbackTimer.reset();
 			mShowFeedbackTimer.start();
 		}
@@ -317,7 +352,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		{
 			mShowFeedbackTimer.reset();
 			
-			var offset:Number = 1024 / (mTemplate.AudioAssetList.length + 0.2);
+			var offset:Number = 1024 / (mTemplate.AudioList.length + 0.2);
 			for (var i:int = 0, endi:int = mLampList.length; i < endi; ++i)
 			{
 				if (i != mTemplate.Answer)
@@ -361,6 +396,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		private function OnTweenShowSuccessFeedback():void
 		{
 			removeChild(mBlocker);
+			
+			(new Asset.ClickToContinueSound() as Sound).play();
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void

@@ -10,6 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
@@ -143,7 +144,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 				example.addEventListener(MouseEvent.CLICK, OnClickExample);
 				example.filters = [new GlowFilter(FAMILY_COLOR[i], 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				addChild(example);
-				TweenLite.to(example, 0.5, { ease:Elastic.easeOut, delay:((i * 0.2) + 0.4), scaleX:1, scaleY:1, alpha:1 });
+				if (mTemplate.SkipInstruction)
+				{
+					TweenLite.to(example, 0.5, { ease:Elastic.easeOut, delay:(i * 0.2), scaleX:1, scaleY:1, alpha:1 } );
+				}
+				else
+				{
+					TweenLite.to(example, 0.5, { ease:Elastic.easeOut, delay:((i * 0.2) + 0.4), scaleX:1, scaleY:1, alpha:1 } );
+				}
 				mExampleList.push(example);
 			}
 			
@@ -166,7 +174,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
 				word.x = ((i % 4) * 180) + 110;
 				word.y = (Math.floor(i / 4) * 76) + 650 + 300;
-				TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 2.8), y:(word.y - 300) });
+				if (mTemplate.SkipInstruction)
+				{
+					TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(word.y - 300) } );
+				}
+				else
+				{
+					TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 2.8), y:(word.y - 300) } );
+				}
 				word.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWord);
 				word.addEventListener(MouseEvent.CLICK, OnClickWord);
 				word.EnableMouseOver();
@@ -203,11 +218,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			mBlocker.graphics.endFill();
 			addChild(mBlocker);
 			
-			var instruction:Sound = new Asset.FamilyInstructionSound() as Sound;
-			instruction.play();
-			var instructionTimer:Timer = new Timer(instruction.length, 1);
-			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
-			instructionTimer.start();
+			var startLessonTimer:Timer = new Timer((mTemplate.WordList.length * 100) + 500, 1);
+			if (!mTemplate.SkipInstruction)
+			{
+				var instruction:Sound = new Asset.FamilyInstructionSound() as Sound;
+				instruction.play();
+				startLessonTimer.delay = Math.max(startLessonTimer.delay, instruction.length);
+			}
+			startLessonTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
+			startLessonTimer.start();
 			
 			mDragTimer = new Timer(1000, 1);
 			mDragTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDragTimerComplete);
@@ -258,9 +277,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			super.Dispose();
 		}
 		
-		private function OnInstructionTimerComplete(aEvent:TimerEvent):void
+		private function OnStartLessonTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
 			
 			removeChild(mBlocker);
 		}
@@ -292,9 +311,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			
 			mSelectedWord = aEvent.currentTarget as CurvedBox;
 			mSelectedWord.DisableMouseOver();
-			//mSelectedWord.mouseEnabled = false;
-			//mSelectedWord.mouseChildren = false;
-			//mSelectedWord.removeEventListener(MouseEvent.CLICK, OnClickWord);
 			mSelectedWord.filters = [new GlowFilter(Palette.WRONG_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			
 			mSelectedWordOrigin = DisplayObjectUtil.GetPosition(mSelectedWord);
@@ -374,7 +390,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			removeEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
 			
-			//var familyIndex:int = mFamilyBoxList.indexOf(aEvent.currentTarget as Sprite);
 			var familyIndex:int = -1;
 			
 			var i:int, endi:int;
@@ -462,44 +477,23 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			
 			TweenLite.to(mSelectedWord, 0.5, { ease:Quad.easeOut, x:mouseX, y:mouseY });
 			
-			//if (mSelectedWord)
-			//{
-				//mSelectedWord.mouseEnabled = true;
-				//mSelectedWord.mouseChildren = true;
-				//mSelectedWord.EnableMouseOver();
-				//mSelectedWord.addEventListener(MouseEvent.CLICK, OnClickWord);
-				//mSelectedWord.filters = [];
-				//
-				//TweenLite.to(mSelectedWord, 0.7, { ease:Strong.easeOut, x:mSelectedWordOrigin.x, y:mSelectedWordOrigin.y });
-			//}
-			//else
-			//{
-				for (var i:int = 0, endi:int = mFamilyBoxList.length; i < endi; ++i)
+			for (var i:int = 0, endi:int = mFamilyBoxList.length; i < endi; ++i)
+			{
+				if (!mFamilyLockedList[i])
 				{
-					if (!mFamilyLockedList[i])
+					if (!mFamilyBoxList[i].hasEventListener(MouseEvent.CLICK))
 					{
-						if (!mFamilyBoxList[i].hasEventListener(MouseEvent.CLICK))
-						{
-							mFamilyBoxList[i].addEventListener(MouseEvent.CLICK, OnClickFamilyBox);
-						}
+						mFamilyBoxList[i].addEventListener(MouseEvent.CLICK, OnClickFamilyBox);
 					}
 				}
-			//}
+			}
 			
-			//(new Asset.ClickSound() as Sound).play();
-			
-			//mSelectedWord = aEvent.currentTarget as CurvedBox;
 			mSelectedWord.mouseEnabled = false;
 			mSelectedWord.mouseChildren = false;
-			//mSelectedWord.DisableMouseOver();
 			mSelectedWord.removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownWord);
 			mSelectedWord.removeEventListener(MouseEvent.CLICK, OnClickWord);
 			removeEventListener(MouseEvent.MOUSE_MOVE, OnDragMouseMove);
-			//mSelectedWord.filters = [new GlowFilter(Palette.WRONG_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			
-			//(new Asset.FamilyWordSound["_" + mSelectedWord.Label]() as Sound).play();
-			
-			//mSelectedWordOrigin = DisplayObjectUtil.GetPosition(mSelectedWord);
 			addChild(mSelectedWord);
 			addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 		}
@@ -643,7 +637,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			
 			if (newFamilyLock)
 			{
-				(new Asset.CrescendoSound() as Sound).play();
+				(new (Random.FromList(Asset.PositiveFeedbackSound) as Class)() as Sound).play();
+				
 				mEarFamilyTimer.start();
 			}
 			else
@@ -718,6 +713,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 		private function OnTweenShowSuccessFeedback():void
 		{
 			removeChild(mBlocker);
+			
+			(new Asset.ClickToContinueSound() as Sound).play();
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void

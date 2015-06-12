@@ -15,6 +15,14 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 				new <String>["snow", "goat", "scorch", "far"],
 				new <String>["low", "coat", "star", "torch", "glow", "jar", "boat", "porch"]));
 			
+			mStepList.push(new FamilySortTemplate(new <String>["ow", "oat", "orch", "ar"],
+				new <String>["snow", "goat", "scorch", "far"],
+				new <String>["low", "coat", "star", "torch", "glow", "jar", "boat", "porch"], true));
+			
+			mStepList.push(new FamilySortTemplate(new <String>["ow", "oat", "orch", "ar"],
+				new <String>["snow", "goat", "scorch", "far"],
+				new <String>["low", "coat", "star", "torch", "glow", "jar", "boat", "porch"], true));
+			
 			super();
 		}
 	}

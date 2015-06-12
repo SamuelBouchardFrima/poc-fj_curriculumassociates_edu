@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
@@ -80,7 +81,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			mCircuitList = new Vector.<Sprite>();
 			var circuit:Sprite;
 			var circuitBitmap:Bitmap;
-			for (i = 0, endi = mTemplate.PictureAssetList.length; i < endi; ++i)
+			for (i = 0, endi = mTemplate.AnswerList.length; i < endi; ++i)
 			{
 				circuit = new Sprite();
 				circuit.x = (i * 330) + 175;
@@ -101,7 +102,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
 				word.x = ((i % 3) * 220) + 190;
 				word.y = (Math.floor(i / 3) * 90) + 620 + 300;
-				TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 1.2), y:(word.y - 300) });
+				if (mTemplate.SkipInstruction)
+				{
+					TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(word.y - 300) });
+				}
+				else
+				{
+					TweenLite.to(word, 0.5, { ease:Strong.easeOut, delay:((i * 0.1) + 1.2), y:(word.y - 300) });
+				}
 				word.addEventListener(MouseEvent.CLICK, OnClickWord);
 				word.EnableMouseOver();
 				addChild(word);
@@ -124,11 +132,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			
 			mCurrentCircuit = 0;
 			
-			var instruction:Sound = new Asset.CircuitInstructionSound() as Sound;
-			instruction.play();
-			var instructionTimer:Timer = new Timer(instruction.length, 1);
-			instructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
-			instructionTimer.start();
+			var startLessonTimer:Timer = new Timer((mTemplate.WordList.length * 100) + 500, 1);
+			if (!mTemplate.SkipInstruction)
+			{
+				var instruction:Sound = new Asset.CircuitInstructionSound() as Sound;
+				instruction.play();
+				startLessonTimer.delay = Math.max(startLessonTimer.delay, instruction.length);
+			}
+			startLessonTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
+			startLessonTimer.start();
 			
 			mEarWordTimer = new Timer(300, 1);
 			mEarWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarWordTimerComplete);
@@ -180,7 +192,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			picture.x = 5;
 			picture.y = 30;
 			picture.scaleX = picture.scaleY = 0.01;
-			var pictureBitmap:Bitmap = new mTemplate.PictureAssetList[mCurrentCircuit]();
+			var pictureBitmap:Bitmap = new Asset.CircuitBitmap["_" + mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]]]();
 			pictureBitmap.smoothing = true;
 			pictureBitmap.x = -pictureBitmap.width / 2;
 			pictureBitmap.y = -pictureBitmap.height / 2;
@@ -214,7 +226,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			addChild(mSlot);
 			TweenLite.to(mSlot, 0.5, { ease:Strong.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 } );
 			
-			(new mTemplate.AudioAssetList[mTemplate.AnswerList[mCurrentCircuit]]() as Sound).play();
+			(new Asset.CircuitSound["_" + mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]]]() as Sound).play();
 			
 			removeChild(mBlocker);
 		}
@@ -229,9 +241,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			TweenLite.to(mSlot, 1, { ease:Quad.easeOut, onComplete:OnTweenGlowSlotStronger, alpha:1 });
 		}
 		
-		private function OnInstructionTimerComplete(aEvent:TimerEvent):void
+		private function OnStartLessonTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnInstructionTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnStartLessonTimerComplete);
 			
 			ShowPicture();
 		}
@@ -267,11 +279,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			var index:int = mTemplate.DistractorList.indexOf(mWordList[mAnswer].Label);
 			if (index > -1)
 			{
-				(new mTemplate.DistractorAudioList[index]() as Sound).play();
+				(new Asset.CircuitSound["_" + mTemplate.DistractorList[index]]() as Sound).play();
 			}
 			else
 			{
-				(new mTemplate.AudioAssetList[mAnswer]() as Sound).play();
+				(new Asset.CircuitSound["_" + mTemplate.WordList[mAnswer]]() as Sound).play();
 			}
 		}
 		
@@ -287,7 +299,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			var btnColor:int;
 			if (mAnswer == mTemplate.AnswerList[mCurrentCircuit])
 			{
-				(new Asset.CrescendoSound() as Sound).play();
+				//(new Asset.CrescendoSound() as Sound).play();
+				
+				(new (Random.FromList(Asset.PositiveFeedbackSound) as Class)() as Sound).play();
 				
 				TweenLite.to(answerBtn, 0.5, { onComplete:OnTweenShowAnswer, onCompleteParams:[answerBtn] });
 				
@@ -306,7 +320,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				var picture:Sprite = new Sprite();
 				picture.x = 5;
 				picture.y = 30;
-				var pictureBitmap:Bitmap = new mTemplate.PictureAssetList[mCurrentCircuit]();
+				var pictureBitmap:Bitmap = new Asset.CircuitBitmap["_" + mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]]]();
 				pictureBitmap.smoothing = true;
 				pictureBitmap.x = -pictureBitmap.width / 2;
 				pictureBitmap.y = -pictureBitmap.height / 2;
@@ -369,7 +383,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		{
 			mEarCorrectWordTimer.reset();
 			
-			(new mTemplate.AudioAssetList[mTemplate.AnswerList[mCurrentCircuit]]() as Sound).play();
+			(new Asset.CircuitSound["_" + mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]]]() as Sound).play();
 		}
 		
 		private function OnTweenHideWrongAnswer(aWrongAnswerBtn:CurvedBox):void
@@ -401,7 +415,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			}
 			
 			++mCurrentCircuit;
-			if (mCurrentCircuit < mTemplate.PictureAssetList.length)
+			if (mCurrentCircuit < mTemplate.AnswerList.length)
 			{
 				ShowPicture();
 			}
@@ -421,20 +435,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				{
 					mWordList[i].BoxColor = Palette.DIALOG_BOX;
 					mWordList[i].filters = [];
-					if (!contains(mWordList[i]))
-					{
-						if (i == mTemplate.AnswerList[mCurrentCircuit - 1])
-						{
-							//mWordList[i].Content = new BoxLabel(mTemplate.DistractorList[mCurrentCircuit - 1], 52.5,
-								//Palette.DIALOG_CONTENT);
-						}
-						else
-						{
-							mWordList[i].y = (Math.floor(i / 3) * 90) + 620 + 300;
-							TweenLite.to(mWordList[i], 0.5, { ease:Strong.easeOut, delay:(i * 0.1), y:(mWordList[i].y - 300) });
-							addChild(mWordList[i]);
-						}
-					}
 				}
 				
 				mSuccessFeedback = new Sprite();
@@ -484,10 +484,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		{
 			mSuccessFeedbackAudioTimer.reset();
 			
+			var sound:Sound;
 			switch (mResult)
 			{
 				case Result.GREAT:
-					(new Asset.CrescendoSound() as Sound).play();
+					sound = (new Asset.CrescendoSound() as Sound);
 					
 					var connection:Bitmap = new Asset.CircuitConnectionOn();
 					connection.x = 155;
@@ -497,17 +498,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 					mCircuitConnection = connection;
 					break;
 				case Result.VALID:
-					(new Asset.ValidationSound() as Sound).play();
+					sound = (new Asset.ValidationSound() as Sound);
 					break;
 				case Result.WRONG:
-					(new Asset.ErrorSound() as Sound).play();
+					sound = (new Asset.ErrorSound() as Sound);
 					break;
 			}
+			sound.play();
 		}
 		
 		private function OnTweenShowSuccessFeedback():void
 		{
 			removeChild(mBlocker);
+			
+			(new Asset.ClickToContinueSound() as Sound).play();
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
