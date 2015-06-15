@@ -27,7 +27,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 	
 	public class LessonPOC extends Sprite
 	{
-		private static const VERSION:String = "v2.0";
+		private static const VERSION:String = "v2.1";
 		
 		private var mContainer:Sprite;
 		private var mQuestList:Vector.<Class>;
@@ -76,6 +76,10 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 			//mQuestList = new <Class>[LessonPOCSpotlightQuest, LessonPOCFlashlightQuest, LessonPOCCircuitQuest, LessonPOCFamilySortQuest];
 			//mQuestNameList = new <String>["LISTEN UP", "FLASHLIGHT", "MAKE A CIRCUIT", "FAMILY"];
 			//mQuestTitleAudioList = new <Class>[Asset.SpotlightTitleSound, Asset.FlashlightTitleSound, Asset.CircuitTitleSound, Asset.FamilySortTitleSound];
+			
+			//mQuestList = new <Class>[LessonPOCFamilySortQuest];
+			//mQuestNameList = new <String>["FAMILY"];
+			//mQuestTitleAudioList = new <Class>[Asset.FamilySortTitleSound];
 			
 			var i:int, endi:int;
 			

@@ -208,9 +208,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mSuccessFeedback.addChild(successLabel);
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
-			if (mSubmitedWord)
+			if (mResult == Result.GREAT)
 			{
-				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				if (mSubmitedWord)
+				{
+					TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				}
 			}
 			if (mSubmissionHighlight)
 			{
@@ -423,10 +426,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			mCraftingTray.visible = false;
 			
-			// TODO:	don't send submited word to answer field if it is valid but incorrect
-			
+			var target:Point = DisplayObjectUtil.GetPosition(mAnswerField);
+			var scale:Number = 1;
+			if (mResult == Result.VALID)
+			{
+				target = new Point(512, 230);
+				scale = 1.5;
+			}
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
-				x:mAnswerField.x, y:mAnswerField.y, scaleX:1 });
+				x:target.x, y:target.y, scaleX:scale, scaleY:scale });
 		}
 		
 		private function OnEnterFrameSubmissionHighlight(aEvent:Event):void
@@ -436,9 +444,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnTweenSendSubmitedWord():void
 		{
-			var answer:String = mCraftingTray.AssembleWord();
-			answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-			mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
+			if (mResult == Result.GREAT)
+			{
+				var answer:String = mCraftingTray.AssembleWord();
+				answer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
+			}
 			
 			ShowSuccessFeedback();
 		}
@@ -469,6 +480,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
 		{
+			if (mResult == Result.VALID)
+			{
+				if (mSubmitedWord)
+				{
+					TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				}
+			}
+			
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 });
 			
@@ -477,6 +496,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				mCraftingTray.Clear();
 				mToolTray.Clear(mTemplate.LetterList);
 				mCraftingTray.visible = true;
+				
+				UpdateAnswer();
 			}
 		}
 		

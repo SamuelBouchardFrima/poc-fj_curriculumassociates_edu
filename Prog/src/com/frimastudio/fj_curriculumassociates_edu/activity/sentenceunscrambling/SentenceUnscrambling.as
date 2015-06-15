@@ -471,8 +471,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSubmitedSentence.x = mCraftingTray.Center;
 			mSubmitedSentence.y = mCraftingTray.y;
 			mSubmitedSentence.width = mCraftingTray.width;
-			var target:Point = new Point(mPicture.x + (mPicture.width / 2),
-				mPicture.y + mPicture.height - (mSubmitedSentence.height / 2));
+			
+			var target:Point = new Point(512, 288);
+			//var target:Point = new Point(mPicture.x + (mPicture.width / 2),
+				//mPicture.y + mPicture.height - (mSubmitedSentence.height / 2));
 			if (mResult == Result.GREAT)
 			{
 				mSubmissionHighlight = new Sprite();

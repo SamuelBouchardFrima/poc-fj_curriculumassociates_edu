@@ -76,6 +76,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var FlashlightBitmap:Class;
 		[Embed(source = "../../../../art/lesson/newCircuitLucu.png")]
 		public static var NewCircuitLucuBitmap:Class;
+		[Embed(source = "../../../../art/lesson/btncontinue.png")]
+		public static var ContinueBtnLucuBitmap:Class;
 		
 		[Embed(source = "../../../../art/lesson/newLucu_1.png")]
 		private static var NewLucu1:Class;

@@ -439,38 +439,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 				
 				mSuccessFeedback = new Sprite();
 				mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-				mSuccessFeedback.graphics.beginFill(0x000000, 0);
+				mSuccessFeedback.graphics.beginFill(0x000000, 0.7);
 				mSuccessFeedback.graphics.drawRect(0, 0, 1024, 768);
 				mSuccessFeedback.graphics.endFill();
 				mSuccessFeedback.alpha = 0;
-				var successLabel:TextField = new TextField();
-				successLabel.autoSize = TextFieldAutoSize.CENTER;
-				successLabel.selectable = false;
-				successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
-				switch (mResult)
-				{
-					case Result.GREAT:
-						successLabel.text = "Great!\nClick to continue.";
-						break;
-					case Result.VALID:
-						successLabel.text = "Good!\nClick to continue.";
-						break;
-					case Result.WRONG:
-					default:
-						successLabel.text = "Almost!\nClick to continue.";
-						break;
-				}
-				successLabel.embedFonts = true;
-				successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-					null, null, null, null, null, "center"));
-				successLabel.x = 512 - (successLabel.width / 2);
-				successLabel.y = 384 - (successLabel.height / 2);
-				var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
-				successBox.alpha = 0.7;
+				var continueBtn:Bitmap = new Asset.ContinueBtnLucuBitmap() as Bitmap;
+				continueBtn.x = 512 - (continueBtn.width / 2);
+				continueBtn.y = 384 - (continueBtn.height / 2);
+				var successBox:CurvedBox = new CurvedBox(new Point(continueBtn.width, continueBtn.height), 0xCCCCCC);
 				successBox.x = 512;
 				successBox.y = 384;
 				mSuccessFeedback.addChild(successBox);
-				mSuccessFeedback.addChild(successLabel);
+				mSuccessFeedback.addChild(continueBtn);
 				addChild(mSuccessFeedback);
 				TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, delay:1.2,
 					onComplete:OnTweenShowSuccessFeedback, alpha:1 });

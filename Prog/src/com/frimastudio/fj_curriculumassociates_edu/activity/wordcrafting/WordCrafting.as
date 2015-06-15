@@ -93,6 +93,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mMini.addEventListener(MouseEvent.CLICK, OnClickMini);
 			addChild(mMini);
 			
+			mMiniSelected = true;
+			mMini.filters = [new GlowFilter(Palette.GREAT_BTN, 1, 4, 4, 2, BitmapFilterQuality.HIGH)];
+			TweenLite.to(mMini, 0.2, { ease:Quad.easeOut, onComplete:OnTweenSquashMini, overwrite:true,
+				scaleX:1.2, scaleY:0.8, y:518 + (mMini.height / (8 * mMini.scaleY)) });
+			
 			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			toolTrayBox.x = 512;
 			toolTrayBox.y = 723;
@@ -253,9 +258,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mSuccessFeedback.addChild(successLabel);
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
-			if (mSubmitedWord)
+			if (mResult == Result.GREAT)
 			{
-				TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				if (mSubmitedWord)
+				{
+					TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				}
 			}
 			if (mSubmissionHighlight)
 			{
@@ -341,23 +349,24 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 					}
 					break;
 				case "felt":
-					switch (Random.RangeInt(0, 2))
-					{
-						case 0:
+					//switch (Random.RangeInt(0, 2))
+					//{
+						//case 0:
 							pieceLabelList = new <String>["f", "e", "l", "t"];
-							break;
-						case 1:
-							pieceLabelList = new <String>["f", "e", "lt"];
-							break;
-						case 2:
-							pieceLabelList = new <String>["f", "elt"];
-							break;
-						default:
-							break;
-					}
+							//break;
+						//case 1:
+							//pieceLabelList = new <String>["f", "e", "lt"];
+							//break;
+						//case 2:
+							//pieceLabelList = new <String>["f", "elt"];
+							//break;
+						//default:
+							//break;
+					//}
 					break;
 				case "hall":
-					switch (Random.RangeInt(0, 2))
+					//switch (Random.RangeInt(0, 2))
+					switch (Random.RangeInt(0, 1))
 					{
 						case 0:
 							pieceLabelList = new <String>["h", "a", "l", "l"];
@@ -365,25 +374,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 						case 1:
 							pieceLabelList = new <String>["h", "a", "ll"];
 							break;
-						case 2:
-							pieceLabelList = new <String>["h", "all"];
-							break;
+						//case 2:
+							//pieceLabelList = new <String>["h", "all"];
+							//break;
 						default:
 							break;
 					}
 					break;
 				case "fair":
-					switch (Random.RangeInt(0, 1))
-					{
-						case 0:
+					//switch (Random.RangeInt(0, 1))
+					//{
+						//case 0:
 							pieceLabelList = new <String>["f", "a", "i", "r"];
-							break;
-						case 1:
-							pieceLabelList = new <String>["f", "a", "ir"];
-							break;
-						default:
-							break;
-					}
+							//break;
+						//case 1:
+							//pieceLabelList = new <String>["f", "a", "ir"];
+							//break;
+						//default:
+							//break;
+					//}
 					break;
 				default:
 					break;
@@ -417,7 +426,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addChild(bubble);
 				addChild(piece);
 				mFloatPieceList.push(piece);
-				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(485, 885), y:Random.Range(268, 408) });
+				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(455, 950), y:Random.Range(260, 415) });
 			}
 			
 			mFloatPieceList.splice(mFloatPieceList.indexOf(aPiece), 1);
@@ -454,7 +463,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addChild(bubble);
 				addChild(piece);
 				mFloatPieceList.push(piece);
-				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(485, 885), y:Random.Range(268, 408) });
+				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(455, 950), y:Random.Range(260, 415) });
 			}
 			
 			if (Asset.WordSound["_" + aEvent.EventPiece.Label])
@@ -535,7 +544,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addChild(bubble);
 				addChild(piece);
 				mFloatPieceList.push(piece);
-				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(485, 885), y:Random.Range(268, 408) });
+				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(455, 950), y:Random.Range(260, 415) });
 				
 				mDraggedPiece.Dispose();
 				removeChild(mDraggedPiece);
@@ -705,10 +714,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			mCraftingTray.visible = false;
 			
-			// TODO:	don't send submited word to answer field if it is valid but incorrect
-			
+			var target:Point = DisplayObjectUtil.GetPosition(mAnswerField);
+			var scale:Number = 1;
+			if (mResult == Result.VALID)
+			{
+				target = new Point(512, 230);
+				scale = 1.5;
+			}
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
-				x:mAnswerField.x, y:mAnswerField.y, scaleX:1 });
+				x:target.x, y:target.y, scaleX:scale, scaleY:scale });
 		}
 		
 		private function OnEnterFrameSubmissionHighlight(aEvent:Event):void
@@ -718,7 +732,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function OnTweenSendSubmitedWord():void
 		{
-			mAnswerField.Content = new BoxLabel(mCraftingTray.AssembleWord(), 72, mResult.Color, true);
+			if (mResult == Result.GREAT)
+			{
+				mAnswerField.Content = new BoxLabel(mCraftingTray.AssembleWord(), 72, mResult.Color, true);
+			}
 			
 			ShowSuccessFeedback();
 		}
@@ -749,6 +766,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
 		{
+			if (mResult == Result.VALID)
+			{
+				if (mSubmitedWord)
+				{
+					TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
+				}
+			}
+			
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 } );
 			
@@ -756,6 +781,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			{
 				mCraftingTray.Clear();
 				mCraftingTray.visible = true;
+				
+				UpdateAnswer();
 			}
 		}
 		

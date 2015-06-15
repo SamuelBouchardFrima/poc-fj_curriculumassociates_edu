@@ -59,8 +59,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			addChild(mDialogBox);
 			
 			mContinueBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 12);
-			mContinueBtn.x = 982;
+				new BoxLabel("Continue", 48, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
+			mContinueBtn.x = 1024 - (mContinueBtn.width / 2) - 10;
 			mContinueBtn.y = 633;
 		}
 		

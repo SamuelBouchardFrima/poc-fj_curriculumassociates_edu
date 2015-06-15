@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	import com.frimastudio.fj_curriculumassociates_edu.ui.UIButton;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
 	import com.greensock.easing.Elastic;
+	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -31,14 +32,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		public function set Position(aValue:Point):void
 		{
 			mTemporaryPosition = mPosition = aValue;
-			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mPosition.x, y:mPosition.y });
+			TweenLite.to(this, 0.8, { overwrite:true, ease:Elastic.easeOut, x:mPosition.x, y:mPosition.y });
 		}
 		
 		public function get TemporaryPosition():Point			{	return mTemporaryPosition;	}
 		public function set TemporaryPosition(aValue:Point):void
 		{
 			mTemporaryPosition = aValue;
-			TweenLite.to(this, 0.5, { overwrite:true, ease:Elastic.easeOut, x:mTemporaryPosition.x, y:mTemporaryPosition.y });
+			TweenLite.to(this, 0.8, { overwrite:true, ease:Elastic.easeOut, x:mTemporaryPosition.x, y:mTemporaryPosition.y });
 		}
 		
 		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Point = null, aColor:int = 0xFFFFFF)
@@ -128,8 +129,15 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			mMouseDownOrigin = MouseUtil.PositionRelativeTo(this);
 			
+			TweenLite.to(this, 0.1, { ease:Strong.easeOut, onComplete:OnTweenSquash, scaleX:1.2, scaleY:0.7 });
+			
 			mDragAutostartTimer.reset();
 			mDragAutostartTimer.start();
+		}
+		
+		private function OnTweenSquash():void
+		{
+			TweenLite.to(this, 0.3, { ease:Elastic.easeOut, scaleX:1, scaleY:1 });
 		}
 		
 		private function OnDragAutostartTimerComplete(aEvent:TimerEvent):void

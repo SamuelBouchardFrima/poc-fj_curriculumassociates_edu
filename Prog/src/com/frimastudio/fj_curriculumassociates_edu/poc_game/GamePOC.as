@@ -7,6 +7,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	
 	public class GamePOC extends Sprite
 	{
+		private static const VERSION:String = "v0.5";
+		
 		public function GamePOC():void
 		{
 			stage ? Init() : addEventListener(Event.ADDED_TO_STAGE, Init);
@@ -23,7 +25,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			addChild(quest);
 			
 			var version:TextField = new TextField();
-			version.text = "v0.5";
+			version.text = VERSION;
 			version.selectable = false;
 			version.x = 5;
 			version.y = 5;
