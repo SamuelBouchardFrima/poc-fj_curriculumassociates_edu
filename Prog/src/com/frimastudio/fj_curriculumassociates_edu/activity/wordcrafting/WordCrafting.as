@@ -466,17 +466,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(455, 950), y:Random.Range(260, 415) });
 			}
 			
-			if (Asset.WordSound["_" + aEvent.EventPiece.Label])
-			{
-				(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
-			}
-			else if (Asset.LetterSound["_" + aEvent.EventPiece.Label])
+			if (Asset.LetterSound["_" + aEvent.EventPiece.Label])
 			{
 				(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
 			}
 			else if (Asset.ChunkSound["_" + aEvent.EventPiece.Label])
 			{
 				(new Asset.ChunkSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			}
+			else if (Asset.WordSound["_" + aEvent.EventPiece.Label])
+			{
+				(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
 			}
 			
 			mCraftingTray.Remove(aEvent.EventPiece);
@@ -558,17 +558,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			piece.removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
 			
-			if (Asset.WordSound["_" + piece.Label])
-			{
-				(new Asset.WordSound["_" + piece.Label]() as Sound).play();
-			}
-			else if (Asset.LetterSound["_" + piece.Label])
+			if (Asset.LetterSound["_" + piece.Label])
 			{
 				(new Asset.LetterSound["_" + piece.Label]() as Sound).play();
 			}
 			else if (Asset.ChunkSound["_" + piece.Label])
 			{
 				(new Asset.ChunkSound["_" + piece.Label]() as Sound).play();
+			}
+			else if (Asset.WordSound["_" + piece.Label])
+			{
+				(new Asset.WordSound["_" + piece.Label]() as Sound).play();
 			}
 			
 			mCraftingTray.InsertLast(piece.Label, MouseUtil.PositionRelativeTo(mCraftingTray));

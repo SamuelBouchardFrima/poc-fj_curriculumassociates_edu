@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	
 	public class Dialog extends QuestStep
 	{
@@ -58,6 +59,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);
 			addChild(mDialogBox);
 			
+			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
+			
 			mContinueBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
 				new BoxLabel("Continue", 48, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
 			mContinueBtn.x = 1024 - (mContinueBtn.width / 2) - 10;
@@ -93,6 +96,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			mDialogBox.Content = new BoxLabel(dialog, 60, Palette.DIALOG_CONTENT);
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
+			
+			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
 		}
 		
 		private function OnClickContinueBtn(aEvent:MouseEvent):void

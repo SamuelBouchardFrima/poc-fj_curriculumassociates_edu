@@ -7,6 +7,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mWordList:Vector.<String>;
 		private var mAnswer:String;
 		private var mRequest:String;
+		private var mRequestAudio:Class;
 		private var mNPCAsset:Class;
 		private var mPictureAsset:Class;
 		
@@ -25,6 +26,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			return mRequest;
 		}
 		
+		public function get RequestAudio():Class
+		{
+			return mRequestAudio;
+		}
+		
 		public function get NPCAsset():Class
 		{
 			return mNPCAsset;
@@ -35,8 +41,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			return mPictureAsset;
 		}
 		
-		public function SentenceUnscramblingTemplate(aWordList:Vector.<String>, aAnswer:String, aRequest:String, aNPCAsset:Class,
-			aPictureAsset:Class)
+		public function SentenceUnscramblingTemplate(aWordList:Vector.<String>, aAnswer:String, aRequest:String, aRequestAudio:Class,
+			aNPCAsset:Class, aPictureAsset:Class)
 		{
 			super();
 			
@@ -45,6 +51,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mWordList = aWordList;
 			mAnswer = aAnswer;
 			mRequest = aRequest;
+			mRequestAudio = aRequestAudio;
 			mNPCAsset = aNPCAsset;
 			mPictureAsset = aPictureAsset;
 		}

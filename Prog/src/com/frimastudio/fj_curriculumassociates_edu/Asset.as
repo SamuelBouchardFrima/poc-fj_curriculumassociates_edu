@@ -247,35 +247,35 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var WordSound:Object = { _hill:Hill, _felt:Felt, _hall:Hall, _clam:Clam, _leaf:Leaf, _surf:Surf,
 			_fair:Fair, _a:WordA, _field:Field, _is:Is, _on:On, _sun:Sun, _the:The };
 		
-		[Embed(source = "../../../../audio/letters/h.mp3")]
+		[Embed(source = "../../../../audio/letters/new/h.mp3")]
 		private static var H:Class;
-		[Embed(source = "../../../../audio/letters/i.mp3")]
+		[Embed(source = "../../../../audio/letters/new/i.mp3")]
 		private static var I:Class;
-		[Embed(source = "../../../../audio/letters/l.mp3")]
+		[Embed(source = "../../../../audio/letters/new/l.mp3")]
 		private static var L:Class;
-		[Embed(source = "../../../../audio/letters/f.mp3")]
+		[Embed(source = "../../../../audio/letters/new/f.mp3")]
 		private static var F:Class;
-		[Embed(source = "../../../../audio/letters/e.mp3")]
+		[Embed(source = "../../../../audio/letters/new/e.mp3")]
 		private static var E:Class;
-		[Embed(source = "../../../../audio/letters/t.mp3")]
+		[Embed(source = "../../../../audio/letters/new/t.mp3")]
 		private static var T:Class;
-		[Embed(source = "../../../../audio/letters/a.mp3")]
+		[Embed(source = "../../../../audio/letters/new/a.mp3")]
 		private static var A:Class;
-		[Embed(source = "../../../../audio/letters/c.mp3")]
+		[Embed(source = "../../../../audio/letters/new/c.mp3")]
 		private static var C:Class;
-		[Embed(source = "../../../../audio/letters/m.mp3")]
+		[Embed(source = "../../../../audio/letters/new/m.mp3")]
 		private static var M:Class;
-		[Embed(source = "../../../../audio/letters/s.mp3")]
+		[Embed(source = "../../../../audio/letters/new/s.mp3")]
 		private static var S:Class;
-		[Embed(source = "../../../../audio/letters/u.mp3")]
+		[Embed(source = "../../../../audio/letters/new/u.mp3")]
 		private static var U:Class;
-		[Embed(source = "../../../../audio/letters/r.mp3")]
+		[Embed(source = "../../../../audio/letters/new/r.mp3")]
 		private static var R:Class;
-		[Embed(source = "../../../../audio/letters/p.mp3")]
+		[Embed(source = "../../../../audio/letters/new/p.mp3")]
 		private static var P:Class;
-		[Embed(source = "../../../../audio/letters/o.mp3")]
+		[Embed(source = "../../../../audio/letters/new/o.mp3")]
 		private static var O:Class;
-		[Embed(source = "../../../../audio/letters/g.mp3")]
+		[Embed(source = "../../../../audio/letters/new/g.mp3")]
 		private static var G:Class;
 		public static var LetterSound:Object = { _h:H, _i:I, _l:L, _f:F, _e:E, _t:T, _a:A, _c:C, _m:M, _s:S, _u:U, _r:R,
 			_p:P, _o:O, _g:G };
@@ -304,6 +304,32 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Ir:Class;
 		public static var ChunkSound:Object = { _ill:Ill, _ll:Ll, _lt:Lt, _elt:Elt, _all:All, _cl:Cl, _am:Am, _af:Af,
 			_rf:Rf, _urf:Urf, _ir:Ir };
+		
+		[Embed(source = "../../../../audio/game/dialog_1-1.mp3")]
+		private static var Dialog1_1:Class;
+		[Embed(source = "../../../../audio/game/dialog_1-2.mp3")]
+		private static var Dialog1_2:Class;
+		[Embed(source = "../../../../audio/game/dialog_1-3.mp3")]
+		private static var Dialog1_3:Class;
+		[Embed(source = "../../../../audio/game/dialog_2-1.mp3")]
+		private static var Dialog2_1:Class;
+		[Embed(source = "../../../../audio/game/dialog_2-2.mp3")]
+		private static var Dialog2_2:Class;
+		[Embed(source = "../../../../audio/game/dialog_2-3.mp3")]
+		private static var Dialog2_3:Class;
+		[Embed(source = "../../../../audio/game/dialog_3-1.mp3")]
+		private static var Dialog3_1:Class;
+		[Embed(source = "../../../../audio/game/dialog_3-2.mp3")]
+		private static var Dialog3_2:Class;
+		[Embed(source = "../../../../audio/game/dialog_4-1.mp3")]
+		private static var Dialog4_1:Class;
+		[Embed(source = "../../../../audio/game/dialog_4-2.mp3")]
+		private static var Dialog4_2:Class;
+		public static var DialogSound:Object = [ Dialog1_1, Dialog1_2, Dialog1_3, Dialog2_1, Dialog2_2, Dialog2_3,
+			Dialog3_1, Dialog3_2, Dialog4_1, Dialog4_2 ];
+		
+		[Embed(source = "../../../../audio/game/whereIsTheField.mp3")]
+		public static var WhereIsTheFieldSound:Class;
 		
 		[Embed(source = "../../../../audio/lesson/thatSIt.mp3")]
 		private static var ThatSIt:Class;

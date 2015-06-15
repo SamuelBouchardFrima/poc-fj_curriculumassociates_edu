@@ -197,6 +197,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
+			(new mTemplate.RequestAudio() as Sound).play();
+			
 			//var answerFieldBoundary:Rectangle = mDialogBox.BoundaryOfLabelSubString(answerFieldString);
 			//mAnswerField = new CurvedBox(answerFieldBoundary.size, Palette.ANSWER_FIELD, null, 12);
 			//DisplayObjectUtil.SetPosition(mAnswerField,
