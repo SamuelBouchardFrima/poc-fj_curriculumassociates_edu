@@ -10,6 +10,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
+	import com.greensock.easing.Elastic;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
@@ -46,17 +48,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			craftingTrayBox.y = 633;
 			addChild(craftingTrayBox);
 			
-			var dialog:String = mTemplate.DialogList[mStep];
-			if (mTemplate.DialogList.length > 1)
-			{
-				dialog += "\n...";
-			}
-			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(dialog, 60,
+			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.DialogList[mStep], 60,
 				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
 			mDialogBox.x = 640;
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
-			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);
 			addChild(mDialogBox);
 			
 			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
@@ -65,44 +60,32 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				new BoxLabel("Continue", 48, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
 			mContinueBtn.x = 1024 - (mContinueBtn.width / 2) - 10;
 			mContinueBtn.y = 633;
+			mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickContinueBtn);
+			addChild(mContinueBtn);
 		}
 		
 		override public function Dispose():void
 		{
-			mDialogBox.removeEventListener(MouseEvent.CLICK, OnClickDialogBox);
-			
 			mContinueBtn.removeEventListener(MouseEvent.CLICK, OnClickContinueBtn);
 			
 			super.Dispose();
 		}
 		
-		private function OnClickDialogBox(aEvent:MouseEvent):void
+		private function OnClickContinueBtn(aEvent:MouseEvent):void
 		{
 			++mStep;
 			
-			var dialog:String = mTemplate.DialogList[mStep];
-			
-			if (mStep < mTemplate.DialogList.length - 1)
+			if (mStep < mTemplate.DialogList.length)
 			{
-				dialog += "\n...";
+				mDialogBox.Content = new BoxLabel(mTemplate.DialogList[mStep], 60, Palette.DIALOG_CONTENT);
+				mDialogBox.y = 50 + (mDialogBox.height / 2);
+				
+				(new mTemplate.DialogAudioList[mStep]() as Sound).play();
 			}
 			else
 			{
-				mDialogBox.removeEventListener(MouseEvent.CLICK, OnClickDialogBox);
-				
-				mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickContinueBtn);
-				addChild(mContinueBtn);
+				dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 			}
-			
-			mDialogBox.Content = new BoxLabel(dialog, 60, Palette.DIALOG_CONTENT);
-			mDialogBox.y = 50 + (mDialogBox.height / 2);
-			
-			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
-		}
-		
-		private function OnClickContinueBtn(aEvent:MouseEvent):void
-		{
-			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}
 	}
 }

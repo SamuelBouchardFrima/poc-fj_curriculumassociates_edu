@@ -43,6 +43,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	{
 		private var mTemplate:WordUnscramblingTemplate;
 		private var mNPC:Bitmap;
+		private var mCraftingTrayField:CurvedBox;
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
 		private var mSubmitBtn:CurvedBox;
@@ -57,6 +58,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
+		private var mTutorialStep:int;
+		private var mTutorialTimer:Timer;
 		
 		public function WordUnscrambling(aTemplate:WordUnscramblingTemplate)
 		{
@@ -79,10 +82,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			craftingTrayBox.y = 633;
 			addChild(craftingTrayBox);
 			
-			var craftingTrayField:CurvedBox = new CurvedBox(new Point(910, 76), Palette.CRAFTING_FIELD);
-			craftingTrayField.x = 482;
-			craftingTrayField.y = 633;
-			addChild(craftingTrayField);
+			mCraftingTrayField = new CurvedBox(new Point(910, 76), Palette.CRAFTING_FIELD);
+			mCraftingTrayField.x = 482;
+			mCraftingTrayField.y = 633;
+			addChild(mCraftingTrayField);
 			
 			var craftingIcon:Bitmap = new Asset.IconWriteBitmap();
 			craftingIcon.x = 40;
@@ -139,6 +142,24 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mBlocker.graphics.endFill();
 			
 			UpdateAnswer();
+			
+			mTutorialTimer = new Timer(3000);
+			mTutorialTimer.addEventListener(TimerEvent.TIMER, OnTutorialTimer);
+			mTutorialTimer.start();
+		}
+		
+		override public function Dispose():void
+		{
+			mSubmitBtn.removeEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
+			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
+			
+			mTutorialTimer.reset();
+			mTutorialTimer.removeEventListener(TimerEvent.TIMER, OnTutorialTimer);
+			
+			mToolTray.Dispose();
+			mCraftingTray.Dispose();
+			
+			super.Dispose();
 		}
 		
 		private function UpdateAnswer():void
@@ -221,25 +242,35 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			}
 		}
 		
+		private function OnTutorialTimer(aEvent:TimerEvent):void
+		{
+			switch (mTutorialStep)
+			{
+				case 0:
+					mToolTray.CallAttention(mTemplate.Answer.charAt().toLowerCase());
+					break;
+				default:
+					mTutorialTimer.reset();
+					break;
+			}
+		}
+		
 		private function OnPieceFreedToolTray(aEvent:PieceTrayEvent):void
 		{
-			if (aEvent.Dragged)
+			mTutorialStep = Math.max(mTutorialStep, 1);
+			if (mTutorialStep >= 1)
 			{
-				mPreviousPosition = aEvent.EventPiece.NextPiece;
-				
-				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
-				mDraggedPiece.y = mToolTray.y;
-				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-				addChild(mDraggedPiece);
-				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+				mCraftingTrayField.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
 			}
-			else
-			{
-				mCraftingTray.InsertLast(aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(mCraftingTray));
-				
-				UpdateAnswer();
-			}
+			
+			mPreviousPosition = aEvent.EventPiece.NextPiece;
+			
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			mDraggedPiece.y = mToolTray.y;
+			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			addChild(mDraggedPiece);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
 			(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
 			
@@ -248,23 +279,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnPieceFreedCraftingTray(aEvent:PieceTrayEvent):void
 		{
-			if (aEvent.Dragged)
+			if (mTutorialStep >= 1)
 			{
-				mPreviousPosition = aEvent.EventPiece.NextPiece;
-				
-				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
-				mDraggedPiece.y = mCraftingTray.y;
-				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-				addChild(mDraggedPiece);
-				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
-			}
-			else
-			{
-				mToolTray.InsertLast(aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(mToolTray));
+				mCraftingTrayField.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
 			}
 			
-			(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			mPreviousPosition = aEvent.EventPiece.NextPiece;
+			
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			mDraggedPiece.y = mCraftingTray.y;
+			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			addChild(mDraggedPiece);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
 			mCraftingTray.Remove(aEvent.EventPiece);
 			
@@ -289,6 +316,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnMouseUpStage(aEvent:MouseEvent):void
 		{
+			mCraftingTrayField.filters = [];
+			
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
@@ -319,6 +348,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function OnPieceCapturedCraftingTray(aEvent:PieceTrayEvent):void
 		{
+			mTutorialStep = Math.max(mTutorialStep, 2);
+			
 			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedCraftingTray);
 			
 			removeChild(aEvent.EventPiece);
@@ -420,7 +451,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				addChild(mSubmissionHighlight);
 				
 				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:mAnswerField.x, y:mAnswerField.y,
-					scaleX:1, scaleY:1 });
+					scaleX:1, scaleY:1 } );
+				
+				(new Asset.FusionSound() as Sound).play();
 			}
 			addChild(mSubmitedWord);
 			

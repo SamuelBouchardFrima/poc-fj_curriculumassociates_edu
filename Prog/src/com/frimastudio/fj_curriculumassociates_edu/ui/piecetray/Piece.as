@@ -32,7 +32,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		public function set Position(aValue:Point):void
 		{
 			mTemporaryPosition = mPosition = aValue;
-			TweenLite.to(this, 0.8, { overwrite:true, ease:Elastic.easeOut, x:mPosition.x, y:mPosition.y });
+			TweenLite.to(this, 0.8, { overwrite:true, ease:Elastic.easeOut, x:mPosition.x, y:mPosition.y, scaleX:1, scaleY:1 });
 		}
 		
 		public function get TemporaryPosition():Point			{	return mTemporaryPosition;	}
@@ -44,7 +44,6 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		
 		public function Piece(aPrevious:Piece, aNext:Piece, aContent:String, aPosition:Point = null, aColor:int = 0xFFFFFF)
 		{
-			//super(aContent, 0x99EEFF);
 			super(aContent, aColor);
 			
 			mPrevious = aPrevious;

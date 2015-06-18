@@ -191,6 +191,10 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var SlideSound:Class;
 		[Embed(source = "../../../../audio/snapping.mp3")]
 		public static var SnappingSound:Class;
+		[Embed(source = "../../../../audio/fusion.mp3")]
+		public static var FusionSound:Class;
+		[Embed(source = "../../../../audio/burp.mp3")]
+		public static var BurpSound:Class;
 		
 		[Embed(source = "../../../../audio/crescendo.mp3")]
 		public static var CrescendoSound:Class;

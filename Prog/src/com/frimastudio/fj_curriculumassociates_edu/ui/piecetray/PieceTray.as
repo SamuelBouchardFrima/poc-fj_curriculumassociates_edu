@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Bounce;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Strong;
@@ -18,13 +19,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	public class PieceTray extends Sprite
 	{
 		private var mTrayExplosion:MovieClip;
-		protected static const OFFSET:Number = 5;
+		protected static const OFFSET:Number = 10;
 		protected static const DEADZONE:Number = 50;
 		
 		protected var mEnablePieceDelete:Boolean;
 		protected var mFirstPiece:Piece;
 		protected var mLastPiece:Piece;
-		protected var mAttentionPiece:Piece;
+		//protected var mAttentionPiece:Piece;
 		protected var mAttentionCallingTimer:Timer;
 		
 		public function get Center():Number
@@ -99,24 +100,24 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			Clear();
 		}
 		
-		public function CallAttention():void
+		public function CallAttention(aSelection:String = ""):void
 		{
 			mAttentionCallingTimer.reset();
 			
-			if (mAttentionPiece)
+			var list:Vector.<Piece> = new Vector.<Piece>();
+			var piece:Piece = mFirstPiece;
+			while (piece)
 			{
-				mAttentionPiece = mAttentionPiece.NextPiece;
-			}
-			else
-			{
-				mAttentionPiece = mFirstPiece;
+				if (!aSelection.length || aSelection.indexOf(piece.Label) > -1)
+				{
+					list.push(piece);
+				}
+				piece = piece.NextPiece;
 			}
 			
-			if (mAttentionPiece)
+			if (list.length)
 			{
-				mAttentionPiece.CallAttention();
-				
-				mAttentionCallingTimer.start();
+				(Random.FromList(list) as Piece).CallAttention();
 			}
 		}
 		
@@ -126,11 +127,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			var i:int = 0;
 			while (piece)
 			{
-				//TweenLite.to(piece, 0.5, { ease:Strong.easeOut, delay:(i * 0.1), onComplete:OnTweenBouncePiece,
-					//onCompleteParams:[piece], y:piece.y - 30, scaleX:1.15, scaleY:0.7 });
-				
 				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
-					onCompleteParams:[piece, OnTweenBouncePiece], x:(piece.x - (i * 4 * OFFSET)), y:(piece.height * 0.15),
+					onCompleteParams:[piece, OnTweenBouncePiece], x:(piece.x - (i * (OFFSET + 12))), y:(piece.height * 0.15),
 					scaleX:1.15, scaleY:0.7 });
 				
 				++i;
@@ -147,7 +145,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			{
 				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
 					onCompleteParams:[piece, (i % 2 ? OnTweenFizzleUpPiece : OnTweenFizzleDownPiece)],
-					x:(piece.x - (i * 4 * OFFSET)) });
+					x:(piece.x - (i * (OFFSET + 12))) });
 				
 				++i;
 				piece = piece.NextPiece;

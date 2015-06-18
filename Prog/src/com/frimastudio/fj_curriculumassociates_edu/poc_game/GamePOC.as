@@ -1,13 +1,15 @@
 package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent;
+	import com.greensock.plugins.GlowFilterPlugin;
+	import com.greensock.plugins.TweenPlugin;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
 	
 	public class GamePOC extends Sprite
 	{
-		private static const VERSION:String = "v0.5";
+		private static const VERSION:String = "v0.6";
 		
 		public function GamePOC():void
 		{
@@ -19,6 +21,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			removeEventListener(Event.ADDED_TO_STAGE, Init);
 			
 			// entry point
+			
+			TweenPlugin.activate([GlowFilterPlugin]);
 			
 			var quest:GamePOCQuest = new GamePOCQuest();
 			quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);

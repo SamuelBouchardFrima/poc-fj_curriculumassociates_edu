@@ -43,89 +43,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mTemplate:SentenceUnscramblingTemplate;
 		private var mPicture:Bitmap;
 		private var mNPC:Bitmap;
+		private var mCraftingTrayField:CurvedBox;
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
 		private var mSubmitBtn:CurvedBox;
 		private var mDialogBox:Box;
-		//private var mAnswerField:CurvedBox;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
-		private var mLearnedSentenceList:Object;
 		private var mSubmitedSentence:UIButton;
 		private var mSubmissionHighlight:Sprite;
 		private var mAnswer:String;
 		private var mResult:Result;
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
+		private var mTutorialStep:int;
+		private var mTutorialTimer:Timer;
 		
 		private function get SentenceIsCorrect():Boolean
 		{
 			return (mCraftingTray.AssembleSentence() == mTemplate.Answer);
-			
-			//switch (mCraftingTray.AssembleSentence())
-			//{
-				//case "The field is on a hill.":
-				//case "A field is on the hill.":
-				//case "On a hill is the field.":
-				//case "On the hill is a field.":
-					//return true;
-				//default:
-					//return false;
-			//}
-		}
-		
-		private function get SentenceIsValid():Boolean
-		{
-			return false;
-			
-			//switch (mCraftingTray.AssembleSentence())
-			//{
-				//case "The field is on a hill.":
-				//case "A field is on the hill.":
-				//case "On a hill is the field.":
-				//case "On the hill is a field.":
-				//case "The hill is on a field.":
-				//case "A hill is on the field.":
-				//case "The sun is on a hill.":
-				//case "A sun is on the hill.":
-				//case "The sun is on a field.":
-				//case "A sun is on the field.":
-				//case "The field is on a sun.":
-				//case "A field is on the sun.":
-				//case "The hill is on a sun.":
-				//case "A hill is on the sun.":
-				//case "On the field is a hill.":
-				//case "On a field is the hill.":
-				//case "On the sun is a hill.":
-				//case "On a sun is the hill.":
-				//case "On the sun is a field.":
-				//case "On a sun is the field.":
-				//case "On the field is a sun.":
-				//case "On a field is the sun.":
-				//case "On the hill is a sun.":
-				//case "On a hill is the sun.":
-				//case "The hill is a field.":
-				//case "A hill is the field.":
-				//case "The sun is a hill.":
-				//case "A sun is the hill.":
-				//case "The sun is a field.":
-				//case "A sun is the field.":
-				//case "The field is a hill.":
-				//case "A field is the hill.":
-				//case "The field is a sun.":
-				//case "A field is the sun.":
-				//case "The hill is a sun.":
-				//case "A hill is the sun.":
-				//case "The field is on.":
-				//case "A field is on.":
-				//case "The hill is on.":
-				//case "A hill is on.":
-				//case "The sun is on.":
-				//case "A sun is on.":
-					//return true;
-				//default:
-					//return false;
-			//}
 		}
 		
 		public function SentenceUnscrambling(aTemplate:SentenceUnscramblingTemplate)
@@ -154,10 +90,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			craftingTrayBox.y = 633;
 			addChild(craftingTrayBox);
 			
-			var craftingTrayField:CurvedBox = new CurvedBox(new Point(910, 76), Palette.CRAFTING_FIELD);
-			craftingTrayField.x = 482;
-			craftingTrayField.y = 633;
-			addChild(craftingTrayField);
+			mCraftingTrayField = new CurvedBox(new Point(910, 76), Palette.CRAFTING_FIELD);
+			mCraftingTrayField.x = 482;
+			mCraftingTrayField.y = 633;
+			addChild(mCraftingTrayField);
 			
 			var craftingIcon:Bitmap = new Asset.IconWriteBitmap();
 			craftingIcon.x = 40;
@@ -183,29 +119,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			//var answerFieldString:String = "____";
-			//for (var i:int = 0, endi:int = mTemplate.Answer.length; i < endi; ++i)
-			//{
-				//answerFieldString += "_";
-			//}
-			//var request:String = mTemplate.Request.split("_").join(answerFieldString);
-			
 			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Request, 60,
 				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
-			//mDialogBox.HideLabelSubString(answerFieldString);
 			mDialogBox.x = 640;
 			mDialogBox.y = 50 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
 			(new mTemplate.RequestAudio() as Sound).play();
-			
-			//var answerFieldBoundary:Rectangle = mDialogBox.BoundaryOfLabelSubString(answerFieldString);
-			//mAnswerField = new CurvedBox(answerFieldBoundary.size, Palette.ANSWER_FIELD, null, 12);
-			//DisplayObjectUtil.SetPosition(mAnswerField,
-				//Geometry.RectangleCenter(answerFieldBoundary).add(DisplayObjectUtil.GetPosition(mDialogBox)));
-			//addChild(mAnswerField);
-			
-			mLearnedSentenceList = { };
 			
 			mResult = Result.WRONG;
 			
@@ -216,21 +136,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mBlocker.graphics.endFill();
 			
 			UpdateAnswer();
+			
+			mTutorialTimer = new Timer(3000);
+			mTutorialTimer.addEventListener(TimerEvent.TIMER, OnTutorialTimer);
+			mTutorialTimer.start();
 		}
 		
 		private function UpdateAnswer():void
 		{
-			//var answer:String = mCraftingTray.AssembleSentence();
-			//if (answer.length)
-			//{
-				////answer = answer.charAt(0).toUpperCase() + answer.substring(1) + ".";
-				//mAnswerField.Content = new BoxLabel(answer, 72, Palette.ANSWER_CONTENT);
-			//}
-			//else
-			//{
-				//mAnswerField.Content = null;
-			//}
-			
 			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
@@ -243,6 +156,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSuccessFeedback.graphics.endFill();
 			mSuccessFeedback.alpha = 0;
 			addChild(mSuccessFeedback);
+			
+			if (mSubmitedSentence)
+			{
+				addChild(mSubmitedSentence);
+			}
 			
 			addChild(mBlocker);
 			
@@ -293,25 +211,35 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			}
 		}
 		
+		private function OnTutorialTimer(aEvent:TimerEvent):void
+		{
+			switch (mTutorialStep)
+			{
+				case 0:
+					mToolTray.CallAttention(mTemplate.Answer.split(" ")[0].toLowerCase());
+					break;
+				default:
+					mTutorialTimer.reset();
+					break;
+			}
+		}
+		
 		private function OnPieceFreedToolTray(aEvent:PieceTrayEvent):void
 		{
-			if (aEvent.Dragged)
+			mTutorialStep = Math.max(mTutorialStep, 1);
+			if (mTutorialStep >= 1)
 			{
-				mPreviousPosition = aEvent.EventPiece.NextPiece;
-				
-				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
-				mDraggedPiece.y = mToolTray.y;
-				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-				addChild(mDraggedPiece);
-				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+				mCraftingTrayField.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
 			}
-			else
-			{
-				mCraftingTray.InsertLast(aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(mCraftingTray));
-				
-				UpdateAnswer();
-			}
+			
+			mPreviousPosition = aEvent.EventPiece.NextPiece;
+			
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			mDraggedPiece.y = mToolTray.y;
+			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			addChild(mDraggedPiece);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
 			(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
 			
@@ -320,23 +248,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnPieceFreedCraftingTray(aEvent:PieceTrayEvent):void
 		{
-			if (aEvent.Dragged)
+			if (mTutorialStep >= 1)
 			{
-				mPreviousPosition = aEvent.EventPiece.NextPiece;
-				
-				mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
-				mDraggedPiece.y = mCraftingTray.y;
-				mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
-				addChild(mDraggedPiece);
-				stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
-				stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
-			}
-			else
-			{
-				mToolTray.InsertLast(aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(mToolTray));
+				mCraftingTrayField.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
 			}
 			
-			(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			mPreviousPosition = aEvent.EventPiece.NextPiece;
+			
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			mDraggedPiece.y = mCraftingTray.y;
+			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			addChild(mDraggedPiece);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
 			mCraftingTray.Remove(aEvent.EventPiece);
 			
@@ -361,6 +285,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnMouseUpStage(aEvent:MouseEvent):void
 		{
+			mCraftingTrayField.filters = [];
+			
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
@@ -391,6 +317,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnPieceCapturedCraftingTray(aEvent:PieceTrayEvent):void
 		{
+			mTutorialStep = Math.max(mTutorialStep, 2);
+			
 			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedCraftingTray);
 			
 			removeChild(aEvent.EventPiece);
@@ -411,12 +339,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 				if (SentenceIsCorrect)
 				{
 					mResult = Result.GREAT;
-					mLearnedSentenceList[mAnswer] = mAnswer;
-				}
-				else if (SentenceIsValid)
-				{
-					mResult = Result.VALID;
-					mLearnedSentenceList[mAnswer] = mAnswer;
 				}
 				else
 				{
@@ -475,8 +397,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSubmitedSentence.width = mCraftingTray.width;
 			
 			var target:Point = new Point(512, 288);
-			//var target:Point = new Point(mPicture.x + (mPicture.width / 2),
-				//mPicture.y + mPicture.height - (mSubmitedSentence.height / 2));
 			if (mResult == Result.GREAT)
 			{
 				mSubmissionHighlight = new Sprite();
@@ -490,7 +410,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 				mSubmissionHighlight.addChild(highlightBitmap);
 				addChild(mSubmissionHighlight);
 				
-				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:target.x, y:target.y });
+				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:target.x, y:target.y } );
+				
+				(new Asset.FusionSound() as Sound).play();
 			}
 			addChild(mSubmitedSentence);
 			
@@ -507,11 +429,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnTweenSendSubmitedSentence():void
 		{
-			//var answer:String = mCraftingTray.AssembleSentence();
-			//mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color);
-			//mSubmitBtn.BoxColor = mSubmitedSentence.BoxColor = mResult.Color;
+			mSubmitedSentence.addEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
 			
 			ShowSuccessFeedback();
+		}
+		
+		private function OnClickSubmitedSentence(aEvent:MouseEvent):void
+		{
+			(new Asset.SentenceSound["_the_field_is_on_a_hill"]() as Sound).play();
 		}
 		
 		private function OnTweenShowSuccessFeedback():void
@@ -529,6 +454,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
 			if (mSubmitedSentence)
 			{
+				mSubmitedSentence.removeEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
 				TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 } );
 			}
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 } );
