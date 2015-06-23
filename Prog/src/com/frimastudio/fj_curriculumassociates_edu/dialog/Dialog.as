@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.dialog
 {
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
@@ -21,9 +22,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	{
 		private var mTemplate:DialogTemplate;
 		private var mStep:int;
-		private var mNPC:Bitmap;
 		private var mDialogBox:Box;
-		private var mContinueBtn:CurvedBox;
+		private var mActivityBox:ActivityBox;
 		
 		public function Dialog(aTemplate:DialogTemplate)
 		{
@@ -33,52 +33,50 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			mStep = 0;
 			
-			mNPC = new mTemplate.NPCAsset();
-			mNPC.x = 30;
-			mNPC.y = 40;
-			addChild(mNPC);
-			
-			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
-			toolTrayBox.x = 512;
-			toolTrayBox.y = 723;
-			addChild(toolTrayBox);
-			
-			var craftingTrayBox:Box = new Box(new Point(1024, 90), Palette.CRAFTING_BOX);
-			craftingTrayBox.x = 512;
-			craftingTrayBox.y = 633;
-			addChild(craftingTrayBox);
-			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.DialogList[mStep], 60,
-				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
-			mDialogBox.x = 640;
-			mDialogBox.y = 50 + (mDialogBox.height / 2);
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.DialogList[mStep], 45,
+				Palette.DIALOG_CONTENT), 12, Direction.TOP_LEFT, Axis.BOTH);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
+			
+			if (mTemplate.ActivityWordList)
+			{
+				mActivityBox = new ActivityBox(mTemplate.ActivityWordList);
+				mActivityBox.x = 512;
+				mActivityBox.y = 110;
+				addChild(mActivityBox);
+			}
 			
 			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
 			
-			mContinueBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-				new BoxLabel("Continue", 48, Palette.BTN_CONTENT), 12, null, Axis.HORIZONTAL);
-			mContinueBtn.x = 1024 - (mContinueBtn.width / 2) - 10;
-			mContinueBtn.y = 633;
-			mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickContinueBtn);
-			addChild(mContinueBtn);
+			graphics.beginFill(0x000000, 0);
+			graphics.drawRect(0, 0, 1024, 768);
+			graphics.endFill();
+			
+			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		override public function Dispose():void
 		{
-			mContinueBtn.removeEventListener(MouseEvent.CLICK, OnClickContinueBtn);
+			removeEventListener(MouseEvent.CLICK, OnClick);
+			
+			if (mActivityBox)
+			{
+				mActivityBox.Dispose();
+			}
 			
 			super.Dispose();
 		}
 		
-		private function OnClickContinueBtn(aEvent:MouseEvent):void
+		private function OnClick(aEvent:MouseEvent):void
 		{
 			++mStep;
 			
 			if (mStep < mTemplate.DialogList.length)
 			{
-				mDialogBox.Content = new BoxLabel(mTemplate.DialogList[mStep], 60, Palette.DIALOG_CONTENT);
-				mDialogBox.y = 50 + (mDialogBox.height / 2);
+				mDialogBox.Content = new BoxLabel(mTemplate.DialogList[mStep], 45, Palette.DIALOG_CONTENT);
+				mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+				mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 				
 				(new mTemplate.DialogAudioList[mStep]() as Sound).play();
 			}

@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscrambling
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	
 	public class SentenceUnscramblingTemplate extends ActivityTemplate
 	{
@@ -8,43 +9,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mAnswer:String;
 		private var mRequest:String;
 		private var mRequestAudio:Class;
-		private var mNPCAsset:Class;
-		private var mPictureAsset:Class;
 		
-		public function get WordList():Vector.<String>
-		{
-			return mWordList;
-		}
+		public function get WordList():Vector.<String>	{ return mWordList; }
+		public function get Answer():String	{ return mAnswer; }
+		public function get Request():String	{ return mRequest; }
+		public function get RequestAudio():Class	{ return mRequestAudio; }
 		
-		public function get Answer():String
+		public function SentenceUnscramblingTemplate(aLevel:Level, aWordList:Vector.<String>, aAnswer:String, aRequest:String,
+			aRequestAudio:Class)
 		{
-			return mAnswer;
-		}
-		
-		public function get Request():String
-		{
-			return mRequest;
-		}
-		
-		public function get RequestAudio():Class
-		{
-			return mRequestAudio;
-		}
-		
-		public function get NPCAsset():Class
-		{
-			return mNPCAsset;
-		}
-		
-		public function get PictureAsset():Class
-		{
-			return mPictureAsset;
-		}
-		
-		public function SentenceUnscramblingTemplate(aWordList:Vector.<String>, aAnswer:String, aRequest:String, aRequestAudio:Class,
-			aNPCAsset:Class, aPictureAsset:Class)
-		{
-			super();
+			super(aLevel);
 			
 			mStepClass = SentenceUnscrambling;
 			
@@ -52,8 +26,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mAnswer = aAnswer;
 			mRequest = aRequest;
 			mRequestAudio = aRequestAudio;
-			mNPCAsset = aNPCAsset;
-			mPictureAsset = aPictureAsset;
 		}
 	}
 }

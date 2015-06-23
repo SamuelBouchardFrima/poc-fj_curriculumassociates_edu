@@ -7,7 +7,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		public function get IconAsset():Class	{ return mIconAsset; }
 		public function set IconAsset(aValue:Class):void	{ mIconAsset = aValue; }
 		
-		public function BoxIcon(aIconAsset:Class, aColor:int = NaN)
+		public function BoxIcon(aIconAsset:Class, aColor:int = -1)
 		{
 			super(aColor);
 			

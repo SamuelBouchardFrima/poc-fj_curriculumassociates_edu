@@ -42,7 +42,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	public class WordUnscrambling extends Activity
 	{
 		private var mTemplate:WordUnscramblingTemplate;
-		private var mNPC:Bitmap;
 		private var mCraftingTrayField:CurvedBox;
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
@@ -66,11 +65,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			super(aTemplate);
 			
 			mTemplate = aTemplate;
-			
-			mNPC = new mTemplate.NPCAsset();
-			mNPC.x = 30;
-			mNPC.y = 40;
-			addChild(mNPC);
 			
 			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			toolTrayBox.x = 512;
@@ -111,18 +105,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			var answerFieldString:String = "____";
+			var answerFieldString:String = "";
 			for (var i:int = 0, endi:int = mTemplate.Answer.length; i < endi; ++i)
 			{
 				answerFieldString += "_";
 			}
 			var request:String = mTemplate.Request.split("_").join(answerFieldString);
 			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(request, 60,
-				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
+			mDialogBox = new Box(new Point(1004, 200), Palette.DIALOG_BOX, new BoxLabel(request, 60, Palette.DIALOG_CONTENT), 12);
 			mDialogBox.HideLabelSubString(answerFieldString);
-			mDialogBox.x = 640;
-			mDialogBox.y = 50 + (mDialogBox.height / 2);
+			mDialogBox.x = 512;
+			mDialogBox.y = 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
 			var answerFieldBoundary:Rectangle = mDialogBox.BoundaryOfLabelSubString(answerFieldString);
@@ -167,7 +160,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			var answer:String = mCraftingTray.AssembleWord();
 			if (answer.length)
 			{
-				answer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				//answer = answer.charAt(0).toUpperCase() + answer.substring(1);
 				mAnswerField.Content = new BoxLabel(answer, 72, Palette.ANSWER_CONTENT);
 			}
 			else
@@ -272,7 +265,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
-			(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			if (Asset.LetterSound["_" + aEvent.EventPiece.Label])
+			{
+				(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			}
 			
 			mToolTray.Remove(aEvent.EventPiece);
 		}
@@ -366,7 +362,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			var answer:String = mCraftingTray.AssembleWord();
 			if (answer.length)
 			{
-				mAnswer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				//mAnswer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				mAnswer = answer;
 				if (mAnswer == mTemplate.Answer)
 				{
 					mResult = Result.GREAT;
@@ -480,7 +477,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			if (mResult == Result.GREAT)
 			{
 				var answer:String = mCraftingTray.AssembleWord();
-				answer = answer.charAt(0).toUpperCase() + answer.substring(1);
+				//answer = answer.charAt(0).toUpperCase() + answer.substring(1);
 				mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
 			}
 			

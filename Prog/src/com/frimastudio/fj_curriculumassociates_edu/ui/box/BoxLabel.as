@@ -15,7 +15,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		public function get DropShadow():Boolean	{ return mDropShadow; }
 		public function set DropShadow(aValue:Boolean):void { mDropShadow = aValue; }
 		
-		public function BoxLabel(aLabel:String = "", aSize:Number = NaN, aColor:int = NaN, aDropShadow:Boolean = false)
+		public function BoxLabel(aLabel:String = "", aSize:Number = 0, aColor:int = -1, aDropShadow:Boolean = false)
 		{
 			super(aColor);
 			

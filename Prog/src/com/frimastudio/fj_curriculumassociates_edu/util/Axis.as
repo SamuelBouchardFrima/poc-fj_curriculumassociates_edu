@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.util
 		public static const NONE:Axis = new Axis(sI++, "NONE", new Point(0, 0));
 		public static const HORIZONTAL:Axis = new Axis(sI++, "HORIZONTAL", new Point(1, 0));
 		public static const VERTICAL:Axis = new Axis(sI++, "VERTICAL", new Point(0, 1));
+		public static const BOTH:Axis = new Axis(sI++, "BOTH", new Point(1, 1));
 		
 		private var mID:int;
 		private var mDescription:String;

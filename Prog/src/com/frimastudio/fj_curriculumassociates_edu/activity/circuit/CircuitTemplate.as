@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	
 	public class CircuitTemplate extends ActivityTemplate
 	{
@@ -17,7 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		public function CircuitTemplate(aWordList:Vector.<String>, aDistractorList:Vector.<String>, aAnswerList:Vector.<int>,
 			aSkipInstruction:Boolean = false)
 		{
-			super();
+			super(Level.NONE);
 			
 			mStepClass = Circuit;
 			

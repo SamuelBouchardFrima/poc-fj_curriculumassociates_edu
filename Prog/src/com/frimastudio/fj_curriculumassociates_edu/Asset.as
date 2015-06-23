@@ -2,8 +2,33 @@ package com.frimastudio.fj_curriculumassociates_edu
 {
 	import flash.display.MovieClip;
 	import flash.text.Font;
+	
 	public class Asset
 	{
+		[Embed(source = "../../../../art/POC/background/CA_BG_LabGreen_V3.jpg")]
+		public static var TheLabBGBitmap:Class;
+		[Embed(source = "../../../../art/POC/background/CA_BG_Townsquare_V4.jpg")]
+		public static var TownSquareBGBitmap:Class;
+		[Embed(source = "../../../../art/POC/background/CA_BG_Grocery_Store_V2.jpg")]
+		public static var GroceryStoreBGBitmap:Class;
+		[Embed(source = "../../../../art/POC/background/CA_BG_Stage_Rock_V3.jpg")]
+		public static var TheaterBGBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/lucu/Persos.png")]
+		public static var LucuDuoBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/npc/CA_NPC_Cop_V1.png")]
+		public static var CopNPCBitmap:Class;
+		[Embed(source = "../../../../art/POC/npc/CA_NPC_Chef_V2.png")]
+		public static var ChefNPCBitmap:Class;
+		[Embed(source = "../../../../art/POC/npc/CA_NPC_GlamStar_V3.png")]
+		public static var GlamStarNPCBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/prop/Chair.png")]
+		public static var ChairPropBitmap:Class;
+		[Embed(source = "../../../../art/POC/prop/Rat.png")]
+		public static var RatPropBitmap:Class;
+		
 		[Embed(source = "../../../../art/TheFieldIsOnAHill.png")]
 		public static var TheFieldIsOnAHillBitmap:Class;
 		
@@ -48,6 +73,11 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var CupBitmap:Class;
 		[Embed(source = "../../../../art/POC/Field.png")]
 		public static var FieldBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/UnlockPopup.png")]
+		public static var UnlockPopupBitmap:Class;
+		[Embed(source = "../../../../art/POC/Fliers.png")]
+		public static var FliersBitmap:Class;
 		
 		[Embed(source = "../../../../art/lesson/labLucu.png")]
 		public static var LabLucuBitmap:Class;

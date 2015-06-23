@@ -41,8 +41,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 	public class SentenceUnscrambling extends Activity
 	{
 		private var mTemplate:SentenceUnscramblingTemplate;
-		private var mPicture:Bitmap;
-		private var mNPC:Bitmap;
 		private var mCraftingTrayField:CurvedBox;
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
@@ -69,16 +67,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			super(aTemplate);
 			
 			mTemplate = aTemplate;
-			
-			mPicture = new mTemplate.PictureAsset();
-			mPicture.x = 224;
-			mPicture.y = 175;
-			addChild(mPicture);
-			
-			mNPC = new mTemplate.NPCAsset();
-			mNPC.x = 30;
-			mNPC.y = 40;
-			addChild(mNPC);
 			
 			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			toolTrayBox.x = 512;
@@ -119,10 +107,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			mDialogBox = new Box(new Point(584, 160), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Request, 60,
-				Palette.DIALOG_CONTENT), 12, Direction.LEFT, Axis.VERTICAL);
-			mDialogBox.x = 640;
-			mDialogBox.y = 50 + (mDialogBox.height / 2);
+			var request:String = mTemplate.Request;
+			
+			mDialogBox = new Box(new Point(1004, 200), Palette.DIALOG_BOX, new BoxLabel(request, 60, Palette.DIALOG_CONTENT), 12);
+			mDialogBox.x = 512;
+			mDialogBox.y = 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
 			(new mTemplate.RequestAudio() as Sound).play();
@@ -241,7 +230,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
-			(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			if (Asset.WordSound["_" + aEvent.EventPiece.Label])
+			{
+				(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+			}
 			
 			mToolTray.Remove(aEvent.EventPiece);
 		}

@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	
 	public class SpotlightTemplate extends ActivityTemplate
 	{
@@ -19,7 +20,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.spotlight
 		public function SpotlightTemplate(aRequest:String, aHighlight:String, aAnswer:int, aAudioList:Vector.<String>,
 			aSkipInstruction:Boolean = false)
 		{
-			super();
+			super(Level.NONE);
 			
 			mStepClass = Spotlight;
 			

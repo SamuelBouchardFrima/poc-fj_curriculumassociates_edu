@@ -8,9 +8,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		public function get ContentColor():int	{ return mColor; }
 		public function set ContentColor(aValue:int):void	{ mColor = aValue; }
 		
-		public function BoxContent(aColor:int = NaN)
+		public function BoxContent(aColor:int = -1)
 		{
-			mColor = (isNaN(aColor) ? Palette.BTN_CONTENT : aColor);
+			mColor = (aColor == -1 ? Palette.BTN_CONTENT : aColor);
 		}
 	}
 }

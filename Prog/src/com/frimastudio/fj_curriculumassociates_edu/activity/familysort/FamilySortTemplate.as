@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	
 	public class FamilySortTemplate extends ActivityTemplate
 	{
@@ -17,7 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 		public function FamilySortTemplate(aFamilyList:Vector.<String>, aExampleList:Vector.<String>, aWordList:Vector.<String>,
 			aSkipInstruction:Boolean = false)
 		{
-			super();
+			super(Level.NONE);
 			
 			mStepClass = FamilySort;
 			

@@ -7,7 +7,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
+	import com.frimastudio.fj_curriculumassociates_edu.util.StringUtil;
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.BitmapFilterQuality;
@@ -45,6 +47,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					sizeWidth = mContent.width + (mMargin * 2);
 					break;
 				case Axis.VERTICAL:
+					sizeHeight = mContent.height + (mMargin * 2);
+					break;
+				case Axis.BOTH:
+					sizeWidth = mContent.width + (mMargin * 2);
 					sizeHeight = mContent.height + (mMargin * 2);
 					break;
 				default:
@@ -109,13 +115,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			DrawContent();
 		}
 		
-		public function Box(aSize:Point, aColor:int = NaN, aContent:BoxContent = null, aMargin:Number = 0,
+		public function Box(aSize:Point, aColor:int = -1, aContent:BoxContent = null, aMargin:Number = 0,
 			aPointDirection:Direction = null, aAutoSizeAxis:Axis = null)
 		{
 			super();
 			
 			mSize = new Rectangle(-aSize.x / 2, -aSize.y / 2, aSize.x, aSize.y);
-			mColor = (isNaN(aColor) ? Palette.GENERIC_BTN : aColor);
+			mColor = (aColor == -1 ? Palette.GENERIC_BTN : aColor);
 			mContentTemplate = (aContent ? aContent : new BoxLabel());
 			mPointDirection = aPointDirection;
 			mAutoSizeAxis = (aAutoSizeAxis ? aAutoSizeAxis : Axis.NONE);
@@ -134,6 +140,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			DrawBox();
 			DrawPoint();
 			DrawContent();
+			
+			Content = mContentTemplate;
 		}
 		
 		protected function DrawBox():void
@@ -177,6 +185,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(mSize.left - 20, 0));
 					coordinateList.push(new Point(mSize.left + 5, 0));
 					break;
+				case Direction.TOP_LEFT:
+					coordinateList.push(new Point(mSize.left + 27, mSize.top + 5));
+					coordinateList.push(new Point(mSize.left + 40, mSize.top - 20));
+					coordinateList.push(new Point(mSize.left + 40, mSize.top + 5));
+					break;
 				case Direction.DOWN_LEFT:
 					coordinateList.push(new Point(mSize.left + 27, mSize.bottom - 5));
 					coordinateList.push(new Point(mSize.left + 40, mSize.bottom + 20));
@@ -204,6 +217,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				mContent.removeChildAt(0);
 			}
 			
+			var i:int, endi:int;
+			var j:int, endj:int;
 			if (mContentTemplate is BoxLabel)
 			{
 				var labelTemplate:BoxLabel = mContentTemplate as BoxLabel;
@@ -237,6 +252,21 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 						label.x = -label.width / 2;
 						label.y = -label.height / 2;
 						break;
+					case Axis.BOTH:
+						label.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
+							Math.min(mSize.height - (mMargin * 1.5), labelTemplate.Size), labelTemplate.ContentColor,
+							null, null, null, null, null, "center"));
+						label.height = mSize.height - (mMargin * 1.5);
+						label.autoSize = TextFieldAutoSize.CENTER;
+						if (label.width > mSize.width)
+						{
+							label.wordWrap = true;
+							label.multiline = true;
+							label.width = mSize.width;
+						}
+						label.x = -label.width / 2;
+						label.y = -label.height / 2 - (mMargin * 0.5);
+						break;
 					default:
 						label.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
 							Math.min(mSize.height * 0.75, labelTemplate.Size), labelTemplate.ContentColor,
@@ -264,6 +294,124 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				icon.transform.colorTransform = colorTransform;
 				mContent.addChild(icon);
 			}
+			else if (mContentTemplate is BoxTiledLabel)
+			{
+				var tiledLabelTemplate:BoxTiledLabel = mContentTemplate as BoxTiledLabel;
+				var contentList:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+				var character:String;
+				var characterContainer:Sprite;
+				var tileColor:int;
+				var characterBox:CurvedBox;
+				var punctuationField:TextField;
+				var spaceIndex:int;
+				for (i = 0, endi = tiledLabelTemplate.Label.length; i < endi; ++i)
+				{
+					character = tiledLabelTemplate.Label.charAt(i);
+					if (i == 0)
+					{
+						character = character.toUpperCase();
+					}
+					
+					characterContainer = new Sprite();
+					
+					tileColor = tiledLabelTemplate.TileColorList[tiledLabelTemplate.Label.substring(0, i + 1).split(" ").length - 1];
+					
+					if (StringUtil.CharIsAlphabet(character))
+					{
+						characterBox = new CurvedBox(new Point(tiledLabelTemplate.Size, tiledLabelTemplate.Size),
+							tileColor, new BoxLabel(character, tiledLabelTemplate.Size * 0.75,
+							tiledLabelTemplate.ContentColor), 12, null, Axis.HORIZONTAL);
+						characterContainer.addChild(characterBox);
+					}
+					else if (StringUtil.CharIsPunctuation(character))
+					{
+						punctuationField = new TextField();
+						punctuationField.embedFonts = true;
+						punctuationField.autoSize = TextFieldAutoSize.CENTER;
+						punctuationField.text = character;
+						punctuationField.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName,
+							tiledLabelTemplate.Size * 0.75, tiledLabelTemplate.ContentColor,
+							null, null, null, null, null, "center"));
+						punctuationField.x = -punctuationField.width / 2;
+						punctuationField.y = (-punctuationField.height / 2) - 6;
+						characterContainer.addChild(punctuationField);
+					}
+					else if (character == "_")
+					{
+						characterBox = new CurvedBox(new Point(tiledLabelTemplate.Size, tiledLabelTemplate.Size),
+							tileColor, new BoxLabel("?", tiledLabelTemplate.Size * 0.75,
+							tiledLabelTemplate.ContentColor), 12, null, Axis.HORIZONTAL);
+						characterContainer.addChild(characterBox);
+					}
+					else if (character == " ")
+					{
+						characterContainer.graphics.lineStyle();
+						characterContainer.graphics.beginFill(0x000000, 0);
+						characterContainer.graphics.drawRect(-10, -tiledLabelTemplate.Size / 2,
+							20, tiledLabelTemplate.Size);
+						characterContainer.graphics.endFill();
+					}
+					else
+					{
+						throw new Error("Character " + character + " is not handled.");
+					}
+					
+					mContent.addChild(characterContainer);
+					contentList.push(characterContainer);
+					
+					if (i == 0)
+					{
+						//characterContainer.x = (-Size.x / 2) + 5 + (characterContainer.width / 2);
+						characterContainer.x = (-Size.x / 2) + (characterContainer.width / 2);
+						characterContainer.y = 0;
+					}
+					else
+					{
+						characterContainer.x = contentList[i - 1].x + (contentList[i - 1].width / 2) +
+							(characterContainer.width / 2);
+						
+						if (characterContainer.x > (Size.x / 2) - 5 - (characterContainer.width / 2))
+						{
+							spaceIndex = tiledLabelTemplate.Label.lastIndexOf(" ", i);
+							if (spaceIndex > -1)
+							{
+								for (j = spaceIndex + 1, endj = i; j <= endj; ++j)
+								{
+									if (j == spaceIndex + 1)
+									{
+										contentList[j].x = (-Size.x / 2) + (contentList[j].width / 2);
+										contentList[j].y = contentList[j - 1].y + (contentList[j - 1].height / 2) + 20 +
+											(contentList[j].height / 2);
+									}
+									else
+									{
+										contentList[j].x = contentList[j - 1].x + (contentList[j - 1].width / 2) +
+											(characterContainer.width / 2);
+										contentList[j].y = contentList[j - 1].y;
+									}
+								}
+							}
+							else
+							{
+								throw new Error("Unable to find a space where to change line.");
+							}
+						}
+						else
+						{
+							characterContainer.y = contentList[i - 1].y;
+						}
+					}
+				}
+				
+				var bounds:Rectangle = mContent.getBounds(this);
+				var offset:Point = DisplayObjectUtil.GetPosition(mContent).subtract(new Point(bounds.left + (bounds.width / 2),
+					bounds.top + (bounds.height / 2)));
+				for (i = 0, endi = contentList.length; i < endi; ++i)
+				{
+					contentList[i].x += offset.x;
+					contentList[i].y += offset.y;
+				}
+			}
 			else
 			{
 				throw new Error("BoxContent of type " + typeof(mContentTemplate) + " is not handled.");
@@ -273,6 +421,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			{
 				case Axis.HORIZONTAL:
 				case Axis.VERTICAL:
+				case Axis.BOTH:
 					Size = Size;
 					break;
 				default:

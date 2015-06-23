@@ -28,7 +28,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			DrawPoint();
 		}
 		
-		public function CurvedBox(aSize:Point, aColor:int = NaN, aContent:BoxContent = null, aMargin:Number = 0,
+		public function CurvedBox(aSize:Point, aColor:int = -1, aContent:BoxContent = null, aMargin:Number = 0,
 			aPointDirection:Direction = null, aAutoSizeAxis:Axis = null, aCurve:Number = 22)
 		{
 			mCurve = aCurve;

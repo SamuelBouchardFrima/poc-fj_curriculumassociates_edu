@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import flash.geom.Point;
 	
 	public class FlashlightTemplate extends ActivityTemplate
@@ -24,7 +25,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 		public function FlashlightTemplate(aRequest:String, aHighlight:String, aAnswer:int, aPictureAssetList:Vector.<Class>,
 			aPicturePositionList:Vector.<Point>, aAudioList:Vector.<String>, aSkipInstruction:Boolean = false)
 		{
-			super();
+			super(Level.NONE);
 			
 			mStepClass = Flashlight;
 			
