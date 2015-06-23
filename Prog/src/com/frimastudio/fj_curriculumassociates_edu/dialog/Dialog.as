@@ -37,7 +37,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				Palette.DIALOG_CONTENT), 12, Direction.TOP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);
 			addChild(mDialogBox);
+			
+			mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
 			
 			if (mTemplate.ActivityWordList)
 			{
@@ -48,17 +51,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			}
 			
 			(new mTemplate.DialogAudioList[mStep]() as Sound).play();
-			
-			graphics.beginFill(0x000000, 0);
-			graphics.drawRect(0, 0, 1024, 768);
-			graphics.endFill();
-			
-			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		override public function Dispose():void
 		{
-			removeEventListener(MouseEvent.CLICK, OnClick);
+			mDialogBox.removeEventListener(MouseEvent.CLICK, OnClickDialogBox);
+			mLevel.Lucu.removeEventListener(MouseEvent.CLICK, OnClickLucu);
 			
 			if (mActivityBox)
 			{
@@ -68,7 +66,25 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			super.Dispose();
 		}
 		
-		private function OnClick(aEvent:MouseEvent):void
+		private function OnClickDialogBox(aEvent:MouseEvent):void
+		{
+			++mStep;
+			
+			if (mStep < mTemplate.DialogList.length)
+			{
+				mDialogBox.Content = new BoxLabel(mTemplate.DialogList[mStep], 45, Palette.DIALOG_CONTENT);
+				mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+				mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+				
+				(new mTemplate.DialogAudioList[mStep]() as Sound).play();
+			}
+			else
+			{
+				dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+			}
+		}
+		
+		private function OnClickLucu(aEvent:MouseEvent):void
 		{
 			++mStep;
 			

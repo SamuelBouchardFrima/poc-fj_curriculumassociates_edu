@@ -26,6 +26,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 	public class Box extends Sprite
 	{
 		protected var mSize:Rectangle;
+		protected var mDefaultSize:Rectangle;
 		protected var mColor:int;
 		protected var mContentTemplate:BoxContent;
 		protected var mPointDirection:Direction;
@@ -121,6 +122,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			super();
 			
 			mSize = new Rectangle(-aSize.x / 2, -aSize.y / 2, aSize.x, aSize.y);
+			mDefaultSize = mSize.clone();
 			mColor = (aColor == -1 ? Palette.GENERIC_BTN : aColor);
 			mContentTemplate = (aContent ? aContent : new BoxLabel());
 			mPointDirection = aPointDirection;
@@ -258,11 +260,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 							null, null, null, null, null, "center"));
 						label.height = mSize.height - (mMargin * 1.5);
 						label.autoSize = TextFieldAutoSize.CENTER;
-						if (label.width > mSize.width)
+						if (label.width > mDefaultSize.width)
 						{
 							label.wordWrap = true;
 							label.multiline = true;
-							label.width = mSize.width;
+							label.width = mDefaultSize.width;
 						}
 						label.x = -label.width / 2;
 						label.y = -label.height / 2 - (mMargin * 0.5);
@@ -339,8 +341,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					else if (character == "_")
 					{
 						characterBox = new CurvedBox(new Point(tiledLabelTemplate.Size, tiledLabelTemplate.Size),
-							tileColor, new BoxLabel("?", tiledLabelTemplate.Size * 0.75,
-							tiledLabelTemplate.ContentColor), 12, null, Axis.HORIZONTAL);
+							tileColor, new BoxLabel("_", tiledLabelTemplate.Size * 0.75,
+							//tiledLabelTemplate.ContentColor), 12, null, Axis.HORIZONTAL);
+							tileColor), 12, null, Axis.HORIZONTAL);
 						characterContainer.addChild(characterBox);
 					}
 					else if (character == " ")

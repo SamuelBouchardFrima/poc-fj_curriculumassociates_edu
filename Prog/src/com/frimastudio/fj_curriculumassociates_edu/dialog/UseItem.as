@@ -11,11 +11,14 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	import com.greensock.easing.Elastic;
+	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	
@@ -35,6 +38,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			graphics.drawRect(0, 0, 1024, 768);
 			graphics.endFill();
 			
+			mLevel.NPC.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
 			mLevel.NPC.addEventListener(MouseEvent.CLICK, OnClickNPC);
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
@@ -49,18 +54,35 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mItem.y = mouseY;
 			mItem.scaleX = mItem.scaleY = 0.01;
 			var itemBitmap:Bitmap = new mTemplate.ItemAsset() as Bitmap;
+			itemBitmap.smoothing = true;
 			itemBitmap.x = -itemBitmap.width / 2;
 			itemBitmap.y = -itemBitmap.height / 2;
 			mItem.addChild(itemBitmap);
 			addChild(mItem);
-			TweenLite.to(mItem, 1, { ease:Elastic.easeOut, scaleX:0.25, scaleY:0.25 });
+			TweenLite.to(mItem, 1, { ease:Elastic.easeOut, scaleX:0.5, scaleY:0.5 });
 			
 			addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 		}
 		
 		override public function Dispose():void
 		{
+			removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+			
+			TweenLite.killTweensOf(mLevel.NPC);
+			mLevel.NPC.filters = [];
+			mLevel.NPC.removeEventListener(MouseEvent.CLICK, OnClickNPC);
+			
 			super.Dispose();
+		}
+		
+		private function OnTweenGlowStrong():void
+		{
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowWeak, glowFilter:{ alpha:0.25 } });
+		}
+		
+		private function OnTweenGlowWeak():void
+		{
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter:{ alpha:0.75 } });
 		}
 		
 		private function OnMouseMove(aEvent:MouseEvent):void
@@ -74,7 +96,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mLevel.NPC.removeEventListener(MouseEvent.CLICK, OnClickNPC);
 			
 			TweenLite.to(mItem, 0.5, { ease:Strong.easeOut, onComplete:OnTweenItemGiven,
-				x:mouseX, y:mouseY, scaleX:0.5, scaleY:0.5, alpha:0 });
+				x:mouseX, y:mouseY, scaleX:1, scaleY:1, alpha:0 });
 		}
 		
 		private function OnTweenItemGiven():void

@@ -33,7 +33,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mTemplate = aTemplate;
 			
 			mLevel.Prop.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
-			TweenLite.to(mLevel.Prop, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter: { alpha:0.75 } });
+			TweenLite.to(mLevel.Prop, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
 			mLevel.Prop.addEventListener(MouseEvent.CLICK, OnClickProp);
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
@@ -51,6 +51,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		override public function Dispose():void
 		{
 			TweenLite.killTweensOf(mLevel.Prop);
+			mLevel.Prop.filters = [];
 			mLevel.Prop.removeEventListener(MouseEvent.CLICK, OnClickProp);
 			
 			mActivityBox.Dispose();

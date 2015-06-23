@@ -55,6 +55,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			var chunk:CurvedBox;
 			var chunkOffset:Number;
 			var label:String;
+			var labelColor:int;
 			
 			for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
 			{
@@ -64,14 +65,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				for (j = 0, endj = mWordTemplateList[i].ChunkList.length; j < endj; ++j)
 				{
 					label = mWordTemplateList[i].ChunkList[j];
+					labelColor = Palette.DIALOG_CONTENT;
 					switch (label)
 					{
 						case "_":
-							label = "?";
+							label = " ";
+							labelColor = mWordTemplateList[i].ColorCode;
 							break;
 					}
-					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
-						new BoxLabel(label, 45, Palette.DIALOG_CONTENT), 12, null, Axis.HORIZONTAL);
+					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(label, 45, labelColor),
+						12, null, Axis.HORIZONTAL);
 					chunkOffset += chunk.width / 2;
 					chunk.x = chunkOffset;
 					chunk.y = 0;

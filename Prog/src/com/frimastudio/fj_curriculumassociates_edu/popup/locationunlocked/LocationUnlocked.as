@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -35,6 +36,9 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 			background.addChild(backgroundBitmap);
 			background.x = 512;
 			background.y = 384;
+			var colorTransform:ColorTransform = new ColorTransform();
+			colorTransform.color = 0xFFCC66;
+			background.transform.colorTransform = colorTransform;
 			addChild(background);
 			
 			var title:TextField = new TextField();

@@ -48,12 +48,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		private var mMouseDownOrigin:Point;
 		private var mTutorialStep:int;
 		private var mTutorialTimer:Timer;
+		private var mMiniDefaultPosition:Point;
+		private var mMiniDefaultScale:Number;
 		
 		public function SentenceDecrypting(aTemplate:SentenceDecryptingTemplate)
 		{
 			super(aTemplate);
 			
 			mTemplate = aTemplate;
+			
+			mMiniDefaultPosition = DisplayObjectUtil.GetPosition(mLevel.Mini);
+			mMiniDefaultScale = mLevel.Mini.scaleX;
 			
 			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			toolTrayBox.x = 512;
@@ -266,7 +271,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			var burpTimer:Timer = new Timer(sound.length, 1);
 			burpTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnBurpTimerComplete);
 			burpTimer.start();
-			TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, delay:(sound.length / 850), scaleX:1, scaleY:1, y:518 });
+			TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, delay:(sound.length / 850), y:mMiniDefaultPosition.y,
+				scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 			
 			mFloatPieceList.splice(mFloatPieceList.indexOf(aPiece), 1);
 			aPiece.Dispose();
@@ -296,8 +302,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				miniBitmap.x = -miniBitmap.width / 2;
 				miniBitmap.y = -miniBitmap.height / 2;
 				mLevel.Mini.addChild(miniBitmap);
-				TweenLite.to(mLevel.Mini, 0.5, { ease:Strong.easeOut, y:(518 - (mLevel.Mini.height / (8 * mLevel.Mini.scaleY))),
-					scaleX:0.9, scaleY:1.2 });
+				TweenLite.to(mLevel.Mini, 0.5, { ease:Strong.easeOut,
+					y:(mMiniDefaultPosition.y - (mLevel.Mini.height / (8 * mLevel.Mini.scaleY))),
+					scaleX:(mMiniDefaultScale * 0.9), scaleY:(mMiniDefaultScale * 1.2) });
 				
 				if (mTutorialStep >= 3)
 				{
@@ -358,7 +365,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				mFloatPieceList.push(piece);
 				
 				TweenLite.to(piece, 0.1, { ease:Strong.easeOut, onComplete:OnTweenSendFedWord,
-					onCompleteParams:[piece], x:685, y:518 });
+					onCompleteParams:[piece], x:mMiniDefaultPosition.x, y:mMiniDefaultPosition.y });
 				
 				mDraggedPiece.Dispose();
 				removeChild(mDraggedPiece);
@@ -372,7 +379,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				miniBitmap.x = -miniBitmap.width / 2;
 				miniBitmap.y = -miniBitmap.height / 2;
 				mLevel.Mini.addChild(miniBitmap);
-				TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, scaleX:1, scaleY:1, y:518 });
+				TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
+					scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 				
 				mToolTray.addEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedToolTray);
 				mToolTray.Insert(mDraggedPiece, mPreviousPosition);
@@ -415,7 +423,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 						miniBitmap.x = -miniBitmap.width / 2;
 						miniBitmap.y = -miniBitmap.height / 2;
 						mLevel.Mini.addChild(miniBitmap);
-						TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, scaleX:1, scaleY:1, y:518 });
+						TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
+							scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 					}
 					else
 					{
@@ -425,7 +434,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 						miniBitmap.x = -miniBitmap.width / 2;
 						miniBitmap.y = -miniBitmap.height / 2;
 						mLevel.Mini.addChild(miniBitmap);
-						TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, scaleX:1, scaleY:1, y:518 });
+						TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
+							scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 						
 						piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this));
 						piece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
@@ -456,7 +466,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 					miniBitmap.x = -miniBitmap.width / 2;
 					miniBitmap.y = -miniBitmap.height / 2;
 					mLevel.Mini.addChild(miniBitmap);
-					TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, scaleX:1, scaleY:1, y:518 });
+					TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
+						scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 					
 					piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this));
 					piece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
@@ -487,7 +498,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				miniBitmap.x = -miniBitmap.width / 2;
 				miniBitmap.y = -miniBitmap.height / 2;
 				mLevel.Mini.addChild(miniBitmap);
-				TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, scaleX:1, scaleY:1, y:518 });
+				TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
+					scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 				
 				piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this));
 				piece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
@@ -560,8 +572,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				miniBitmap.x = -miniBitmap.width / 2;
 				miniBitmap.y = -miniBitmap.height / 2;
 				mLevel.Mini.addChild(miniBitmap);
-				TweenLite.to(mLevel.Mini, 0.5, { ease:Strong.easeOut, y:(518 - (mLevel.Mini.height / (8 * mLevel.Mini.scaleY))),
-					scaleX:0.9, scaleY:1.2 });
+				TweenLite.to(mLevel.Mini, 0.5, { ease:Strong.easeOut,
+					y:(mMiniDefaultPosition.y - (mLevel.Mini.height / (8 * mLevel.Mini.scaleY))),
+					scaleX:(mMiniDefaultScale * 0.9), scaleY:(mMiniDefaultScale * 1.2) });
 				
 				if (mTutorialStep >= 3)
 				{

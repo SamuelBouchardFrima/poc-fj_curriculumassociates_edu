@@ -98,7 +98,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(Vector.<String>("ni".split("")), "", null, ActivityType.WORD_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["front"], ".")], true));
 			mStepList.push(new WordUnscramblingTemplate(Level.TOWN_SQUARE, new <String>["t", "i"], "it",
-				"I'll watch _ fi I can ??? ni front."));
+				"I'll watch _ fi I can     ni front."));
 			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE,
 				new <WordTemplate>[new WordTemplate(new <String>["I"], "'"),
 				new WordTemplate(new <String>["ll"]),
@@ -111,7 +111,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(Vector.<String>("ni".split("")), "", null, ActivityType.WORD_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["front"], ".")], true));
 			mStepList.push(new WordUnscramblingTemplate(Level.TOWN_SQUARE, new <String>["f", "i"], "if",
-				"I'll watch it _ I can ??? ni front."));
+				"I'll watch it _ I can     ni front."));
 			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE,
 				new <WordTemplate>[new WordTemplate(new <String>["I"], "'"),
 				new WordTemplate(new <String>["ll"]),
@@ -124,7 +124,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(Vector.<String>("ni".split("")), "", ActivityType.WORD_UNSCRAMBLING),
 				new WordTemplate(new <String>["front"], ".")], true));
 			mStepList.push(new WordUnscramblingTemplate(Level.TOWN_SQUARE, new < String > ["n", "i"], "in",
-				"I'll watch it if I can ??? _ front."));
+				"I'll watch it if I can     _ front."));
 			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE,
 				new <WordTemplate>[new WordTemplate(new <String>["I"], "'"),
 				new WordTemplate(new <String>["ll"]),
@@ -159,25 +159,25 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE,
 				new <WordTemplate>[new WordTemplate(Vector.<String>("___".split("")), "", null, ActivityType.WORD_CRAFTING.ColorCode),
 				new WordTemplate(new <String>["you"]),
-				new WordTemplate(Vector.<String>("k_now".split("")), "", null, ActivityType.SENTENCE_DECRYPTING.ColorCode),
+				new WordTemplate(Vector.<String>("k_ow".split("")), "", null, ActivityType.SENTENCE_DECRYPTING.ColorCode),
 				new WordTemplate(new <String>["I"]),
 				new WordTemplate(new <String>["love"]),
 				new WordTemplate(Vector.<String>("ot".split("")), "", ActivityType.WORD_UNSCRAMBLING),
 				new WordTemplate(Vector.<String>("_ing".split("")), "?", null, ActivityType.SENTENCE_DECRYPTING.ColorCode)],
 				true));
 			mStepList.push(new WordUnscramblingTemplate(Level.GROCERY_STORE, new < String > ["o", "t"], "to",
-				"??? you k?now I love _ ?ing?"));
+				"    you k ow I love _  ing?"));
 			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE,
 				new <WordTemplate>[new WordTemplate(Vector.<String>("___".split("")), "", ActivityType.WORD_CRAFTING),
 				new WordTemplate(new <String>["you"]),
-				new WordTemplate(Vector.<String>("k_now".split("")), "", null, ActivityType.SENTENCE_DECRYPTING.ColorCode),
+				new WordTemplate(Vector.<String>("k_ow".split("")), "", null, ActivityType.SENTENCE_DECRYPTING.ColorCode),
 				new WordTemplate(new <String>["I"]),
 				new WordTemplate(new <String>["love"]),
 				new WordTemplate(new <String>["to"], "", null, -1, true),
 				new WordTemplate(Vector.<String>("_ing".split("")), "?", null, ActivityType.SENTENCE_DECRYPTING.ColorCode)],
 				true));
 			mStepList.push(new WordCraftingTemplate(Level.GROCERY_STORE, new <String>["rid", "dim"], "did",
-				"_ you k?ow I love to ?ing?"));
+				"_ you k ow I love to  ing?"));
 			mStepList.push(new SentenceDecryptingTemplate(Level.GROCERY_STORE, new <String>["sit", "in"],
 				"Did you know I love to sing?", "Did you k_ow I love to _ing?"));
 			mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Great job!"], new <Class>[Asset.DialogSound[3]],
@@ -205,7 +205,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["t"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["can"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
-				new WordTemplate(new <String>["___"], "", ActivityType.WORD_CRAFTING)], true));
+				new WordTemplate(Vector.<String>("___".split("")), "", ActivityType.WORD_CRAFTING)], true));
 			mStepList.push(new DialogTemplate(Level.THEATER, new <String>["You are running out of words."],
 				new <Class>[Asset.DialogSound[3]],
 				new <WordTemplate>[new WordTemplate(new <String>["but"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
@@ -215,7 +215,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["t"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["can"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
-				new WordTemplate(new <String>["___"], "", ActivityType.WORD_CRAFTING)]));
+				new WordTemplate(Vector.<String>("___".split("")), "", null, ActivityType.WORD_CRAFTING.ColorCode)]));
 			mStepList.push(new UseLevelPropTemplate(Level.THEATER,
 				new <WordTemplate>[new WordTemplate(new <String>["but"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
@@ -224,7 +224,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["t"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["can"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
-				new WordTemplate(new <String>["___"], "", ActivityType.WORD_CRAFTING)],
+				new WordTemplate(Vector.<String>("___".split("")), "", null, ActivityType.WORD_CRAFTING.ColorCode)],
 				"Find something in the room that will help you."));
 			mStepList.push(new SentenceUnscramblingTemplate(Level.THEATER, new <String>["at", "rat!", "fat", "Look", "the"],
 				"Look at the fat rat!", "", Asset.WhereIsTheFieldSound));
@@ -239,7 +239,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["t"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["can"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
-				new WordTemplate(new <String>["___"], "", ActivityType.WORD_CRAFTING)], true));
+				new WordTemplate(Vector.<String>("___".split("")), "", ActivityType.WORD_CRAFTING)], true));
 			mStepList.push(new WordCraftingTemplate(Level.THEATER, new <String>["rat", "fat", "rip", "did"], "rap",
 				"but I sing don't can I _."));
 			mStepList.push(new SelectActivityTemplate(Level.THEATER,
@@ -250,7 +250,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["t"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["can"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
 				new WordTemplate(new <String>["I"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode),
-				new WordTemplate(new <String>["___"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode, true)], true));
+				new WordTemplate(new <String>["rap"], "", null, ActivityType.SENTENCE_UNSCRAMBLING.ColorCode, true)], true));
 			mStepList.push(new SentenceUnscramblingTemplate(Level.THEATER,
 				new <String>["but", "I", "sing.", "don't", "can", "I", "rap"], "I don't rap but I can sing.", "",
 				Asset.WhereIsTheFieldSound));
@@ -286,9 +286,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["eyes"], "!")]));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "QUEST REWARD", "Words:", new <String>["nip", "fit"]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB,
-				new <String>["A chicken lip, a lizard hip, and alligator eyes. This is original!", "Let met try!",
+				new <String>["A chicken lip, a lizard hip, and alligator eyes.", "This is original!", "Let met try!",
 				"Monkey legs and buzzard eggs and salamander thighs!"],
-				new <Class>[Asset.DialogSound[0], Asset.DialogSound[0], Asset.DialogSound[0]]));
+				new <Class>[Asset.DialogSound[0], Asset.DialogSound[0], Asset.DialogSound[0], Asset.DialogSound[0]]));
 			
 			mStepList.push(new ActivateQuestTemplate(Level.THE_LAB));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new < String > ["Keep working on that song."],
@@ -333,12 +333,12 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["and"], "", null, -1, true),
 				new WordTemplate(new <String>["sip"], ".", null, -1, true)]));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "QUEST REWARD", "Words:", new <String>["it", "sip"]));
-			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Mix it up and take a sip. Wow that sounds great!",
-				"It's Mama's Soup Surprise!"], new <Class>[Asset.DialogSound[0], Asset.DialogSound[0]]));
+			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Mix it up and take a sip.", "Wow that sounds great!",
+				"It's Mama's Soup Surprise!"], new <Class>[Asset.DialogSound[0], Asset.DialogSound[0], Asset.DialogSound[0]]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["A chicken lip, a lizard hip, and alligator eyes.",
-				"Monkey legs and buzzard eggs and salamander thighs", "Mix it up and take a sip. It's Mama's Soup Surprise!",
+				"Monkey legs and buzzard eggs and salamander thighs.", "Mix it up and take a sip.", "It's Mama's Soup Surprise!",
 				"Rockin' tune! You are ready for the karaoke contest!"], new <Class>[Asset.DialogSound[0], Asset.DialogSound[0],
-				Asset.DialogSound[0], Asset.DialogSound[0]]));
+				Asset.DialogSound[0], Asset.DialogSound[0], Asset.DialogSound[0]]));
 			mStepList.push(new LocationUnlockedTemplate(Level.THE_LAB, "You unlocked the karaoke contest!"));
 			
 			super();
