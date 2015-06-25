@@ -662,7 +662,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 				successLabel.text = "Great!\nClick to continue.";
 				successLabel.embedFonts = true;
 				successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72,
-					Result.GREAT.Color, null, null, null, null, null, "center"));
+					Result.GREAT.Color, null, null, null, null, null, TextFormatAlign.CENTER));
 				successLabel.x = 512 - (successLabel.width / 2);
 				successLabel.y = 384 - (successLabel.height / 2);
 				

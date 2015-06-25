@@ -14,7 +14,14 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		public function get Punctuation():String	{ return mPunctuation; }
 		public function get ActivityToLaunch():ActivityType	{ return mActivityToLaunch; }
 		public function get ColorCode():int	{ return mColorCode; }
+		public function set ColorCode(aValue:int):void	{ mColorCode = aValue; }
 		public function get ProgressDone():Boolean	{ return mProgressDone; }
+		
+		public function set ActivityToLaunch(aValue:ActivityType):void
+		{
+			mActivityToLaunch = aValue;
+			mColorCode = mActivityToLaunch.ColorCode;
+		}
 		
 		public function WordTemplate(aChunkList:Vector.<String>, aPunctuation:String = "",
 			aActivityToLaunch:ActivityType = null, aColorCodeOverride:int = -1, aProgressDone:Boolean = false)

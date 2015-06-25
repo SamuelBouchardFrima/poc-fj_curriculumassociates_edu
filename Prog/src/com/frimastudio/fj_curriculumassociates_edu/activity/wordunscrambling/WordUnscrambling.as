@@ -1,6 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Activity;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Result;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
@@ -37,6 +39,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class WordUnscrambling extends Activity
@@ -46,8 +49,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
 		private var mSubmitBtn:CurvedBox;
-		private var mDialogBox:Box;
-		private var mAnswerField:CurvedBox;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
 		private var mLearnedWordList:Object;
@@ -59,6 +60,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		private var mSuccessFeedback:Sprite;
 		private var mTutorialStep:int;
 		private var mTutorialTimer:Timer;
+		private var mActivityBox:ActivityBox;
 		
 		public function WordUnscrambling(aTemplate:WordUnscramblingTemplate)
 		{
@@ -105,24 +107,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			var answerFieldString:String = "";
-			for (var i:int = 0, endi:int = mTemplate.Answer.length; i < endi; ++i)
-			{
-				answerFieldString += "_";
-			}
-			var request:String = mTemplate.Request.split("_").join(answerFieldString);
-			
-			mDialogBox = new Box(new Point(1004, 200), Palette.DIALOG_BOX, new BoxLabel(request, 60, Palette.DIALOG_CONTENT), 12);
-			mDialogBox.HideLabelSubString(answerFieldString);
-			mDialogBox.x = 512;
-			mDialogBox.y = 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
-			
-			var answerFieldBoundary:Rectangle = mDialogBox.BoundaryOfLabelSubString(answerFieldString);
-			mAnswerField = new CurvedBox(answerFieldBoundary.size, Palette.ANSWER_FIELD, null, 12);
-			DisplayObjectUtil.SetPosition(mAnswerField,
-				Geometry.RectangleCenter(answerFieldBoundary).add(DisplayObjectUtil.GetPosition(mDialogBox)));
-			addChild(mAnswerField);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, true);
+			mActivityBox.x = 512;
+			mActivityBox.y = 10 + (mActivityBox.height / 2);
+			addChild(mActivityBox);
 			
 			mLearnedWordList = { };
 			
@@ -157,17 +145,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		private function UpdateAnswer():void
 		{
-			var answer:String = mCraftingTray.AssembleWord();
-			if (answer.length)
-			{
-				//answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-				mAnswerField.Content = new BoxLabel(answer, 72, Palette.ANSWER_CONTENT);
-			}
-			else
-			{
-				mAnswerField.Content = null;
-			}
-			
+			mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), true);
 			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
@@ -211,7 +189,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			successLabel.embedFonts = true;
 			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
 			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
@@ -362,7 +340,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			var answer:String = mCraftingTray.AssembleWord();
 			if (answer.length)
 			{
-				//mAnswer = answer.charAt(0).toUpperCase() + answer.substring(1);
 				mAnswer = answer;
 				if (mAnswer == mTemplate.Answer)
 				{
@@ -386,8 +363,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				
 				addChild(mBlocker);
 				
-				mCraftingTray.Color = mResult.Color;
-				mCraftingTray.ContentColor = Palette.BTN_CONTENT;
+				mCraftingTray.Color = (mResult == Result.GREAT ? ActivityType.WORD_UNSCRAMBLING.ColorCode : mResult.Color);
 				
 				if (mResult == Result.WRONG)
 				{
@@ -430,10 +406,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitWordTimerComplete);
 			
-			mSubmitedWord = new UIButton(mAnswer, mResult.Color);
+			var target:Point = mActivityBox.CurrentActivityCenter;
+			var scale:Number = 1;
+			
+			var color:int = (mResult == Result.GREAT ? ActivityType.WORD_UNSCRAMBLING.ColorCode : mResult.Color);
+			mSubmitedWord = new UIButton(mAnswer, color);
 			mSubmitedWord.x = mCraftingTray.Center;
 			mSubmitedWord.y = mCraftingTray.y;
 			mSubmitedWord.width = mCraftingTray.width;
+			
 			if (mResult == Result.GREAT)
 			{
 				mSubmissionHighlight = new Sprite();
@@ -447,22 +428,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				mSubmissionHighlight.addChild(highlightBitmap);
 				addChild(mSubmissionHighlight);
 				
-				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:mAnswerField.x, y:mAnswerField.y,
-					scaleX:1, scaleY:1 } );
+				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:target.x, y:target.y, scaleX:1, scaleY:1 });
 				
 				(new Asset.FusionSound() as Sound).play();
+			}
+			else if (mResult == Result.VALID)
+			{
+				target = new Point(512, 230);
+				scale = 1.5;
 			}
 			addChild(mSubmitedWord);
 			
 			mCraftingTray.visible = false;
 			
-			var target:Point = DisplayObjectUtil.GetPosition(mAnswerField);
-			var scale:Number = 1;
-			if (mResult == Result.VALID)
-			{
-				target = new Point(512, 230);
-				scale = 1.5;
-			}
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
 				x:target.x, y:target.y, scaleX:scale, scaleY:scale });
 		}
@@ -476,9 +454,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		{
 			if (mResult == Result.GREAT)
 			{
-				var answer:String = mCraftingTray.AssembleWord();
-				//answer = answer.charAt(0).toUpperCase() + answer.substring(1);
-				mAnswerField.Content = new BoxLabel(answer, 72, mResult.Color, true);
+				mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList());
 			}
 			
 			ShowSuccessFeedback();

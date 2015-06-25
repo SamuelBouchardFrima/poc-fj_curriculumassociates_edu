@@ -1,11 +1,13 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity
 {
+	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
+	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
@@ -14,16 +16,43 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	public class ActivityBox extends Box
 	{
 		private var mWordTemplateList:Vector.<WordTemplate>;
+		private var mGhostContent:Boolean;
 		private var mWordList:Vector.<Sprite>;
 		private var mChunkListList:Vector.<Vector.<CurvedBox>>;
+		private var mPunctuationList:Object;
 		
-		public function ActivityBox(aWordTemplateList:Vector.<WordTemplate>)
+		public function get WordTemplateList():Vector.<WordTemplate>	{ return mWordTemplateList; }
+		public function set WordTemplateList(aValue:Vector.<WordTemplate>):void
+		{
+			mWordTemplateList = aValue;
+			DrawContent();
+		}
+		
+		public function get CurrentActivityCenter():Point
+		{
+			for (var i:int = 0, endi:int = mWordTemplateList.length; i < endi; ++i)
+			{
+				if (mWordTemplateList[i].ActivityToLaunch != ActivityType.NONE)
+				{
+					return DisplayObjectUtil.GetPosition(this).add(DisplayObjectUtil.GetPosition(mWordList[i]));
+				}
+			}
+			
+			return DisplayObjectUtil.GetPosition(this);
+		}
+		
+		public function ActivityBox(aWordTemplateList:Vector.<WordTemplate>, aGhostContent:Boolean = false)
 		{
 			mWordTemplateList = aWordTemplateList;
+			mGhostContent = aGhostContent;
 			mWordList = new Vector.<Sprite>();
 			mChunkListList = new Vector.<Vector.<CurvedBox>>();
 			
@@ -39,6 +68,46 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			}
 		}
 		
+		public function UpdateCurrentActivityContent(aChunkList:Vector.<String>, aGhostContent:Boolean = false,
+			aOneWord:Boolean = true):void
+		{
+			mGhostContent = aGhostContent;
+			
+			var i:int, endi:int;
+			var j:int, endj:int;
+			if (aOneWord)
+			{
+				for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
+				{
+					if (mWordTemplateList[i].ActivityToLaunch != ActivityType.NONE)
+					{
+						for (j = 0, endj = mWordTemplateList[i].ChunkList.length; j < endj; ++j)
+						{
+							mWordTemplateList[i].ChunkList[j] = (j < aChunkList.length ? aChunkList[j] : " ");
+						}
+						DrawContent();
+						return;
+					}
+				}
+			}
+			else
+			{
+				//var chunkList:Vector.<String> = 
+				var chunkList:Vector.<String>;
+				for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
+				{
+					//chunkList = new <String>[i < aChunkList.length ? aChunkList[i] : " "];
+					mWordTemplateList[i].ChunkList[0] = (i < aChunkList.length ? aChunkList[i] : " ");
+					//mWordTemplateList[i].ChunkList = new <String>[i < aChunkList.length ? aChunkList[i] : " "];
+					//for (j = 0, endj = mWordTemplateList[i].ChunkList.length; j < endj; ++j)
+					//{
+						//mWordTemplateList[i].ChunkList[j] = (j < aChunkList.length ? aChunkList[j] : " ");
+					//}
+				}
+				DrawContent();
+			}
+		}
+		
 		override protected function DrawContent():void
 		{
 			while (mContent.numChildren > 0)
@@ -46,6 +115,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				mContent.removeChildAt(0);
 			}
 			mWordList.splice(0, mWordList.length);
+			mPunctuationList = { };
 			
 			var i:int, endi:int;
 			var j:int, endj:int;
@@ -56,6 +126,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			var chunkOffset:Number;
 			var label:String;
 			var labelColor:int;
+			var punctuation:TextField;
 			
 			for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
 			{
@@ -94,6 +165,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				word.x = wordOffset.x;
 				word.y = wordOffset.y + (word.height / 2);
 				
+				word.alpha = (mGhostContent && mWordTemplateList[i].ActivityToLaunch != ActivityType.NONE ? 0.5 : 1);
+				
 				word.graphics.beginFill(0x000000, 0);
 				word.graphics.drawRect(-word.width / 2, -word.height / 2, word.width, word.height);
 				word.graphics.endFill();
@@ -124,7 +197,29 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				}
 				mWordList.push(word);
 				mChunkListList.push(chunkList);
-				wordOffset.x += (word.width / 2) + 20;
+				wordOffset.x += (word.width / 2);
+				
+				if (mWordTemplateList[i].Punctuation.length)
+				{
+					punctuation = new TextField();
+					punctuation.embedFonts = true;
+					punctuation.selectable = false;
+					punctuation.autoSize = TextFieldAutoSize.CENTER;
+					punctuation.height = 60;
+					punctuation.text = mWordTemplateList[i].Punctuation;
+					punctuation.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 45, Palette.DIALOG_CONTENT,
+						null, null, null, null, null, TextFormatAlign.CENTER));
+					punctuation.x = wordOffset.x;
+					punctuation.y = wordOffset.y;
+					mContent.addChild(punctuation);
+					mPunctuationList[i] = punctuation;
+					
+					wordOffset.x += punctuation.width;
+				}
+				if (mWordTemplateList[i].Punctuation != "'")
+				{
+					wordOffset.x += 10;
+				}
 			}
 			
 			wordOffset = new Point(-mContent.width / 2, -mContent.height / 2);
@@ -132,6 +227,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			{
 				mWordList[i].x += wordOffset.x;
 				mWordList[i].y += wordOffset.y;
+			}
+			for each (punctuation in mPunctuationList)
+			{
+				punctuation.x += wordOffset.x;
+				punctuation.y += wordOffset.y;
 			}
 		}
 		

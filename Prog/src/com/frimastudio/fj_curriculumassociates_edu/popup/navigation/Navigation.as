@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	public class Navigation extends Popup
 	{
@@ -39,7 +40,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			title.autoSize = TextFieldAutoSize.CENTER;
 			title.text = mTemplate.Title;
 			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			title.x = 512 - (title.width / 2);
 			addChild(title);
 			

@@ -116,8 +116,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			removeEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
-		public function StartDecay():void
+		public function StartDecay(aDuration:Number = 15000):void
 		{
+			mDecayTimer.delay = aDuration;
 			mDecayTimer.reset();
 			mDecayTimer.start();
 		}

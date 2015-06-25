@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	public class Reward extends Popup
 	{
@@ -38,7 +39,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			title.autoSize = TextFieldAutoSize.CENTER;
 			title.text = mTemplate.Title;
 			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			title.x = 512 - (title.width / 2);
 			addChild(title);
 			
@@ -52,7 +53,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			body.autoSize = TextFieldAutoSize.CENTER;
 			body.text = mTemplate.Body;
 			body.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 48, Palette.DIALOG_CONTENT,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			body.x = 512 - (body.width / 2);
 			addChild(body);
 			

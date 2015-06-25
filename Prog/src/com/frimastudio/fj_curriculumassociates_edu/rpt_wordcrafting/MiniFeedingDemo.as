@@ -30,6 +30,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class MiniFeedingDemo extends Sprite
@@ -1747,7 +1748,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				mYellowBulb.graphics.endFill();
 				
 				successLabel.text = "GREAT WORD!\nBUT IT DOES NOT WORK\nIN THIS SENTENCE\n\nCLICK TO\nCONTINUE";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, TextFormatAlign.CENTER));
 				
 				(new Asset.ValidationSound() as Sound).play();
 				
@@ -1774,7 +1775,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 				mRedBulb.graphics.endFill();
 				
 				successLabel.text = "TRY AGAIN!\n\nCLICK TO\nCONTINUE";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, TextFormatAlign.CENTER));
 				
 				(new Asset.ErrorSound() as Sound).play();
 				
@@ -1840,7 +1841,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_wordcrafting
 			successLabel.selectable = false;
 			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
 			successLabel.text = "YOU WIN!\n\nCLICK TO\nCONTINUE";
-			successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, "center"));
+			successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, TextFormatAlign.CENTER));
 			successLabel.x = 400 - (successLabel.width / 2);
 			successLabel.y = 300 - (successLabel.height / 2);
 			mSuccessFeedback.addChild(successLabel);

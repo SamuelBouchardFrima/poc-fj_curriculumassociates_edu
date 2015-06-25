@@ -1,6 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Activity;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Result;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
@@ -41,6 +43,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class WordCrafting extends Activity
@@ -50,8 +53,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
 		private var mSubmitBtn:CurvedBox;
-		private var mDialogBox:Box;
-		private var mAnswerField:CurvedBox;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
 		private var mLearnedWordList:Object;
@@ -68,6 +69,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mTutorialTimer:Timer;
 		private var mMiniDefaultPosition:Point;
 		private var mMiniDefaultScale:Number;
+		private var mActivityBox:ActivityBox;
 		
 		public function WordCrafting(aTemplate:WordCraftingTemplate)
 		{
@@ -117,24 +119,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			var answerFieldString:String = "___";
-			for (var i:int = 0, endi:int = mTemplate.Answer.length; i < endi; ++i)
-			{
-				answerFieldString += "_";
-			}
-			var request:String = mTemplate.Request.split("_").join(answerFieldString);
-			
-			mDialogBox = new Box(new Point(1004, 200), Palette.DIALOG_BOX, new BoxLabel(request, 60, Palette.DIALOG_CONTENT), 12);
-			mDialogBox.HideLabelSubString(answerFieldString);
-			mDialogBox.x = 512;
-			mDialogBox.y = 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
-			
-			var answerFieldBoundary:Rectangle = mDialogBox.BoundaryOfLabelSubString(answerFieldString);
-			mAnswerField = new CurvedBox(answerFieldBoundary.size, Palette.ANSWER_FIELD, null, 12);
-			DisplayObjectUtil.SetPosition(mAnswerField,
-				Geometry.RectangleCenter(answerFieldBoundary).add(DisplayObjectUtil.GetPosition(mDialogBox)));
-			addChild(mAnswerField);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, true);
+			mActivityBox.x = 512;
+			mActivityBox.y = 10 + (mActivityBox.height / 2);
+			addChild(mActivityBox);
 			
 			mLearnedWordList = { };
 			
@@ -186,16 +174,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function UpdateAnswer():void
 		{
-			var answer:String = mCraftingTray.AssembleWord();
-			if (answer.length)
-			{
-				mAnswerField.Content = new BoxLabel(answer, 72, Palette.ANSWER_CONTENT);
-			}
-			else
-			{
-				mAnswerField.Content = null;
-			}
-			
+			mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), true);
 			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
@@ -229,6 +208,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			}
 			
 			mFloatPieceList.splice(mFloatPieceList.indexOf(mDraggedPiece), 1);
+		}
+		
+		private function ChunkIsRequired(aChunk:String):Boolean
+		{
+			return (mTemplate.Answer.indexOf(aChunk) > -1);
 		}
 		
 		private function ShowSuccessFeedback():void
@@ -271,7 +255,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			successLabel.embedFonts = true;
 			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
 			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
@@ -314,9 +298,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 					mTutorialTimer.reset();
 					break;
 				case 2:
-					if (mFloatPieceList.length)
+					var pieceSelection:Vector.<Piece> = new Vector.<Piece>();
+					for (i = 0, endi = mFloatPieceList.length; i < endi; ++i)
 					{
-						(Random.FromList(mFloatPieceList) as Piece).CallAttention(true);
+						if (ChunkIsRequired(mFloatPieceList[i].Label))
+						{
+							pieceSelection.push(mFloatPieceList[i]);
+						}
+					}
+					if (pieceSelection.length)
+					{
+						var piece:Piece = Random.FromList(pieceSelection) as Piece;
+						piece.CallAttention(true);
+						addChild(piece);
 					}
 					break;
 				default:
@@ -348,7 +342,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			mPreviousPosition = aEvent.EventPiece.NextPiece;
 			
-			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			var color:int = (ChunkIsRequired(aEvent.EventPiece.Label) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this), color);
 			mDraggedPiece.y = mToolTray.y;
 			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			addChild(mDraggedPiece);
@@ -459,10 +454,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				mTutorialTimer.start();
 			}
 			
+			var color:int;
 			var piece:Piece;
 			for (var i:int = 0, endi:int = aPieceLabelList.length; i < endi; ++i)
 			{
-				piece = new Piece(null, null, aPieceLabelList[i], DisplayObjectUtil.GetPosition(aPiece));
+				color = (ChunkIsRequired(aPieceLabelList[i]) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
+				piece = new Piece(null, null, aPieceLabelList[i], DisplayObjectUtil.GetPosition(aPiece), color);
 				piece.scaleX = 0.1;
 				piece.scaleY = 0.1;
 				piece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
@@ -529,7 +526,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			mPreviousPosition = aEvent.EventPiece.NextPiece;
 			
-			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this));
+			var color:int = (ChunkIsRequired(aEvent.EventPiece.Label) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
+			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this), color);
 			mDraggedPiece.y = mCraftingTray.y;
 			mDraggedPiece.filters = [new GlowFilter(Palette.GREAT_BTN, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
 			addChild(mDraggedPiece);
@@ -568,9 +566,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			var miniBitmap:Bitmap;
 			var piece:Piece;
+			var color:int;
 			if (mDraggedPiece.getBounds(this).intersects(mLevel.Mini.getBounds(this)))
 			{
-				piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this));
+				color = (ChunkIsRequired(mDraggedPiece.Label) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
+				piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this), color);
 				addChild(piece);
 				
 				mFloatPieceList.push(piece);
@@ -609,7 +609,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, y:mMiniDefaultPosition.y,
 					scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 				
-				piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this));
+				color = (ChunkIsRequired(mDraggedPiece.Label) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
+				piece = new Piece(null, null, mDraggedPiece.Label, MouseUtil.PositionRelativeTo(this), color);
 				piece.addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
 				piece.addEventListener(MouseEvent.CLICK, OnClickFloatPiece);
 				piece.addEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
@@ -759,8 +760,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				
 				addChild(mBlocker);
 				
-				mCraftingTray.Color = mResult.Color;
-				mCraftingTray.ContentColor = Palette.BTN_CONTENT;
+				mCraftingTray.Color = (mResult == Result.GREAT ? ActivityType.WORD_CRAFTING.ColorCode : mResult.Color);
 				
 				if (mResult == Result.WRONG)
 				{
@@ -803,7 +803,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitWordTimerComplete);
 			
-			mSubmitedWord = new UIButton(mAnswer, mResult.Color);
+			var target:Point = mActivityBox.CurrentActivityCenter;
+			var scale:Number = 1;
+			
+			var color:int = (mResult == Result.GREAT ? ActivityType.WORD_CRAFTING.ColorCode : mResult.Color);
+			mSubmitedWord = new UIButton(mAnswer, color);
 			mSubmitedWord.x = mCraftingTray.Center;
 			mSubmitedWord.y = mCraftingTray.y;
 			mSubmitedWord.width = mCraftingTray.width;
@@ -820,22 +824,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				mSubmissionHighlight.addChild(highlightBitmap);
 				addChild(mSubmissionHighlight);
 				
-				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:mAnswerField.x, y:mAnswerField.y,
-					scaleX:1, scaleY:1 } );
+				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:target.x, y:target.y, scaleX:1, scaleY:1 } );
 				
 				(new Asset.FusionSound() as Sound).play();
+			}
+			else if (mResult == Result.VALID)
+			{
+				target = new Point(512, 230);
+				scale = 1.5;
 			}
 			addChild(mSubmitedWord);
 			
 			mCraftingTray.visible = false;
 			
-			var target:Point = DisplayObjectUtil.GetPosition(mAnswerField);
-			var scale:Number = 1;
-			if (mResult == Result.VALID)
-			{
-				target = new Point(512, 230);
-				scale = 1.5;
-			}
 			TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedWord,
 				x:target.x, y:target.y, scaleX:scale, scaleY:scale });
 		}
@@ -849,7 +850,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		{
 			if (mResult == Result.GREAT)
 			{
-				mAnswerField.Content = new BoxLabel(mCraftingTray.AssembleWord(), 72, mResult.Color, true);
+				mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList());
 			}
 			
 			ShowSuccessFeedback();
@@ -890,7 +891,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			}
 			
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 } );
+			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 });
 			
 			if (mResult != Result.GREAT)
 			{

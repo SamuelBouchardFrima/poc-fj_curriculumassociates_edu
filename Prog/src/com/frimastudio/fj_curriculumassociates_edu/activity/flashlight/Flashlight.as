@@ -31,6 +31,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class Flashlight extends Activity
@@ -120,7 +121,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 			mRequest.text = mTemplate.Request;
 			mRequest.embedFonts = true;
 			mRequest.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, Palette.DIALOG_BOX,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			var highlightStart:int = mTemplate.Request.indexOf(mTemplate.Highlight);
 			var highlightEnd:int = highlightStart + mTemplate.Highlight.length;
 			mRequest.x = 512 - (mRequest.width / 2);
@@ -146,7 +147,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.flashlight
 				requestLetter.embedFonts = true;
 				requestLetter.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72,
 					(i >= highlightStart && i < highlightEnd ? Palette.HIGHLIGHT_CONTENT : Palette.DIALOG_CONTENT),
-					null, null, null, null, null, "center"));
+					null, null, null, null, null, TextFormatAlign.CENTER));
 				requestLetter.x = boundaries.x;
 				requestLetter.y = boundaries.y;
 				requestLetter.alpha = 0;

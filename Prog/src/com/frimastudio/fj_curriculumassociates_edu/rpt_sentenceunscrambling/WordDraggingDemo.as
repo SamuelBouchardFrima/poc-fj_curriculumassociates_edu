@@ -21,6 +21,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class WordDraggingDemo extends Sprite
@@ -397,7 +398,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				mReset = true;
 				
 				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nYOU WIN!\n\nCLICK TO\nSTART OVER";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, "center"));
+				successLabel.setTextFormat(new TextFormat(null, 40, 0x99EEFF, true, null, null, null, null, TextFormatAlign.CENTER));
 				
 				(new Asset.CrescendoSound() as Sound).play();
 				
@@ -406,7 +407,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 			else if (SentenceIsValid)
 			{
 				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nGREAT SENTENCE!\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, "center"));
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFFEE99, true, null, null, null, null, TextFormatAlign.CENTER));
 				
 				(new Asset.ValidationSound() as Sound).play();
 				
@@ -417,7 +418,7 @@ package com.frimastudio.fj_curriculumassociates_edu.rpt_sentenceunscrambling
 				mReset = true;
 				
 				successLabel.text = "\"" + mSubmitedSentence.Content + "\"\n\nTRY AGAIN!\n\nCLICK TO\nCONTINUE";
-				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, "center"));
+				successLabel.setTextFormat(new TextFormat(null, 40, 0xFF99AA, true, null, null, null, null, TextFormatAlign.CENTER));
 				
 				(new Asset.ErrorSound() as Sound).play();
 				

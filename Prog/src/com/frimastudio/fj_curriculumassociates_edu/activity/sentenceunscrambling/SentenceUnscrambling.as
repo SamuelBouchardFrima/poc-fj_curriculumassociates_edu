@@ -1,6 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscrambling
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Activity;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Result;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
@@ -36,6 +38,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.Timer;
 	
 	public class SentenceUnscrambling extends Activity
@@ -45,7 +48,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mToolTray:PieceTray;
 		private var mCraftingTray:PieceTray;
 		private var mSubmitBtn:CurvedBox;
-		private var mDialogBox:Box;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
 		private var mSubmitedSentence:UIButton;
@@ -56,6 +58,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mSuccessFeedback:Sprite;
 		private var mTutorialStep:int;
 		private var mTutorialTimer:Timer;
+		private var mActivityBox:ActivityBox;
 		
 		private function get SentenceIsCorrect():Boolean
 		{
@@ -107,14 +110,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			var request:String = mTemplate.Request;
-			
-			mDialogBox = new Box(new Point(1004, 200), Palette.DIALOG_BOX, new BoxLabel(request, 60, Palette.DIALOG_CONTENT), 12);
-			mDialogBox.x = 512;
-			mDialogBox.y = 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
-			
 			(new mTemplate.RequestAudio() as Sound).play();
+			
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, true);
+			mActivityBox.x = 512;
+			mActivityBox.y = 10 + (mActivityBox.height / 2);
+			addChild(mActivityBox);
 			
 			mResult = Result.WRONG;
 			
@@ -133,6 +134,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function UpdateAnswer():void
 		{
+			mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), true, false);
 			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
@@ -181,7 +183,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			successLabel.embedFonts = true;
 			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			
 			successLabel.x = 512 - (successLabel.width / 2);
 			successLabel.y = 384 - (successLabel.height / 2);
@@ -339,19 +341,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 				
 				addChild(mBlocker);
 				
-				mCraftingTray.Color = mResult.Color;
-				mCraftingTray.ContentColor = Palette.BTN_CONTENT;
+				mCraftingTray.Color = (mResult == Result.GREAT ? ActivityType.SENTENCE_UNSCRAMBLING.ColorCode : mResult.Color);
 				
 				if (mResult == Result.WRONG)
 				{
-					var explodeDuration:Number = mCraftingTray.FizzleAndExplode();
+					var explodeDuration:Number = mCraftingTray.FizzleAndExplode(true);
 					var explodeWordTimer:Timer = new Timer(explodeDuration * 1000, 1);
 					explodeWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeSentenceTimerComplete);
 					explodeWordTimer.start();
 				}
 				else
 				{
-					var bounceDuration:Number = mCraftingTray.BounceInSequence();
+					var bounceDuration:Number = mCraftingTray.BounceInSequence(true);
 					var submitWordTimer:Timer = new Timer(bounceDuration * 1000, 1);
 					submitWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitSentenceTimerComplete);
 					submitWordTimer.start();
@@ -383,12 +384,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitSentenceTimerComplete);
 			
-			mSubmitedSentence = new UIButton(mAnswer, mResult.Color);
+			var target:Point = DisplayObjectUtil.GetPosition(mActivityBox);
+			var scale:Number = 1;
+			
+			var color:int = (mResult == Result.GREAT ? ActivityType.SENTENCE_UNSCRAMBLING.ColorCode : mResult.Color);
+			mSubmitedSentence = new UIButton(mAnswer, color);
 			mSubmitedSentence.x = mCraftingTray.Center;
 			mSubmitedSentence.y = mCraftingTray.y;
 			mSubmitedSentence.width = mCraftingTray.width;
 			
-			var target:Point = new Point(512, 288);
 			if (mResult == Result.GREAT)
 			{
 				mSubmissionHighlight = new Sprite();
@@ -411,7 +415,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mCraftingTray.visible = false;
 			
 			TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendSubmitedSentence,
-				x:target.x, y:target.y, scaleX:1 });
+				x:target.x, y:target.y, scaleX:scale, scaleY:scale });
 		}
 		
 		private function OnEnterFrameSubmissionHighlight(aEvent:Event):void
@@ -421,6 +425,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnTweenSendSubmitedSentence():void
 		{
+			if (mResult == Result.GREAT)
+			{
+				mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), false, false);
+			}
+			
 			mSubmitedSentence.addEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
 			
 			ShowSuccessFeedback();

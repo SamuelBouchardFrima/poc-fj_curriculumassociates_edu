@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.itemunlocked
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	public class ItemUnlocked extends Popup
 	{
@@ -49,7 +50,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.itemunlocked
 			title.autoSize = TextFieldAutoSize.CENTER;
 			title.text = mTemplate.Title;
 			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 48, Palette.DIALOG_CONTENT,
-				null, null, null, null, null, "center"));
+				null, null, null, null, null, TextFormatAlign.CENTER));
 			title.x = 512 - (title.width / 2);
 			//title.y = 384 - (title.height / 2);
 			addChild(title);

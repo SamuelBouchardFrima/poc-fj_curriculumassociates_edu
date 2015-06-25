@@ -121,41 +121,83 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 		}
 		
-		public function BounceInSequence():Number
+		public function BounceInSequence(aAsSentence:Boolean = false):Number
 		{
 			var piece:Piece = mFirstPiece;
 			var i:int = 0;
-			while (piece)
+			
+			if (aAsSentence)
 			{
-				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
-					onCompleteParams:[piece, OnTweenBouncePiece], x:(piece.x - (i * (OFFSET + 12))), y:(piece.height * 0.15),
-					scaleX:1.15, scaleY:0.7 });
-				
-				++i;
-				piece = piece.NextPiece;
+				while (piece)
+				{
+					TweenLite.to(piece, 0.25, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenBouncePiece,
+						onCompleteParams:[piece], y: -50, scaleX:0.85, scaleY:1.15 } );
+					
+					++i;
+					piece = piece.NextPiece;
+				}
+				return (0.55 + ((i - 1) * 0.05));
 			}
-			return (0.7 + ((i - 1) * 0.05));
+			else
+			{
+				while (piece)
+				{
+					TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
+						onCompleteParams:[piece, OnTweenBouncePiece], x:(piece.x - (i * OFFSET)), y:(piece.height * 0.15),
+						scaleX:1.15, scaleY:0.7 });
+					
+					++i;
+					piece = piece.NextPiece;
+				}
+				return (0.7 + ((i - 1) * 0.05));
+			}
 		}
 		
-		public function FizzleAndExplode():Number
+		public function FizzleAndExplode(aAsSentence:Boolean = false):Number
 		{
 			var piece:Piece = mFirstPiece;
 			var i:int = 0;
-			while (piece)
+			if (aAsSentence)
 			{
-				TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
-					onCompleteParams:[piece, (i % 2 ? OnTweenFizzleUpPiece : OnTweenFizzleDownPiece)],
-					x:(piece.x - (i * (OFFSET + 12))) });
+				var whiteBox:CurvedBox;
+				while (piece)
+				{
+					TweenLite.killTweensOf(piece);
+					TweenLite.to(piece, 0.05, { ease:Strong.easeOut, y:0 });
+					
+					whiteBox = new CurvedBox(piece.Size, 0xFFFFFF);
+					whiteBox.x = piece.x;
+					whiteBox.alpha = 0;
+					addChild(whiteBox);
+					TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:((i * 0.07) + 0.05), onComplete:OnTweenWhitenPiece,
+						onCompleteParams:[piece, whiteBox], alpha:1 });
+					
+					++i;
+					piece = piece.NextPiece;
+				}
 				
-				++i;
-				piece = piece.NextPiece;
+				TweenLite.to(this, 0.3, { onComplete:OnTweenExplodeTray });
+				
+				return 1.3;
 			}
-			
-			var explodeTimer:Timer = new Timer(700, 1);
-			explodeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeTimerComplete);
-			explodeTimer.start();
-			
-			return 2;
+			else
+			{
+				while (piece)
+				{
+					TweenLite.to(piece, 0.15, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFusePiece,
+						onCompleteParams:[piece, (i % 2 ? OnTweenFizzleUpPiece : OnTweenFizzleDownPiece)],
+						x:(piece.x - (i * OFFSET)) });
+					
+					++i;
+					piece = piece.NextPiece;
+				}
+				
+				var explodeTimer:Timer = new Timer(700, 1);
+				explodeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeTimerComplete);
+				explodeTimer.start();
+				
+				return 2;
+			}
 		}
 		
 		public function Add(aContent:String, aStartPosition:Number):void
@@ -210,21 +252,51 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			return word;
 		}
 		
+		//public function AssembleSentence():String
+		//{
+			//var sentence:Vector.<String> = new Vector.<String>();
+			//var piece:Piece = mFirstPiece;
+			//while (piece)
+			//{
+				//sentence.push(piece.Label);
+				//piece = piece.NextPiece;
+			//}
+			////if (sentence.length)
+			////{
+				////sentence[0] = sentence[0].charAt(0).toUpperCase() + sentence[0].substring(1);
+				////sentence[sentence.length - 1] += ".";
+			////}
+			//return sentence.join(" ");
+		//}
+		
 		public function AssembleSentence():String
 		{
-			var sentence:Vector.<String> = new Vector.<String>();
+			return AssembleChunkList().join(" ");
+			//var sentence:Vector.<String> = new Vector.<String>();
+			//var piece:Piece = mFirstPiece;
+			//while (piece)
+			//{
+				//sentence.push(piece.Label);
+				//piece = piece.NextPiece;
+			//}
+			////if (sentence.length)
+			////{
+				////sentence[0] = sentence[0].charAt(0).toUpperCase() + sentence[0].substring(1);
+				////sentence[sentence.length - 1] += ".";
+			////}
+			//return sentence.join(" ");
+		}
+		
+		public function AssembleChunkList():Vector.<String>
+		{
+			var chunkList:Vector.<String> = new Vector.<String>();
 			var piece:Piece = mFirstPiece;
 			while (piece)
 			{
-				sentence.push(piece.Label);
+				chunkList.push(piece.Label);
 				piece = piece.NextPiece;
 			}
-			//if (sentence.length)
-			//{
-				//sentence[0] = sentence[0].charAt(0).toUpperCase() + sentence[0].substring(1);
-				//sentence[sentence.length - 1] += ".";
-			//}
-			return sentence.join(" ");
+			return chunkList;
 		}
 		
 		public function MakePlace(aPiece:Piece):void
