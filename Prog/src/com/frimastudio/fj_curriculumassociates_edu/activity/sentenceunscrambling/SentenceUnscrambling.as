@@ -50,7 +50,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mSubmitBtn:CurvedBox;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
-		private var mSubmitedSentence:UIButton;
+		//private var mSubmitedSentence:UIButton;
+		private var mSubmitedSentence:Sprite;
 		private var mSubmissionHighlight:Sprite;
 		private var mAnswer:String;
 		private var mResult:Result;
@@ -112,9 +113,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			(new mTemplate.RequestAudio() as Sound).play();
 			
-			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, true);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.PhylacteryArrow, true);
 			mActivityBox.x = 512;
-			mActivityBox.y = 10 + (mActivityBox.height / 2);
+			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 			addChild(mActivityBox);
 			
 			mResult = Result.WRONG;
@@ -148,10 +149,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSuccessFeedback.alpha = 0;
 			addChild(mSuccessFeedback);
 			
-			if (mSubmitedSentence)
-			{
-				addChild(mSubmitedSentence);
-			}
+			//if (mSubmitedSentence)
+			//{
+				//addChild(mSubmitedSentence);
+			//}
 			
 			addChild(mBlocker);
 			
@@ -169,11 +170,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 					(new Asset.CrescendoSound() as Sound).play();
 					break;
 				case Result.VALID:
-					successLabel.text = "Great sentence!\nClick to try again";
+					successLabel.text = "Great sentence!\nClick to try again.";
 					(new Asset.ValidationSound() as Sound).play();
 					break;
 				case Result.WRONG:
-					successLabel.text = "Click to try again";
+					successLabel.text = "Click to try again.";
 					(new Asset.ErrorSound() as Sound).play();
 					break;
 				default:
@@ -195,6 +196,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mSuccessFeedback.addChild(successLabel);
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
+			if (mResult == Result.GREAT)
+			{
+				if (mSubmitedSentence)
+				{
+					TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 });
+				}
+				mActivityBox.ProgressCurrentActivity();
+			}
 			
 			if (mSubmissionHighlight)
 			{
@@ -384,14 +393,36 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitSentenceTimerComplete);
 			
-			var target:Point = DisplayObjectUtil.GetPosition(mActivityBox);
+			//var target:Point = DisplayObjectUtil.GetPosition(mActivityBox);
+			var target:Point = mActivityBox.SentenceCenter;
 			var scale:Number = 1;
 			
 			var color:int = (mResult == Result.GREAT ? ActivityType.SENTENCE_UNSCRAMBLING.ColorCode : mResult.Color);
-			mSubmitedSentence = new UIButton(mAnswer, color);
+			//mSubmitedSentence = new UIButton(mAnswer, color);
+			mSubmitedSentence = new Sprite();
+			var chunkLabelList:Vector.<String> = mCraftingTray.AssembleChunkList();
+			var chunkList:Vector.<CurvedBox> = new Vector.<CurvedBox>();
+			var chunk:CurvedBox;
+			var chunkOffset:Number = 0;
+			var i:int, endi:int;
+			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
+			{
+				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
+					12, null, Axis.HORIZONTAL);
+				chunkOffset += chunk.width / 2;
+				chunk.x = chunkOffset;
+				mSubmitedSentence.addChild(chunk);
+				chunkList.push(chunk);
+				chunkOffset += (chunk.width) / 2 + 10;
+			}
+			var sentenceOffset:Number = -mSubmitedSentence.width / 2;
+			for (i = 0, endi = chunkList.length; i < endi; ++i)
+			{
+				chunkList[i].x += sentenceOffset;
+			}
 			mSubmitedSentence.x = mCraftingTray.Center;
 			mSubmitedSentence.y = mCraftingTray.y;
-			mSubmitedSentence.width = mCraftingTray.width;
+			//mSubmitedSentence.width = mCraftingTray.width;
 			
 			if (mResult == Result.GREAT)
 			{
@@ -430,15 +461,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 				mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), false, false);
 			}
 			
-			mSubmitedSentence.addEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
+			//mSubmitedSentence.addEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
 			
 			ShowSuccessFeedback();
 		}
 		
-		private function OnClickSubmitedSentence(aEvent:MouseEvent):void
-		{
-			(new Asset.SentenceSound["_the_field_is_on_a_hill"]() as Sound).play();
-		}
+		//private function OnClickSubmitedSentence(aEvent:MouseEvent):void
+		//{
+			//(new Asset.SentenceSound["_the_field_is_on_a_hill"]() as Sound).play();
+		//}
 		
 		private function OnTweenShowSuccessFeedback():void
 		{
@@ -453,11 +484,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void
 		{
 			mSuccessFeedback.removeEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-			if (mSubmitedSentence)
-			{
-				mSubmitedSentence.removeEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
-				TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 } );
-			}
+			//if (mSubmitedSentence)
+			//{
+				//mSubmitedSentence.removeEventListener(MouseEvent.CLICK, OnClickSubmitedSentence);
+				//TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 } );
+			//}
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSuccessFeedback, alpha:0 } );
 			
 			if (mResult != Result.GREAT)
@@ -470,7 +501,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		private function OnTweenHideSubmitedSentence():void
 		{
-			mSubmitedSentence.Dispose();
+			//mSubmitedSentence.Dispose();
 			removeChild(mSubmitedSentence);
 			mSubmitedSentence = null;
 		}

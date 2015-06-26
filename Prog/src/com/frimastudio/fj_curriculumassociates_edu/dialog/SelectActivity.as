@@ -33,14 +33,14 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mTemplate = aTemplate;
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click the sentence.", 45,
-				Palette.DIALOG_CONTENT), 12, Direction.TOP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 12, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
-			mActivityBox = new ActivityBox(mTemplate.ActivityWordList);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.PhylacteryArrow);
 			mActivityBox.x = 512;
-			mActivityBox.y = 110;
+			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 			addChild(mActivityBox);
 			
 			if (mTemplate.SelectWholeBox)

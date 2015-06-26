@@ -362,6 +362,236 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var DialogSound:Object = [ Dialog1_1, Dialog1_2, Dialog1_3, Dialog2_1, Dialog2_2, Dialog2_3,
 			Dialog3_1, Dialog3_2, Dialog4_1, Dialog4_2 ];
 		
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/01_great_job.mp3")]
+		//private static var GameHint_01_great_job:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/02_karaoke_contest.mp3")]
+		//private static var GameHint_02_karaoke_contest:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/03_where_start.mp3")]
+		//private static var GameHint_03_where_start:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/04_click_letters_word_parts.mp3")]
+		//private static var GameHint_04_click_letters_word_parts:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/05_word_Mini.mp3")]
+		//private static var GameHint_05_word_Mini:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/06_more_words.mp3")]
+		//private static var GameHint_06_more_words:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/07_click_get_words.mp3")]
+		//private static var GameHint_07_click_get_words:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/08_fliers_in_town.mp3")]
+		//private static var GameHint_08_fliers_in_town:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/09_flier_citizen.mp3")]
+		//private static var GameHint_09_flier_citizen:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/10_click_sentence.mp3")]
+		//private static var GameHint_10_click_sentence:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/11_more_people_theater.mp3")]
+		//private static var GameHint_11_more_people_theater:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/12_running_out_words.mp3")]
+		//private static var GameHint_12_running_out_words:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/13_something_room_help.mp3")]
+		//private static var GameHint_13_something_room_help:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/14_put_words_order.mp3")]
+		//private static var GameHint_14_put_words_order:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/15_ready_karaoke_contest.mp3")]
+		//private static var GameHint_15_ready_karaoke_contest:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/16_back_to_lab.mp3")]
+		//private static var GameHint_16_back_to_lab:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/17_write_song.mp3")]
+		//private static var GameHint_17_write_song:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/18_original.mp3")]
+		//private static var GameHint_18_original:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/19_let_me_try.mp3")]
+		//private static var GameHint_19_let_me_try:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/20_working_song.mp3")]
+		//private static var GameHint_20_working_song:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/21_sounds_great.mp3")]
+		//private static var GameHint_21_sounds_great:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/22_monkey_buzzard_salamander.mp3")]
+		//private static var GameHint_22_monkey_buzzard_salamander:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/23_mommas_soup.mp3")]
+		//private static var GameHint_23_mommas_soup:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/24_rockin_tune_ready.mp3")]
+		//private static var GameHint_24_rockin_tune_ready:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/25_click_word.mp3")]
+		//private static var GameHint_25_click_word:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/26_click_scrambled.mp3")]
+		//private static var GameHint_26_click_scrambled:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/27_unscramble_letters.mp3")]
+		//private static var GameHint_27_unscramble_letters:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/28_dont_sing.mp3")]
+		//private static var GameHint_28_dont_sing:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/29_look_at.mp3")]
+		//private static var GameHint_29_look_at:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Game Hints/30_mix_it_up.mp3")]
+		//private static var GameHint_30_mix_it_up:Class;
+		//public static var GameHintSound:Object = [null, GameHint_01_great_job, GameHint_02_karaoke_contest, GameHint_03_where_start,
+			//GameHint_04_click_letters_word_parts, GameHint_04_click_letters_word_parts, GameHint_05_word_Mini,
+			//GameHint_06_more_words, GameHint_07_click_get_words, GameHint_08_fliers_in_town, GameHint_09_flier_citizen,
+			//GameHint_10_click_sentence, GameHint_11_more_people_theater, GameHint_12_running_out_words,
+			//GameHint_13_something_room_help, GameHint_14_put_words_order, GameHint_15_ready_karaoke_contest,
+			//GameHint_16_back_to_lab, GameHint_17_write_song, GameHint_18_original, GameHint_19_let_me_try, GameHint_20_working_song,
+			//GameHint_21_sounds_great, GameHint_22_monkey_buzzard_salamander, GameHint_23_mommas_soup, GameHint_24_rockin_tune_ready,
+			//GameHint_25_click_word, GameHint_26_click_scrambled, GameHint_27_unscramble_letters, GameHint_28_dont_sing,
+			//GameHint_29_look_at, GameHint_30_mix_it_up];
+		
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/01_t_.mp3")]
+		//private static var LetterSound_01_t_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/02-1_i_short.mp3")]
+		//private static var LetterSound_02_1_i_short:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/02-2_i_long.mp3")]
+		//private static var LetterSound_02_2_i_long:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/03_p_.mp3")]
+		//private static var LetterSound_03_p_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/04_r_.mp3")]
+		//private static var LetterSound_04_r_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/05_n_.mp3")]
+		//private static var LetterSound_05_n_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/06_d_.mp3")]
+		//private static var LetterSound_06_d_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/07_m_.mp3")]
+		//private static var LetterSound_07_m_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/08_f_.mp3")]
+		//private static var LetterSound_08_f_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/09_s_.mp3")]
+		//private static var LetterSound_09_s_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/10-1_a_short.mp3")]
+		//private static var LetterSound_10_1_a_short:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Letter Sounds/10-2_a_long.mp3")]
+		//private static var LetterSound_10_2_a_long:Class;
+		//public static var LetterAudioSound:Object = [null, LetterSound_01_t_, [LetterSound_02_1_i_short, LetterSound_02_2_i_long],
+			//LetterSound_03_p_, LetterSound_04_r_, LetterSound_05_n_, LetterSound_06_d_, LetterSound_07_m_, LetterSound_08_f_,
+			//LetterSound_09_s_, [LetterSound_10_1_a_short, LetterSound_10_2_a_long]];
+		
+		//[Embed(source = "../../../../audio/POC Ausio/Other/choose_location.mp3")]
+		//private static var Navigation_choose_location:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Other/a_lab.mp3")]
+		//private static var Navigation_a_lab:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Other/b_town_square.mp3")]
+		//private static var Navigation_b_town_square:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Other/c_grocery_store.mp3")]
+		//private static var Navigation_c_grocery_store:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Other/d_theater.mp3")]
+		//private static var Navigation_d_theater:Class;
+		//public static var NavigationSound:Object = [Navigation_choose_location, Navigation_a_lab, Navigation_b_town_square,
+			//Navigation_c_grocery_store, Navigation_d_theater];
+		
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/01_did_lesson_13.mp3")]
+		//private static var Reward_01_did_lesson_13:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/02_lesson_reward.mp3")]
+		//private static var Reward_02_lesson_reward:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/03_quest_reward.mp3")]
+		//private static var Reward_03_quest_reward:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/04_pattern_cards.mp3")]
+		//private static var Reward_04_pattern_cards:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/05_words.mp3")]
+		//private static var Reward_05_words:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/06_have_fliers.mp3")]
+		//private static var Reward_06_have_fliers:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/07_grocery_unlocked.mp3")]
+		//private static var Reward_07_grocery_unlocked:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/08_square_unlocked.mp3")]
+		//private static var Reward_08_square_unlocked:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/09_theater_unlocked.mp3")]
+		//private static var Reward_09_theater_unlocked:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Rewards/10_unlocked_karaoke.mp3")]
+		//private static var Reward_10_unlocked_karaoke:Class;
+		//public static var RewardSound:Object = [null, Reward_01_did_lesson_13, Reward_02_lesson_reward, Reward_03_quest_reward,
+			//Reward_04_pattern_cards, Reward_05_words, Reward_06_have_fliers, Reward_07_grocery_unlocked, Reward_08_square_unlocked,
+			//Reward_09_theater_unlocked, Reward_10_unlocked_karaoke];
+		
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/01_print_fliers.mp3")]
+		//private static var SentenceContentTarget_01_print_fliers:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/02_sit_on_it.mp3")]
+		//private static var SentenceContentTarget_02_sit_on_it:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/03_watch_sit_front.mp3")]
+		//private static var SentenceContentTarget_03_watch_sit_front:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/04_love_sing.mp3")]
+		//private static var SentenceContentTarget_04_love_sing:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/05_dont_sing_can_rap.mp3")]
+		//private static var SentenceContentTarget_05_dont_sing_can_rap:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/06_look_fat_rat.mp3")]
+		//private static var SentenceContentTarget_06_look_fat_rat:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/07_lip_hip_eyes.mp3")]
+		//private static var SentenceContentTarget_07_lip_hip_eyes:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Sentence_Content_Target/08_mix_it_take_sip.mp3")]
+		//private static var SentenceContentTarget_08_mix_it_take_sip:Class;
+		//public static var SentenceContentTargetSound:Object = [null, SentenceContentTarget_01_print_fliers,
+			//SentenceContentTarget_02_sit_on_it, SentenceContentTarget_03_watch_sit_front, SentenceContentTarget_04_love_sing,
+			//SentenceContentTarget_05_dont_sing_can_rap, SentenceContentTarget_06_look_fat_rat,
+			//SentenceContentTarget_07_lip_hip_eyes, SentenceContentTarget_08_mix_it_take_sip];
+		
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/01_tip.mp3")]
+		//private static var WordContent_01_tip:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/02_rip.mp3")]
+		//private static var WordContent_02_rip:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/03_nip.mp3")]
+		//private static var WordContent_03_nip:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/04_dim.mp3")]
+		//private static var WordContent_04_dim:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/05_fin.mp3")]
+		//private static var WordContent_05_fin:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/06_sit.mp3")]
+		//private static var WordContent_06_sit:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/07_pit.mp3")]
+		//private static var WordContent_07_pit:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/08_sip.mp3")]
+		//private static var WordContent_08_sip:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/09_it.mp3")]
+		//private static var WordContent_09_it:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/10_if.mp3")]
+		//private static var WordContent_10_if:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/11_in.mp3")]
+		//private static var WordContent_11_in:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/12_rid.mp3")]
+		//private static var WordContent_12_rid:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/13_to.mp3")]
+		//private static var WordContent_13_to:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/14_did.mp3")]
+		//private static var WordContent_14_did:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/15_look.mp3")]
+		//private static var WordContent_15_look:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/16_at.mp3")]
+		//private static var WordContent_16_at:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/17_the.mp3")]
+		//private static var WordContent_17_the:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/18_fat.mp3")]
+		//private static var WordContent_18_fat:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/19_rat.mp3")]
+		//private static var WordContent_19_rat:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/20_i.mp3")]
+		//private static var WordContent_20_i:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/21_dont.mp3")]
+		//private static var WordContent_21_dont:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/22_sing.mp3")]
+		//private static var WordContent_22_sing:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/23_but.mp3")]
+		//private static var WordContent_23_but:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/24_.mp3")]
+		//private static var WordContent_24_:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/25_rap.mp3")]
+		//private static var WordContent_25_rap:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/26_fit.mp3")]
+		//private static var WordContent_26_fit:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/27_mix.mp3")]
+		//private static var WordContent_27_mix:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/28_up.mp3")]
+		//private static var WordContent_28_up:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/29_and.mp3")]
+		//private static var WordContent_29_and:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/30_take.mp3")]
+		//private static var WordContent_30_take:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/31-1_a_ah.mp3")]
+		//private static var WordContent_31_1_a_ah:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/31-2_a_ay.mp3")]
+		//private static var WordContent_31_2_a_ay:Class;
+		//[Embed(source = "../../../../audio/POC Ausio/Word_Content/31-3_a_uh.mp3")]
+		//private static var WordContent_31_3_a_uh:Class;
+		//public static var WordContentSound:Object = [null, WordContent_01_tip, WordContent_02_rip, WordContent_03_nip,
+			//WordContent_04_dim, WordContent_05_fin, WordContent_06_sit, WordContent_07_pit, WordContent_08_sip, WordContent_09_it,
+			//WordContent_10_if, WordContent_11_in, WordContent_12_rid, WordContent_13_to, WordContent_14_did, WordContent_15_look,
+			//WordContent_16_at, WordContent_17_the, WordContent_18_fat, WordContent_19_rat, WordContent_20_i, WordContent_21_dont,
+			//WordContent_22_sing, WordContent_23_but, WordContent_24_, WordContent_25_rap, WordContent_26_fit, WordContent_27_mix,
+			//WordContent_28_up, WordContent_29_and, WordContent_30_take,
+			//[WordContent_31_1_a_ah, WordContent_31_2_a_ay, WordContent_31_3_a_uh]];
+		
 		[Embed(source = "../../../../audio/game/whereIsTheField.mp3")]
 		public static var WhereIsTheFieldSound:Class;
 		

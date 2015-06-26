@@ -179,8 +179,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(mSize.right - 5, 0));
 					break;
 				case Direction.DOWN:
-					coordinateList.push(new Point(-13, mSize.bottom - 5));
-					coordinateList.push(new Point(0, mSize.bottom + 20));
+					coordinateList.push(new Point(-23, mSize.bottom - 5));
+					coordinateList.push(new Point(0, mSize.bottom + 40));
 					coordinateList.push(new Point(0, mSize.bottom - 5));
 					break;
 				case Direction.LEFT:
@@ -188,14 +188,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(mSize.left - 20, 0));
 					coordinateList.push(new Point(mSize.left + 5, 0));
 					break;
-				case Direction.TOP_LEFT:
+				case Direction.UP_LEFT:
 					coordinateList.push(new Point(mSize.left + 27, mSize.top + 5));
 					coordinateList.push(new Point(mSize.left + 40, mSize.top - 20));
 					coordinateList.push(new Point(mSize.left + 40, mSize.top + 5));
 					break;
 				case Direction.DOWN_LEFT:
-					coordinateList.push(new Point(mSize.left + 27, mSize.bottom - 5));
-					coordinateList.push(new Point(mSize.left + 40, mSize.bottom + 20));
+					coordinateList.push(new Point(mSize.left + 17, mSize.bottom - 5));
+					coordinateList.push(new Point(mSize.left + 40, mSize.bottom + 40));
 					coordinateList.push(new Point(mSize.left + 40, mSize.bottom - 5));
 					break;
 				default:

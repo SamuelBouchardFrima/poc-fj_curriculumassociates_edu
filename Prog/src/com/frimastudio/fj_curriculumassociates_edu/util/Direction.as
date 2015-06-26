@@ -11,7 +11,7 @@ package com.frimastudio.fj_curriculumassociates_edu.util
 		public static const RIGHT:Direction = new Direction(sI++, "RIGHT", new Point(1, 0));
 		public static const DOWN:Direction = new Direction(sI++, "DOWN", new Point(0, 1));
 		public static const LEFT:Direction = new Direction(sI++, "LEFT", new Point(-1, 0));
-		public static const TOP_LEFT:Direction = new Direction(sI++, "TOP_LEFT", new Point(-1, -1));
+		public static const UP_LEFT:Direction = new Direction(sI++, "UP_LEFT", new Point(-1, -1));
 		public static const DOWN_LEFT:Direction = new Direction(sI++, "DOWN_LEFT", new Point(-1, 1));
 		
 		private var mID:int;

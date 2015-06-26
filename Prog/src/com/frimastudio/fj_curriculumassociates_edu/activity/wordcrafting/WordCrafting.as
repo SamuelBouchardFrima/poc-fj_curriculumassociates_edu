@@ -56,7 +56,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
 		private var mLearnedWordList:Object;
-		private var mSubmitedWord:UIButton;
+		//private var mSubmitedWord:UIButton;
+		private var mSubmitedWord:Sprite;
 		private var mSubmissionHighlight:Sprite;
 		private var mAnswer:String;
 		private var mResult:Result;
@@ -119,9 +120,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, true);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.PhylacteryArrow, true);
 			mActivityBox.x = 512;
-			mActivityBox.y = 10 + (mActivityBox.height / 2);
+			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 			addChild(mActivityBox);
 			
 			mLearnedWordList = { };
@@ -241,11 +242,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 					(new Asset.CrescendoSound() as Sound).play();
 					break;
 				case Result.VALID:
-					successLabel.text = "Great word!\nClick to try again";
+					successLabel.text = "Great word!\nClick to try again.";
 					(new Asset.ValidationSound() as Sound).play();
 					break;
 				case Result.WRONG:
-					successLabel.text = "Click to try again";
+					successLabel.text = "Click to try again.";
 					(new Asset.ErrorSound() as Sound).play();
 					break;
 				default:
@@ -272,6 +273,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				{
 					TweenLite.to(mSubmitedWord, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedWord, alpha:0 });
 				}
+				mActivityBox.ProgressCurrentActivity();
 			}
 			if (mSubmissionHighlight)
 			{
@@ -807,10 +809,32 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			var scale:Number = 1;
 			
 			var color:int = (mResult == Result.GREAT ? ActivityType.WORD_CRAFTING.ColorCode : mResult.Color);
-			mSubmitedWord = new UIButton(mAnswer, color);
+			//mSubmitedWord = new UIButton(mAnswer, color);
+			mSubmitedWord = new Sprite();
+			var chunkLabelList:Vector.<String> = mCraftingTray.AssembleChunkList();
+			var chunkList:Vector.<CurvedBox> = new Vector.<CurvedBox>();
+			var chunk:CurvedBox;
+			var chunkOffset:Number = 0;
+			var i:int, endi:int;
+			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
+			{
+				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
+					12, null, Axis.HORIZONTAL);
+				chunkOffset += chunk.width / 2;
+				chunk.x = chunkOffset;
+				mSubmitedWord.addChild(chunk);
+				chunkList.push(chunk);
+				chunkOffset += (chunk.width) / 2;
+			}
+			var wordOffset:Number = -mSubmitedWord.width / 2;
+			for (i = 0, endi = chunkList.length; i < endi; ++i)
+			{
+				chunkList[i].x += wordOffset;
+			}
 			mSubmitedWord.x = mCraftingTray.Center;
 			mSubmitedWord.y = mCraftingTray.y;
-			mSubmitedWord.width = mCraftingTray.width;
+			//mSubmitedWord.width = mCraftingTray.width;
+			
 			if (mResult == Result.GREAT)
 			{
 				mSubmissionHighlight = new Sprite();
@@ -833,6 +857,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				target = new Point(512, 230);
 				scale = 1.5;
 			}
+			
 			addChild(mSubmitedWord);
 			
 			mCraftingTray.visible = false;
@@ -863,7 +888,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function OnTweenHideSubmitedWord():void
 		{
-			mSubmitedWord.Dispose();
+			//mSubmitedWord.Dispose();
 			removeChild(mSubmitedWord);
 			mSubmitedWord = null;
 			

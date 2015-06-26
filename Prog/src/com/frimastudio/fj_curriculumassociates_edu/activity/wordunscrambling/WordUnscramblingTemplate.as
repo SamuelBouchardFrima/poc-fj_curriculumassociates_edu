@@ -3,19 +3,24 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
+	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	
 	public class WordUnscramblingTemplate extends ActivityTemplate
 	{
 		private var mLetterList:Vector.<String>;
 		private var mAnswer:String;
 		private var mActivityWordList:Vector.<WordTemplate>;
+		private var mLineBreakList:Vector.<int>;
+		private var mPhylacteryArrow:Direction;
 		
 		public function get LetterList():Vector.<String>	{ return mLetterList; }
 		public function get Answer():String	{ return mAnswer; }
 		public function get ActivityWordList():Vector.<WordTemplate>	{ return mActivityWordList; }
+		public function get LineBreakList():Vector.<int>	{ return mLineBreakList; }
+		public function get PhylacteryArrow():Direction	{ return mPhylacteryArrow; }
 		
 		public function WordUnscramblingTemplate(aLevel:Level, aLetterList:Vector.<String>, aAnswer:String,
-			aActivityWordList:Vector.<WordTemplate>)
+			aActivityWordList:Vector.<WordTemplate>, aLineBreakList:Vector.<int> = null, aPhylacteryArrow:Direction = null)
 		{
 			super(aLevel);
 			
@@ -24,6 +29,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mLetterList = aLetterList;
 			mAnswer = aAnswer;
 			mActivityWordList = aActivityWordList;
+			mLineBreakList = (aLineBreakList ? aLineBreakList : new Vector.<int>());
+			mPhylacteryArrow = (aPhylacteryArrow ? aPhylacteryArrow : Direction.DOWN_LEFT);
 		}
 	}
 }

@@ -14,13 +14,13 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		
 		public static const NONE:Level = new Level(sI++, "NONE");
 		public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap, new Point(89, 466), 0.53,
-			new Point(634, 555), 1, null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.622);
+			new Point(634, 505), 0.9, null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.622);
 		public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap, new Point(149, 478), 0.4,
-			new Point(884, 555), 0.75, Asset.CopNPCBitmap, new Point(542, 474), 0.25);
+			new Point(864, 535), 0.75, Asset.CopNPCBitmap, new Point(542, 474), 0.25);
 		public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap, new Point(149, 466),
-			0.53, new Point(700, 555), 1, Asset.ChefNPCBitmap, new Point(360, 460), 0.6);
+			0.53, new Point(335, 520), 0.9, Asset.ChefNPCBitmap, new Point(600, 370), 0.5);
 		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap, new Point(169, 406), 0.53,
-			new Point(844, 475), 1, Asset.GlamStarNPCBitmap, new Point(532, 400), 0.65, Asset.RatPropBitmap, new Point(356, 467),
+			new Point(844, 460), 0.9, Asset.GlamStarNPCBitmap, new Point(532, 400), 0.65, Asset.RatPropBitmap, new Point(356, 467),
 			1, true);
 		
 		private var mID:int;
