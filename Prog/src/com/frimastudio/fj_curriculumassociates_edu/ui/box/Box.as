@@ -29,6 +29,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		protected var mSize:Rectangle;
 		protected var mDefaultSize:Rectangle;
 		protected var mColor:int;
+		protected var mColorBorderOnly:Boolean;
 		protected var mContentTemplate:BoxContent;
 		protected var mPointDirection:Direction;
 		protected var mAutoSizeAxis:Axis;
@@ -71,6 +72,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			
 			DrawBox();
 			DrawPoint();
+		}
+		
+		public function get ColorBorderOnly():Boolean	{ return mColorBorderOnly; }
+		public function set ColorBorderOnly(aValue:Boolean):void
+		{
+			mColorBorderOnly = aValue;
+			DrawBox();
 		}
 		
 		public function get Content():BoxContent	{ return mContentTemplate; }
@@ -151,8 +159,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		{
 			mGraphic.graphics.clear();
 			
-			mGraphic.graphics.lineStyle();
-			mGraphic.graphics.beginFill(mColor);
+			if (mColorBorderOnly)
+			{
+				mGraphic.graphics.lineStyle(3, mColor);
+				mGraphic.graphics.beginFill(0xFFFFFF);
+			}
+			else
+			{
+				mGraphic.graphics.lineStyle();
+				mGraphic.graphics.beginFill(mColor);
+			}
 			mGraphic.graphics.moveTo(mSize.left, mSize.top);
 			mGraphic.graphics.lineTo(mSize.right, mSize.top);
 			mGraphic.graphics.lineTo(mSize.right, mSize.bottom);
@@ -323,7 +339,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					{
 						characterBox = new CurvedBox(new Point(tiledLabelTemplate.Size, tiledLabelTemplate.Size),
 							tileColor, new BoxLabel(character, tiledLabelTemplate.Size * 0.75,
-							tiledLabelTemplate.ContentColor), 6, null, Axis.HORIZONTAL);
+							tiledLabelTemplate.ContentColor), 3, null, Axis.HORIZONTAL);
 						characterContainer.addChild(characterBox);
 					}
 					else if (StringUtil.CharIsPunctuation(character))
@@ -343,8 +359,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					{
 						characterBox = new CurvedBox(new Point(tiledLabelTemplate.Size, tiledLabelTemplate.Size),
 							tileColor, new BoxLabel("_", tiledLabelTemplate.Size * 0.75,
-							//tiledLabelTemplate.ContentColor), 6, null, Axis.HORIZONTAL);
-							tileColor), 6, null, Axis.HORIZONTAL);
+							//tiledLabelTemplate.ContentColor), 3, null, Axis.HORIZONTAL);
+							tileColor), 3, null, Axis.HORIZONTAL);
 						characterContainer.addChild(characterBox);
 					}
 					else if (character == " ")

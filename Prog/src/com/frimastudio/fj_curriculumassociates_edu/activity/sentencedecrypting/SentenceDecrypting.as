@@ -76,7 +76,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			mMiniDefaultScale = mLevel.Mini.scaleX;
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
-				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
@@ -759,9 +759,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			var explosion:MovieClip = new Asset.PieceExplosionClip() as MovieClip;
 			explosion.x = aWhiteBox.x;
 			explosion.y = aWhiteBox.y;
-			var colorTransform:ColorTransform = new ColorTransform();
-			colorTransform.color = Palette.GREAT_BTN;
-			explosion.transform.colorTransform = colorTransform;
+			//var colorTransform:ColorTransform = new ColorTransform();
+			//colorTransform.color = Palette.GREAT_BTN;
+			//explosion.transform.colorTransform = colorTransform;
 			addChild(explosion);
 			
 			TweenLite.to(aWhiteBox, 0.3, { ease:Strong.easeOut, delay:0.2, onComplete:OnTweenHideExplosion,

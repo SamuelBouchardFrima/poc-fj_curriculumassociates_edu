@@ -12,7 +12,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	
 	public class GamePOC extends Sprite
 	{
-		private static const VERSION:String = "v1.4";
+		private static const VERSION:String = "v1.5";
 		
 		public function GamePOC():void
 		{
@@ -31,7 +31,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			addChild(quest);
 			
-			var version:CurvedBox = new CurvedBox(new Point(16, 16), 0xCCCCCC, new BoxLabel(VERSION, 12, 0x000000), 1, null, Axis.HORIZONTAL, 8);
+			var version:CurvedBox = new CurvedBox(new Point(16, 16), 0xCCCCCC,
+				new BoxLabel(VERSION, 12, 0x000000), 1, null, Axis.HORIZONTAL, 8);
 			version.x = (version.width / 2) + 2;
 			version.y = (version.height / 2) + 2;
 			addChild(version);

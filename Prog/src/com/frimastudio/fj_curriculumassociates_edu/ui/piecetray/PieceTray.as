@@ -131,7 +131,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				while (piece)
 				{
 					TweenLite.to(piece, 0.25, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenBouncePiece,
-						onCompleteParams:[piece], x:(piece.x - (i * 10)), y: -50, scaleX:0.85, scaleY:1.15 } );
+						onCompleteParams:[piece], x:(piece.x - (i * (OFFSET - 15))), y: -50, scaleX:0.85, scaleY:1.15 } );
 					
 					++i;
 					piece = piece.NextPiece;

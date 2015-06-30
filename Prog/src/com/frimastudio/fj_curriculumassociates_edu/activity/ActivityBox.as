@@ -138,7 +138,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			
 			//if (mHint)
 			//{
-				//mHintBtn = new CurvedBox(new Point(80, 80), Palette.VALID_BTN, new BoxLabel("?", 60, Palette.BTN_CONTENT), 12);
+				//mHintBtn = new CurvedBox(new Point(80, 80), Palette.VALID_BTN, new BoxLabel("?", 60, Palette.BTN_CONTENT), 3);
 				//mHintBtn.x = 442;
 				//mHintBtn.y = 0;
 				//mHintBtn.addEventListener(MouseEvent.CLICK, OnClickHintBtn);
@@ -146,7 +146,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			//}
 			//else
 			//{
-				//mHintBtn = new CurvedBox(new Point(80, 80), 0x999999, new BoxLabel("?", 60, Palette.BTN_CONTENT), 12);
+				//mHintBtn = new CurvedBox(new Point(80, 80), 0x999999, new BoxLabel("?", 60, Palette.BTN_CONTENT), 3);
 				//mHintBtn.x = 442;
 				//mHintBtn.y = 0;
 				//addChild(mHintBtn);
@@ -272,7 +272,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 							break;
 					}
 					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(label, 45, labelColor),
-						6, null, Axis.HORIZONTAL);
+						3, null, Axis.HORIZONTAL);
+					chunk.ColorBorderOnly = true;
 					chunkOffset += chunk.width / 2;
 					chunk.x = chunkOffset;
 					chunk.y = 0;
@@ -372,7 +373,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				}
 				if (mWordTemplateList[i].Punctuation != "'")
 				{
-					wordOffset.x += 10;
+					//wordOffset.x += 10;
+					wordOffset.x += 15;
 				}
 			}
 			
@@ -440,7 +442,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 						if (chunkList[j].Label != label)
 						{
 							chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
-								new BoxLabel(label, 45, labelColor), 6, null, Axis.HORIZONTAL);
+								new BoxLabel(label, 45, labelColor), 3, null, Axis.HORIZONTAL);
+							chunk.ColorBorderOnly = true;
 							chunkOffset += chunk.width / 2;
 							chunk.x = chunkList[j].x;
 							chunkTargetList.push(chunkOffset);
@@ -495,7 +498,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				else
 				{
 					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
-						new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
+						new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
+					chunk.ColorBorderOnly = true;
 					chunkOffset += chunk.width / 2;
 					chunk.x = 0;
 					chunkTargetList.push(chunkOffset);
@@ -605,7 +609,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				}
 				if (mWordTemplateList[i].Punctuation != "'")
 				{
-					wordOffset += 10;
+					//wordOffset += 10;
+					wordOffset += 15;
 				}
 			}
 		}

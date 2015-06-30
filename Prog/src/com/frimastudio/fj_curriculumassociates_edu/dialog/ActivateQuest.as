@@ -45,7 +45,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
 			
 			mDialogBox = new CurvedBox(new Point(100, 100), Palette.DIALOG_BOX,
-				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT);
+				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);

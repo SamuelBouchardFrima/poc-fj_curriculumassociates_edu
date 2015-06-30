@@ -72,7 +72,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mTemplate = aTemplate;
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Unscramble the letters.", 45,
-				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				598 - (mDialogBox.height / 2));
@@ -113,7 +113,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			addChild(mCraftingTray);
 			
 			mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
+				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 3);
 			mSubmitBtn.x = 982;
 			mSubmitBtn.y = 643;
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
@@ -443,7 +443,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
 			{
 				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
-					6, null, Axis.HORIZONTAL);
+					3, null, Axis.HORIZONTAL);
+				chunk.ColorBorderOnly = true;
 				chunkOffset += chunk.width / 2;
 				chunk.x = chunkOffset;
 				mSubmitedWord.addChild(chunk);

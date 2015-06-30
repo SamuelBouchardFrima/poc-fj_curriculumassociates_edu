@@ -52,7 +52,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			for (var i:int = 0, endi:int = mTemplate.LocationList.length; i < endi; ++i)
 			{
 				location = new CurvedBox(new Point(200, 200), (mTemplate.LocationUnlockList[i] ? 0xCCFF99 : 0xCCCCCC),
-					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 6, null, null);
+					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 3, null, null);
 				offset += location.width / 2;
 				location.x = offset;
 				location.y = 0;

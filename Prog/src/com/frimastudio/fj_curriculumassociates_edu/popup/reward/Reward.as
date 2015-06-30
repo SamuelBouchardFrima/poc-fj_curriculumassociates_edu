@@ -66,7 +66,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			for (var i:int = 0, endi:int = mTemplate.RewardList.length; i < endi; ++i)
 			{
 				reward = new CurvedBox(new Point(60, 60), 0xCCCCCC,
-					new BoxLabel(mTemplate.RewardList[i], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
+					new BoxLabel(mTemplate.RewardList[i], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
+				reward.ColorBorderOnly = true;
 				offset += reward.width / 2;
 				reward.x = offset;
 				reward.y = 0;

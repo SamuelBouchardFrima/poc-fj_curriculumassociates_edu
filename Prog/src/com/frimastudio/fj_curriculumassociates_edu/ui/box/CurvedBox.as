@@ -45,8 +45,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		{
 			mGraphic.graphics.clear();
 			
-			mGraphic.graphics.lineStyle();
-			mGraphic.graphics.beginFill(mColor);
+			if (mColorBorderOnly)
+			{
+				mGraphic.graphics.lineStyle(5, mColor);
+				mGraphic.graphics.beginFill(0xFFFFFF);
+			}
+			else
+			{
+				mGraphic.graphics.lineStyle();
+				mGraphic.graphics.beginFill(mColor);
+			}
 			mGraphic.graphics.moveTo(mSize.left + mCurve, mSize.top);
 			mGraphic.graphics.lineTo(mSize.right - mCurve, mSize.top);
 			mGraphic.graphics.curveTo(mSize.right, mSize.top, mSize.right, mSize.top + mCurve);

@@ -78,7 +78,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX,
 				new BoxLabel("Put the words in order to make the sentence.", 45, Palette.DIALOG_CONTENT),
-				6, Direction.UP_LEFT, Axis.BOTH);
+				3, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				598 - (mDialogBox.height / 2));
@@ -431,12 +431,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
 			{
 				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
-					6, null, Axis.HORIZONTAL);
+					3, null, Axis.HORIZONTAL);
+				chunk.ColorBorderOnly = true;
 				chunkOffset += chunk.width / 2;
 				chunk.x = chunkOffset;
 				mSubmitedSentence.addChild(chunk);
 				chunkList.push(chunk);
-				chunkOffset += (chunk.width) / 2 + 10;
+				chunkOffset += (chunk.width) / 2 + 15;
 			}
 			var sentenceOffset:Number = -mSubmitedSentence.width / 2;
 			for (i = 0, endi = chunkList.length; i < endi; ++i)
