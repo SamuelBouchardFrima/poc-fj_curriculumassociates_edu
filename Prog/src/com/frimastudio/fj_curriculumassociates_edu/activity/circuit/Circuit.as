@@ -99,7 +99,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			for (i = 0, endi = mTemplate.WordList.length; i < endi; ++i)
 			{
 				word = new CurvedBox(new Point(188, 66), Palette.DIALOG_BOX,
-					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
+					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 6);
 				word.x = ((i % 3) * 220) + 190;
 				word.y = (Math.floor(i / 3) * 90) + 620 + 300;
 				if (mTemplate.SkipInstruction)
@@ -290,7 +290,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 		private function OnTweenSendAnswer(aWordBtn:CurvedBox):void
 		{
 			var answerBtn:CurvedBox = new CurvedBox(aWordBtn.Size, Palette.DIALOG_BOX,
-				new BoxLabel(aWordBtn.Label, 52.5, Palette.DIALOG_CONTENT), 12);
+				new BoxLabel(aWordBtn.Label, 52.5, Palette.DIALOG_CONTENT), 6);
 			answerBtn.x = aWordBtn.x;
 			answerBtn.y = aWordBtn.y;
 			addChild(answerBtn);
@@ -396,7 +396,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.circuit
 			var answer:int = mWordList.indexOf(aWordBtn);
 			
 			var answerBtn:CurvedBox = new CurvedBox(aWordBtn.Size, Palette.DIALOG_BOX,
-				new BoxLabel(mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]], 52.5, Palette.DIALOG_CONTENT), 12);
+				new BoxLabel(mTemplate.WordList[mTemplate.AnswerList[mCurrentCircuit]], 52.5, Palette.DIALOG_CONTENT), 6);
 			answerBtn.x = aWordBtn.x;
 			answerBtn.y = aWordBtn.y;
 			addChild(answerBtn);

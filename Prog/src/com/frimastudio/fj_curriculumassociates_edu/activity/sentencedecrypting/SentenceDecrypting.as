@@ -76,7 +76,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			mMiniDefaultScale = mLevel.Mini.scaleX;
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
-				Palette.DIALOG_CONTENT), 12, Direction.UP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
@@ -892,6 +892,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		private function OnTweenShowSuccessFeedback():void
 		{
 			removeChild(mBlocker);
+			
+			if (mAnswer.indexOf("_") == -1)
+			{
+				(new mTemplate.RequestVO() as Sound).play();
+			}
 		}
 		
 		private function OnClickSuccessFeedback(aEvent:MouseEvent):void

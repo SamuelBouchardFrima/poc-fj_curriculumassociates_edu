@@ -17,6 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
 	import com.greensock.TweenLite;
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -271,7 +272,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 							break;
 					}
 					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(label, 45, labelColor),
-						12, null, Axis.HORIZONTAL);
+						6, null, Axis.HORIZONTAL);
 					chunkOffset += chunk.width / 2;
 					chunk.x = chunkOffset;
 					chunk.y = 0;
@@ -409,10 +410,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			var label:String;
 			var labelColor:int;
 			var punctuation:TextField;
-			var whiteBox:CurvedBox;
-			var wordExplosion:MovieClip;
-			var colorTransform:ColorTransform;
-			var size:Point;
+			//var whiteBox:CurvedBox;
+			//var wordExplosion:MovieClip;
+			//var colorTransform:ColorTransform;
+			//var size:Point;
+			var highlight:Sprite;
+			var highlightBitmap:Bitmap;
 			
 			for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
 			{
@@ -437,7 +440,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 						if (chunkList[j].Label != label)
 						{
 							chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
-								new BoxLabel(label, 45, labelColor), 12, null, Axis.HORIZONTAL);
+								new BoxLabel(label, 45, labelColor), 6, null, Axis.HORIZONTAL);
 							chunkOffset += chunk.width / 2;
 							chunk.x = chunkList[j].x;
 							chunkTargetList.push(chunkOffset);
@@ -446,21 +449,36 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 							
 							if (aPlayExplosion)
 							{
-								chunk.alpha = 0;
+								highlight = new Sprite();
+								highlight.x = chunk.x + word.x + mContent.x;
+								highlight.y = chunk.y + word.y + mContent.y;
+								highlight.scaleX = highlight.scaleY = 0.01;
+								highlight.alpha = 0;
+								highlightBitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
+								highlightBitmap.smoothing = true;
+								highlightBitmap.x = -highlightBitmap.width / 2;
+								highlightBitmap.y = -highlightBitmap.height / 2;
+								highlight.addChild(highlightBitmap);
+								addChild(highlight);
 								
-								size = MathUtil.MaxPoint(chunk.Size, chunkList[j].Size);
-								whiteBox = new CurvedBox(size, Palette.GREAT_BTN);
-								whiteBox.x = chunkList[j].x;
-								whiteBox.y = chunkList[j].y;
-								whiteBox.alpha = 0;
-								word.addChild(whiteBox);
-								TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:(j * 0.07), onComplete:OnTweenWhitenChunk,
-									onCompleteParams:[chunkList[j], whiteBox, word, chunk], alpha:1 } );
+								TweenLite.to(highlight, 0.2, { ease:Strong.easeIn, onComplete:OnTweenShowHighlight,
+									onCompleteParams:[highlight], scaleX:1, scaleY:1, alpha:1, rotation:30 });
+								
+								//chunk.alpha = 0;
+								//
+								//size = MathUtil.MaxPoint(chunk.Size, chunkList[j].Size);
+								//whiteBox = new CurvedBox(size, Palette.GREAT_BTN);
+								//whiteBox.x = chunkList[j].x;
+								//whiteBox.y = chunkList[j].y;
+								//whiteBox.alpha = 0;
+								//word.addChild(whiteBox);
+								//TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:(j * 0.07), onComplete:OnTweenWhitenChunk,
+									//onCompleteParams:[chunkList[j], whiteBox, word, chunk], alpha:1 } );
 							}
-							else
-							{
+							//else
+							//{
 								word.removeChild(chunkList[j]);
-							}
+							//}
 							
 							chunkList[j] = chunk;
 							chunkOffset += chunk.width / 2;
@@ -477,7 +495,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				else
 				{
 					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
-						new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 12, null, Axis.HORIZONTAL);
+						new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
 					chunkOffset += chunk.width / 2;
 					chunk.x = 0;
 					chunkTargetList.push(chunkOffset);
@@ -490,26 +508,41 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 					
 					if (aPlayExplosion)
 					{
-						chunk.alpha = 0;
+						highlight = new Sprite();
+						highlight.x = chunk.x + word.x + mContent.x;
+						highlight.y = chunk.y + word.y + mContent.y;
+						highlight.scaleX = highlight.scaleY = 0.01;
+						highlight.alpha = 0;
+						highlightBitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
+						highlightBitmap.smoothing = true;
+						highlightBitmap.x = -highlightBitmap.width / 2;
+						highlightBitmap.y = -highlightBitmap.height / 2;
+						highlight.addChild(highlightBitmap);
+						addChild(highlight);
 						
-						for (j = 0, endj = chunkList.length; j < endj; ++j)
-						{
-							whiteBox = new CurvedBox(chunkList[j].Size, Palette.GREAT_BTN);
-							whiteBox.x = chunkList[j].x;
-							whiteBox.y = chunkList[j].y;
-							whiteBox.alpha = 0;
-							word.addChild(whiteBox);
-							TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:(j * 0.07), onComplete:OnTweenWhitenChunk,
-								onCompleteParams:[chunkList[j], whiteBox, word, (j == 0 ? chunk : null)], alpha:1 });
-						}
+						TweenLite.to(highlight, 0.2, { ease:Strong.easeIn, onComplete:OnTweenShowHighlight,
+							onCompleteParams:[highlight], scaleX:1, scaleY:1, alpha:1, rotation:30 });
 						
-						if (!wordExplosion)
-						{
-							wordExplosion = new Asset.TrayExplosionClip() as MovieClip;
-						}
+						//chunk.alpha = 0;
+						//
+						//for (j = 0, endj = chunkList.length; j < endj; ++j)
+						//{
+							//whiteBox = new CurvedBox(chunkList[j].Size, Palette.GREAT_BTN);
+							//whiteBox.x = chunkList[j].x;
+							//whiteBox.y = chunkList[j].y;
+							//whiteBox.alpha = 0;
+							//word.addChild(whiteBox);
+							//TweenLite.to(whiteBox, 0.1, { ease:Strong.easeOut, delay:(j * 0.07), onComplete:OnTweenWhitenChunk,
+								//onCompleteParams:[chunkList[j], whiteBox, word, (j == 0 ? chunk : null)], alpha:1 });
+						//}
+						//
+						//if (!wordExplosion)
+						//{
+							//wordExplosion = new Asset.TrayExplosionClip() as MovieClip;
+						//}
 					}
-					else
-					{
+					//else
+					//{
 						for (j = 0, endj = chunkList.length; j < endj; ++j)
 						{
 							word.removeChild(chunkList[j]);
@@ -517,7 +550,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 						
 						word.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 2, 2, 4, BitmapFilterQuality.HIGH)];
 						TweenLite.to(word, 0.5, { glowFilter:{ alpha:1 } });
-					}
+					//}
 					
 					chunkList = mChunkListList[i] = new <CurvedBox>[chunk];
 					chunkOffset += chunk.width / 2;
@@ -526,21 +559,21 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 				wordWidth = chunkOffset;
 				chunkOffset = -wordWidth / 2;
 				
-				if (wordExplosion && aPlayExplosion)
-				{
-					(new Asset.TrayExplosionSound() as Sound).play();
-					wordExplosion.x = -wordWidth / 2;
-					wordExplosion.y = 0;
-					colorTransform = new ColorTransform();
-					colorTransform.color = Palette.GREAT_BTN;
-					wordExplosion.transform.colorTransform = colorTransform;
-					word.addChild(wordExplosion);
-					TweenLite.to(this, 1.5, { onComplete:OnTweenHideWordExplosion,
-						//onCompleteParams:[wordExplosion, word, chunkList[0]] });
-						onCompleteParams:[wordExplosion, word] });
-					
-					wordExplosion = null;
-				}
+				//if (wordExplosion && aPlayExplosion)
+				//{
+					//(new Asset.TrayExplosionSound() as Sound).play();
+					//wordExplosion.x = -wordWidth / 2;
+					//wordExplosion.y = 0;
+					//colorTransform = new ColorTransform();
+					//colorTransform.color = Palette.GREAT_BTN;
+					//wordExplosion.transform.colorTransform = colorTransform;
+					//word.addChild(wordExplosion);
+					//TweenLite.to(this, 1.5, { onComplete:OnTweenHideWordExplosion,
+						////onCompleteParams:[wordExplosion, word, chunkList[0]] });
+						//onCompleteParams:[wordExplosion, word] });
+					//
+					//wordExplosion = null;
+				//}
 				
 				for (j = 0, endj = chunkList.length; j < endj; ++j)
 				{
@@ -577,6 +610,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			}
 		}
 		
+		private function OnTweenShowHighlight(aHighlight:Sprite):void
+		{
+			TweenLite.to(aHighlight, 1.5, { ease:Strong.easeOut, onComplete:OnTweenHideHighlight,
+				onCompleteParams:[aHighlight], scaleX:0.5, scaleY:0.5, alpha:0, rotation:255 });
+		}
+		
+		private function OnTweenHideHighlight(aHighlight:Sprite):void
+		{
+			removeChild(aHighlight);
+		}
+		
 		private function OnTweenAttentionJump(aJumpAmount:int, aWord:Sprite, aDefaultY:Number):void
 		{
 			TweenLite.to(aWord, 0.4, { ease:Bounce.easeOut, onComplete:OnTweenAttentionBounce,
@@ -598,53 +642,53 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 			}
 		}
 		
-		//private function OnTweenHideWordExplosion(aWordExplosion:MovieClip, aWord:Sprite, aNewChunk:CurvedBox):void
-		private function OnTweenHideWordExplosion(aWordExplosion:MovieClip, aWord:Sprite):void
-		{
-			//aNewChunk.alpha = 1;
-			//aWord.addChild(aNewChunk);
-			aWord.removeChild(aWordExplosion);
-			
-			aWord.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 2, 2, 4, BitmapFilterQuality.HIGH)];
-			TweenLite.to(aWord, 0.5, { glowFilter:{ alpha:1 } });
-		}
-		
-		private function OnTweenWhitenChunk(aOldChunk:CurvedBox, aWhiteBox:CurvedBox, aWord:Sprite,
-			aNewChunk:CurvedBox = null):void
-		{
-			aWord.removeChild(aOldChunk);
-			if (aNewChunk)
-			{
-				//aWord.addChild(aNewChunk);
-				aNewChunk.alpha = 1;
-			}
-			//aWord.addChild(aWhiteBox);
-			
-			TweenLite.to(aWhiteBox, 0.15, { ease:Strong.easeIn, onComplete:OnTweenExplodePiece,
-				onCompleteParams:[aWhiteBox, aWord], scaleX:1.2, scaleY:1.2 });
-		}
-		
-		private function OnTweenExplodePiece(aWhiteBox:CurvedBox, aWord:Sprite):void
-		{
-			var explosion:MovieClip = new Asset.PieceExplosionClip() as MovieClip;
-			explosion.x = aWhiteBox.x;
-			explosion.y = aWhiteBox.y;
-			var colorTransform:ColorTransform = new ColorTransform();
-			colorTransform.color = Palette.GREAT_BTN;
-			explosion.transform.colorTransform = colorTransform;
-			aWord.addChild(explosion);
-			
-			TweenLite.to(aWhiteBox, 0.3, { ease:Strong.easeOut, delay:0.2, onComplete:OnTweenHideExplosion,
-				onCompleteParams:[aWhiteBox, explosion, aWord], scaleX:2, scaleY:2, alpha:0 });
-			
-			(new Asset.PieceExplosionSound() as Sound).play();
-		}
-		
-		private function OnTweenHideExplosion(aWhiteBox:CurvedBox, aExplosion:MovieClip, aWord:Sprite):void
-		{
-			aWord.removeChild(aWhiteBox);
-			aWord.removeChild(aExplosion);
-		}
+		////private function OnTweenHideWordExplosion(aWordExplosion:MovieClip, aWord:Sprite, aNewChunk:CurvedBox):void
+		//private function OnTweenHideWordExplosion(aWordExplosion:MovieClip, aWord:Sprite):void
+		//{
+			////aNewChunk.alpha = 1;
+			////aWord.addChild(aNewChunk);
+			//aWord.removeChild(aWordExplosion);
+			//
+			//aWord.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 2, 2, 4, BitmapFilterQuality.HIGH)];
+			//TweenLite.to(aWord, 0.5, { glowFilter:{ alpha:1 } });
+		//}
+		//
+		//private function OnTweenWhitenChunk(aOldChunk:CurvedBox, aWhiteBox:CurvedBox, aWord:Sprite,
+			//aNewChunk:CurvedBox = null):void
+		//{
+			//aWord.removeChild(aOldChunk);
+			//if (aNewChunk)
+			//{
+				////aWord.addChild(aNewChunk);
+				//aNewChunk.alpha = 1;
+			//}
+			////aWord.addChild(aWhiteBox);
+			//
+			//TweenLite.to(aWhiteBox, 0.15, { ease:Strong.easeIn, onComplete:OnTweenExplodePiece,
+				//onCompleteParams:[aWhiteBox, aWord], scaleX:1.2, scaleY:1.2 });
+		//}
+		//
+		//private function OnTweenExplodePiece(aWhiteBox:CurvedBox, aWord:Sprite):void
+		//{
+			//var explosion:MovieClip = new Asset.PieceExplosionClip() as MovieClip;
+			//explosion.x = aWhiteBox.x;
+			//explosion.y = aWhiteBox.y;
+			//var colorTransform:ColorTransform = new ColorTransform();
+			//colorTransform.color = Palette.GREAT_BTN;
+			//explosion.transform.colorTransform = colorTransform;
+			//aWord.addChild(explosion);
+			//
+			//TweenLite.to(aWhiteBox, 0.3, { ease:Strong.easeOut, delay:0.2, onComplete:OnTweenHideExplosion,
+				//onCompleteParams:[aWhiteBox, explosion, aWord], scaleX:2, scaleY:2, alpha:0 });
+			//
+			//(new Asset.PieceExplosionSound() as Sound).play();
+		//}
+		//
+		//private function OnTweenHideExplosion(aWhiteBox:CurvedBox, aExplosion:MovieClip, aWord:Sprite):void
+		//{
+			//aWord.removeChild(aWhiteBox);
+			//aWord.removeChild(aExplosion);
+		//}
 		
 		//private function OnTweenGlowStrong(aWord:Sprite):void
 		//{

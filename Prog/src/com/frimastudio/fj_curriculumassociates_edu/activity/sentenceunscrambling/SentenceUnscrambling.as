@@ -78,7 +78,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX,
 				new BoxLabel("Put the words in order to make the sentence.", 45, Palette.DIALOG_CONTENT),
-				12, Direction.UP_LEFT, Axis.BOTH);
+				6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				598 - (mDialogBox.height / 2));
@@ -119,7 +119,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			addChild(mCraftingTray);
 			
 			mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 12);
+				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 			mSubmitBtn.x = 982;
 			mSubmitBtn.y = 643;
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
@@ -431,7 +431,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
 			{
 				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
-					12, null, Axis.HORIZONTAL);
+					6, null, Axis.HORIZONTAL);
 				chunkOffset += chunk.width / 2;
 				chunk.x = chunkOffset;
 				mSubmitedSentence.addChild(chunk);

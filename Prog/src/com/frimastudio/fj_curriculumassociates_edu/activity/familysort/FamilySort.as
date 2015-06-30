@@ -117,7 +117,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 				familyEmptySlot.y = 88;
 				addChild(familyEmptySlot);
 				
-				family = new CurvedBox(new Point(170, 66), Palette.DIALOG_BOX, null, 12);
+				family = new CurvedBox(new Point(170, 66), Palette.DIALOG_BOX, null, 6);
 				family.x = mFamilyBoxList[i].x;
 				family.y = 88;
 				family.alpha = 0;
@@ -135,7 +135,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			for (i = 0, endi = Math.min(mTemplate.ExampleList.length, 4); i < endi; ++i)
 			{
 				example = new CurvedBox(new Point(170, 66), Palette.DIALOG_BOX,
-					new BoxLabel(mTemplate.ExampleList[i], 52.5, Palette.DIALOG_CONTENT), 12);
+					new BoxLabel(mTemplate.ExampleList[i], 52.5, Palette.DIALOG_CONTENT), 6);
 				example.x = mFamilyBoxList[i].x;
 				example.y = 242;
 				example.scaleX = 0.01;
@@ -171,7 +171,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.familysort
 			for (i = 0, endi = mTemplate.WordList.length; i < endi; ++i)
 			{
 				word = new CurvedBox(new Point(170, 66), Palette.DIALOG_BOX,
-					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 12);
+					new BoxLabel(mTemplate.WordList[i], 52.5, Palette.DIALOG_CONTENT), 6);
 				word.x = ((i % 4) * 180) + 110;
 				word.y = (Math.floor(i / 4) * 76) + 650 + 300;
 				if (mTemplate.SkipInstruction)

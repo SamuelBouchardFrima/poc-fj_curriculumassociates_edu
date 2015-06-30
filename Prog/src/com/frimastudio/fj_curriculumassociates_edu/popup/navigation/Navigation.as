@@ -52,7 +52,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			for (var i:int = 0, endi:int = mTemplate.LocationList.length; i < endi; ++i)
 			{
 				location = new CurvedBox(new Point(200, 200), (mTemplate.LocationUnlockList[i] ? 0xCCFF99 : 0xCCCCCC),
-					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 12, null, null);
+					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 6, null, null);
 				offset += location.width / 2;
 				location.x = offset;
 				location.y = 0;
@@ -85,7 +85,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 		
 		private function OnClickLocation(aEvent:MouseEvent):void
 		{
-			(new Asset.NavigationSound[mLocationList.indexOf(aEvent.currentTarget as CurvedBox) + 1]() as Sound).play();
+			var vo:int = mTemplate.LocationVOList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)];
+			(new Asset.NavigationSound[vo]() as Sound).play();
 			
 			if (mTemplate.LocationUnlockList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)])
 			{

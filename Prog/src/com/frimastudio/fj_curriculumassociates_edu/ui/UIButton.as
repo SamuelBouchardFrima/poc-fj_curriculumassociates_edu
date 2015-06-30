@@ -22,7 +22,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		
 		public function UIButton(aContent:String, aColor:int = 0xFFFFFF)
 		{
-			super(new Point(60, 60), aColor, new BoxLabel(aContent, 45, Palette.DIALOG_CONTENT), 12, null, Axis.HORIZONTAL);
+			super(new Point(60, 60), aColor, new BoxLabel(aContent, 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
 		}
 		
 		public function Dispose():void

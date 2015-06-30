@@ -133,7 +133,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_lesson
 				sign.mouseEnabled = false;
 				sign.mouseChildren = false;
 				signBox = new CurvedBox(new Point(96, 128), Palette.GENERIC_BTN,
-					new BoxIcon(Asset.LessonBitmap[i], Palette.BTN_CONTENT), 12);
+					new BoxIcon(Asset.LessonBitmap[i], Palette.BTN_CONTENT), 6);
 				signBox.x = 0;
 				signBox.y = -325;
 				signBox.graphics.lineStyle(5, Palette.GENERIC_BTN);
