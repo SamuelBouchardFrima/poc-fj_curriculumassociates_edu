@@ -6,12 +6,14 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import flash.utils.Timer;
 	
 	public class Message extends Popup
 	{
@@ -34,6 +36,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			
 			var title:TextField = new TextField();
 			title.embedFonts = true;
+			title.selectable = false;
 			title.autoSize = TextFieldAutoSize.CENTER;
 			title.text = mTemplate.Title;
 			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
@@ -45,6 +48,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			
 			var body:TextField = new TextField();
 			body.embedFonts = true;
+			body.selectable = false;
 			body.width = background.width;
 			body.wordWrap = true;
 			body.multiline = true;
@@ -59,9 +63,12 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			title.y = 384 - (background.height / 2) + space;
 			body.y = title.y + title.height + (space / 2);
 			
-			addEventListener(MouseEvent.CLICK, OnClick);
+			var sound:Sound = new mTemplate.TitleVO() as Sound;
+			sound.play();
 			
-			(new mTemplate.VO() as Sound).play();
+			var playBodyVOTimer:Timer = new Timer(sound.length, 1);
+			playBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			playBodyVOTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -69,6 +76,25 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			removeEventListener(MouseEvent.CLICK, OnClick);
 			
 			super.Dispose();
+		}
+		
+		private function OnPlayBodyVOTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			
+			var sound:Sound = new mTemplate.BodyVO() as Sound;
+			sound.play();
+			
+			var enableClickTimer:Timer = new Timer(sound.length, 1);
+			enableClickTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEnableClickTimerComplete);
+			enableClickTimer.start();
+		}
+		
+		private function OnEnableClickTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			
+			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

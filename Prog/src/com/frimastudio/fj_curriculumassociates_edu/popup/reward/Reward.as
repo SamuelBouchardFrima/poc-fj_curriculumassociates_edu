@@ -21,6 +21,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 	public class Reward extends Popup
 	{
 		private var mTemplate:RewardTemplate;
+		private var mCurrentReward:int;
 		
 		public function Reward(aTemplate:RewardTemplate)
 		{
@@ -39,6 +40,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			
 			var title:TextField = new TextField();
 			title.embedFonts = true;
+			title.selectable = false;
 			title.autoSize = TextFieldAutoSize.CENTER;
 			title.text = mTemplate.Title;
 			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
@@ -50,6 +52,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			
 			var body:TextField = new TextField();
 			body.embedFonts = true;
+			body.selectable = false;
 			body.width = background.width;
 			body.wordWrap = true;
 			body.multiline = true;
@@ -82,13 +85,12 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			body.y = title.y + title.height;
 			rewardContainer.y = body.y + body.height + (space / 2);
 			
-			addEventListener(MouseEvent.CLICK, OnClick);
-			
 			var sound:Sound = new mTemplate.VO() as Sound;
 			sound.play();
 			
-			var earRewardTypeTimer:Timer = new Timer(sound.length, 1);
-			earRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarRewardTypeTimerComplete);
+			var playRewardTypeTimer:Timer = new Timer(sound.length, 1);
+			playRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
+			playRewardTypeTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -98,11 +100,39 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			super.Dispose();
 		}
 		
-		private function OnEarRewardTypeTimerComplete(aEvent:TimerEvent):void
+		private function OnPlayRewardTypeTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarRewardTypeTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
 			
-			(new Asset.RewardSound[5]() as Sound).play();
+			var sound:Sound = new Asset.RewardSound[5]() as Sound;
+			sound.play();
+			
+			mCurrentReward = 0;
+			
+			var playNextRewardTimer:Timer = new Timer(sound.length, 1);
+			playNextRewardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+			playNextRewardTimer.start();
+		}
+		
+		private function OnPlayNextRewardTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+			
+			if (mCurrentReward < mTemplate.RewardList.length)
+			{
+				var sound:Sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+				sound.play();
+				
+				++mCurrentReward;
+				
+				var playNextRewardTimer:Timer = new Timer(sound.length, 1);
+				playNextRewardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+				playNextRewardTimer.start();
+			}
+			else
+			{
+				addEventListener(MouseEvent.CLICK, OnClick);
+			}
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

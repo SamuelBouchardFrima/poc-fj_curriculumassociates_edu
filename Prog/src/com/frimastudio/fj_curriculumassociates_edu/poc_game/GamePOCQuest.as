@@ -28,7 +28,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
 			
-			mStepList.push(new MessageTemplate(Level.THE_LAB, "Great job!", "You did Lesson 13.", Asset.RewardSound[1]));
+			mStepList.push(new MessageTemplate(Level.THE_LAB, "Great job!", "You did Lesson 13.",
+				Asset.GameHintSound[1], Asset.RewardSound[1]));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "LESSON REWARD", "Words:", new <String>["tip", "rip", "dim", "fin"],
 				Asset.RewardSound[2]));
 			

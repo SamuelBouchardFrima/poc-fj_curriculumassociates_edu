@@ -45,6 +45,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 			
 			var title:TextField = new TextField();
 			title.embedFonts = true;
+			title.selectable = false;
 			title.width = 400;
 			title.wordWrap = true;
 			title.multiline = true;
