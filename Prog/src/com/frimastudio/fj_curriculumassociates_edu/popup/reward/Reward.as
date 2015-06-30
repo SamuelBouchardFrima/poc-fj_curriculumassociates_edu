@@ -9,11 +9,14 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import flash.utils.Timer;
 	
 	public class Reward extends Popup
 	{
@@ -79,6 +82,12 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			rewardContainer.y = body.y + body.height + (space / 2);
 			
 			addEventListener(MouseEvent.CLICK, OnClick);
+			
+			var sound:Sound = new mTemplate.VO() as Sound;
+			sound.play();
+			
+			var earRewardTypeTimer:Timer = new Timer(sound.length, 1);
+			earRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarRewardTypeTimerComplete);
 		}
 		
 		override public function Dispose():void
@@ -86,6 +95,13 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			removeEventListener(MouseEvent.CLICK, OnClick);
 			
 			super.Dispose();
+		}
+		
+		private function OnEarRewardTypeTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarRewardTypeTimerComplete);
+			
+			(new Asset.RewardSound[5]() as Sound).play();
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

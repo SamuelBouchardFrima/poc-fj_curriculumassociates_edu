@@ -10,6 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -68,6 +69,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			var space:Number = (background.height - (title.height + locationContainer.height)) / 2.5;
 			title.y = 384 - (background.height / 2) + space;
 			locationContainer.y = title.y + title.height + (space / 2) + (locationContainer.height / 2);
+			
+			(new Asset.NavigationSound[0]() as Sound).play();
 		}
 		
 		override public function Dispose():void
@@ -82,6 +85,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 		
 		private function OnClickLocation(aEvent:MouseEvent):void
 		{
+			(new Asset.NavigationSound[mLocationList.indexOf(aEvent.currentTarget as CurvedBox) + 1]() as Sound).play();
+			
 			if (mTemplate.LocationUnlockList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)])
 			{
 				dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));

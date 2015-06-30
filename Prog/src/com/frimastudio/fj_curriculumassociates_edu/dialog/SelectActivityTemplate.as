@@ -6,23 +6,26 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	
 	public class SelectActivityTemplate extends QuestStepTemplate
 	{
+		private var mActivityVO:Class;
 		private var mActivityWordList:Vector.<WordTemplate>;
 		private var mLineBreakList:Vector.<int>;
 		private var mPhylacteryArrow:Direction;
 		private var mSelectWholeBox:Boolean;
 		
+		public function get ActivityVO():Class	{ return mActivityVO; }
 		public function get ActivityWordList():Vector.<WordTemplate>	{ return mActivityWordList; }
 		public function get LineBreakList():Vector.<int>	{ return mLineBreakList; }
 		public function get PhylacteryArrow():Direction	{ return mPhylacteryArrow; }
 		public function get SelectWholeBox():Boolean	{ return mSelectWholeBox; }
 		
-		public function SelectActivityTemplate(aLevel:Level, aActivityWordList:Vector.<WordTemplate>,
+		public function SelectActivityTemplate(aLevel:Level, aActivityVO:Class, aActivityWordList:Vector.<WordTemplate>,
 			aLineBreakList:Vector.<int> = null, aPhylacteryArrow:Direction = null, aSelectWholeBox:Boolean = false)
 		{
 			super(aLevel);
 			
 			mStepClass = SelectActivity;
 			
+			mActivityVO = aActivityVO;
 			mActivityWordList = aActivityWordList;
 			mLineBreakList = (aLineBreakList ? aLineBreakList : new Vector.<int>());
 			mPhylacteryArrow = (aPhylacteryArrow ? aPhylacteryArrow : Direction.DOWN_LEFT);

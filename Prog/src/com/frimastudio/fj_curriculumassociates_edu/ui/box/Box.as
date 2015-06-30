@@ -184,7 +184,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 					coordinateList.push(new Point(0, mSize.bottom - 5));
 					break;
 				case Direction.LEFT:
-					coordinateList.push(new Point(mSize.left + 5, -13));
+					coordinateList.push(new Point(mSize.left + 5, 13));
 					coordinateList.push(new Point(mSize.left - 20, 0));
 					coordinateList.push(new Point(mSize.left + 5, 0));
 					break;

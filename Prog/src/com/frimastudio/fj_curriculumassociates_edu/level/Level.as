@@ -13,15 +13,24 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		private static var sInitialized:Boolean;
 		
 		public static const NONE:Level = new Level(sI++, "NONE");
-		public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap, new Point(89, 466), 0.53,
-			new Point(634, 505), 0.9, null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.622);
+		//public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap, new Point(89, 466), 0.53,
+			//new Point(634, 505), 0.9, null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.622);
+		public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap, new Point(89, 466), 0.35333,
+			new Point(634, 505), 0.6, null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.41467);
+		//public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap, new Point(149, 478), 0.4,
+			//new Point(864, 535), 0.75, Asset.CopNPCBitmap, new Point(542, 474), 0.25);
 		public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap, new Point(149, 478), 0.4,
-			new Point(864, 535), 0.75, Asset.CopNPCBitmap, new Point(542, 474), 0.25);
+			new Point(864, 535), 0.5, Asset.CopNPCBitmap, new Point(542, 494), 0.16667);
+		//public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap, new Point(149, 466),
+			//0.53, new Point(335, 470), 0.8, Asset.ChefNPCBitmap, new Point(600, 370), 0.5);
 		public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap, new Point(149, 466),
-			0.53, new Point(335, 520), 0.9, Asset.ChefNPCBitmap, new Point(600, 370), 0.5);
-		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap, new Point(169, 406), 0.53,
-			new Point(844, 460), 0.9, Asset.GlamStarNPCBitmap, new Point(532, 400), 0.65, Asset.RatPropBitmap, new Point(356, 467),
-			1, true);
+			0.35333, new Point(335, 470), 0.53333, Asset.ChefNPCBitmap, new Point(600, 370), 0.33333);
+		//public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap, new Point(169, 406), 0.53,
+			//new Point(844, 460), 0.9, Asset.GlamStarNPCBitmap, new Point(532, 400), 0.65, Asset.RatPropBitmap, new Point(356, 467),
+			//1, true);
+		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap, new Point(169, 431), 0.35333,
+			new Point(844, 460), 0.6, Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, Asset.RatPropBitmap,
+			new Point(356, 467), 0.66667, true);
 		
 		private var mID:int;
 		private var mDescription:String;
@@ -147,8 +156,8 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 			}
 			if (mLucu)
 			{
-				TweenLite.killTweensOf(mLucu);
-				mLucu.filters = [];
+				//TweenLite.killTweensOf(mLucu);
+				//mLucu.filters = [];
 				addChild(mLucu);
 			}
 			if (mMini)
@@ -160,20 +169,20 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 				miniBitmap.y = -miniBitmap.height / 2;
 				mMini.addChild(miniBitmap);
 				
-				TweenLite.killTweensOf(mMini);
-				mMini.filters = [];
+				//TweenLite.killTweensOf(mMini);
+				//mMini.filters = [];
 				addChild(mMini);
 			}
 			if (mNPC)
 			{
-				TweenLite.killTweensOf(mNPC);
-				mNPC.filters = [];
+				//TweenLite.killTweensOf(mNPC);
+				//mNPC.filters = [];
 				addChild(mNPC);
 			}
 			if (mProp)
 			{
-				TweenLite.killTweensOf(mProp);
-				mProp.filters = [];
+				//TweenLite.killTweensOf(mProp);
+				//mProp.filters = [];
 				addChild(mProp);
 			}
 		}

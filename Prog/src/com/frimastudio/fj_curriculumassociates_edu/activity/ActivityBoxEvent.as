@@ -10,7 +10,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity
 		
 		public function get ActivityToLaunch():ActivityType	{ return mActivityToLaunch; }
 		
-		public function ActivityBoxEvent(aType:String, aActivityToLaunch:ActivityType, aBubbles:Boolean = false, aCancelable:Boolean = false)
+		public function ActivityBoxEvent(aType:String, aActivityToLaunch:ActivityType = null, aBubbles:Boolean = false,
+			aCancelable:Boolean = false)
 		{
 			super(aType, aBubbles, aCancelable);
 			

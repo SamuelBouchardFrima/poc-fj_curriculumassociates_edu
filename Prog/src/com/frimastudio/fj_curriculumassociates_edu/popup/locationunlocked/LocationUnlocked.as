@@ -10,6 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -59,6 +60,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 			background.scaleX = background.scaleY = Math.max(background.scaleX, background.scaleY);
 			
 			addEventListener(MouseEvent.CLICK, OnClick);
+			
+			(new mTemplate.VO() as Sound).play();
 		}
 		
 		override public function Dispose():void

@@ -22,6 +22,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Geometry;
+	import com.frimastudio.fj_curriculumassociates_edu.util.MathUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Elastic;
@@ -64,13 +65,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mBlocker:Sprite;
 		private var mSuccessFeedback:Sprite;
 		private var mFloatPieceList:Vector.<Piece>;
+		private var mFloatPieceArea:Rectangle;
 		private var mDragAutostartTimer:Timer;
 		private var mMouseDownOrigin:Point;
 		private var mTutorialStep:int;
 		private var mTutorialTimer:Timer;
 		private var mMiniDefaultPosition:Point;
 		private var mMiniDefaultScale:Number;
+		private var mDialogBox:CurvedBox;
 		private var mActivityBox:ActivityBox;
+		private var mStoredCraftingTrayChunkList:Vector.<String>;
 		
 		public function WordCrafting(aTemplate:WordCraftingTemplate)
 		{
@@ -81,46 +85,56 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mMiniDefaultPosition = DisplayObjectUtil.GetPosition(mLevel.Mini);
 			mMiniDefaultScale = mLevel.Mini.scaleX;
 			
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
+				Palette.DIALOG_CONTENT), 12, Direction.UP_LEFT, Axis.BOTH);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
+				598 - (mDialogBox.height / 2));
+			addChild(mDialogBox);
+			
+			(new Asset.GameHintSound[5]() as Sound).play();
+			
 			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			toolTrayBox.x = 512;
-			toolTrayBox.y = 723;
+			toolTrayBox.y = 728;
 			addChild(toolTrayBox);
 			
 			var craftingTrayBox:Box = new Box(new Point(1024, 90), Palette.CRAFTING_BOX);
 			craftingTrayBox.x = 512;
-			craftingTrayBox.y = 633;
+			craftingTrayBox.y = 643;
 			addChild(craftingTrayBox);
 			
 			mCraftingTrayField = new CurvedBox(new Point(910, 76), Palette.CRAFTING_FIELD);
 			mCraftingTrayField.x = 482;
-			mCraftingTrayField.y = 633;
+			mCraftingTrayField.y = 643;
 			addChild(mCraftingTrayField);
 			
 			var craftingIcon:Bitmap = new Asset.IconWriteBitmap();
 			craftingIcon.x = 40;
-			craftingIcon.y = 633 - (craftingIcon.height / 2);
+			craftingIcon.y = 643 - (craftingIcon.height / 2);
 			addChild(craftingIcon);
 			
 			mToolTray = new PieceTray(false, mTemplate.WordList);
 			mToolTray.x = 90;
-			mToolTray.y = 723;
+			mToolTray.y = 728;
 			mToolTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedToolTray);
 			addChild(mToolTray);
 			
 			mCraftingTray = new PieceTray(false);
 			mCraftingTray.x = 90;
-			mCraftingTray.y = 633;
+			mCraftingTray.y = 643;
 			mCraftingTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedCraftingTray);
 			addChild(mCraftingTray);
 			
 			mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
 				new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 12);
 			mSubmitBtn.x = 982;
-			mSubmitBtn.y = 633;
+			mSubmitBtn.y = 643;
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			addChild(mSubmitBtn);
 			
-			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.PhylacteryArrow, true);
+			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.RequestVO,
+				mTemplate.PhylacteryArrow, true, false, Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
 			mActivityBox.x = 512;
 			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 			addChild(mActivityBox);
@@ -136,6 +150,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mBlocker.graphics.endFill();
 			
 			mFloatPieceList = new Vector.<Piece>();
+			
+			//var areaY:Number = ((mTemplate.LineBreakList.length + 1) * 40) + 180;
+			var areaY:Number = ((mTemplate.LineBreakList.length + 1) * 80) + 60 + 40;
+			var areaH:Number = (mLevel.Mini.y - (mLevel.Mini.height / 2) - 50) - areaY;
+			//mFloatPieceArea = new Rectangle(100, areaY, 824, 400 - areaY);
+			mFloatPieceArea = new Rectangle(100, areaY, 824, areaH);
 			
 			mDragAutostartTimer = new Timer(500, 1);
 			mDragAutostartTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDragAutostartTimerComplete);
@@ -195,17 +215,21 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
-			if (Asset.LetterSound["_" + mDraggedPiece.Label])
+			//if (Asset.LetterSound["_" + mDraggedPiece.Label])
+			if (Asset.LetterAudioSound["_" + mDraggedPiece.Label])
 			{
-				(new Asset.LetterSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//(new Asset.LetterSound["_" + mDraggedPiece.Label]() as Sound).play();
+				(new Asset.LetterAudioSound["_" + mDraggedPiece.Label]() as Sound).play();
 			}
-			else if (Asset.ChunkSound["_" + mDraggedPiece.Label])
+			//else if (Asset.ChunkSound["_" + mDraggedPiece.Label])
+			//{
+				//(new Asset.ChunkSound["_" + mDraggedPiece.Label]() as Sound).play();
+			//}
+			//else if (Asset.WordSound["_" + mDraggedPiece.Label])
+			else if (Asset.WordContentSound["_" + mDraggedPiece.Label])
 			{
-				(new Asset.ChunkSound["_" + mDraggedPiece.Label]() as Sound).play();
-			}
-			else if (Asset.WordSound["_" + mDraggedPiece.Label])
-			{
-				(new Asset.WordSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//(new Asset.WordSound["_" + mDraggedPiece.Label]() as Sound).play();
+				(new Asset.WordContentSound["_" + mDraggedPiece.Label]() as Sound).play();
 			}
 			
 			mFloatPieceList.splice(mFloatPieceList.indexOf(mDraggedPiece), 1);
@@ -352,9 +376,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
-			if (Asset.WordSound["_" + aEvent.EventPiece.Label])
+			//if (Asset.WordSound["_" + mDraggedPiece.Label])
+			if (Asset.WordContentSound["_" + mDraggedPiece.Label])
 			{
-				(new Asset.WordSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//(new Asset.WordSound["_" + mDraggedPiece.Label]() as Sound).play();
+				(new Asset.WordContentSound["_" + mDraggedPiece.Label]() as Sound).play();
 			}
 			
 			//mToolTray.InsertLast(aEvent.EventPiece.Label, new Point(mToolTray.width + (aEvent.EventPiece.width / 2)));
@@ -456,8 +482,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				mTutorialTimer.start();
 			}
 			
+			mDialogBox.Content = new BoxLabel("Click the letters and word parts.", 45, Palette.DIALOG_CONTENT);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
+				598 - (mDialogBox.height / 2));
+			
+			(new Asset.GameHintSound[4]() as Sound).play();
+			
 			var color:int;
 			var piece:Piece;
+			var bubble:Bitmap;
+			var target:Point;
 			for (var i:int = 0, endi:int = aPieceLabelList.length; i < endi; ++i)
 			{
 				color = (ChunkIsRequired(aPieceLabelList[i]) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
@@ -468,7 +503,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addEventListener(MouseEvent.CLICK, OnClickFloatPiece);
 				piece.addEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
 				//piece.StartDecay();
-				var bubble:Bitmap = new Asset.BubbleBitmap();
+				bubble = new Asset.BubbleBitmap();
 				bubble.smoothing = true;
 				bubble.width = Math.max(bubble.width, piece.width + 30);
 				bubble.scaleY = bubble.scaleX;
@@ -477,7 +512,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addChild(bubble);
 				addChild(piece);
 				mFloatPieceList.push(piece);
-				TweenLite.to(piece, 2, { ease:Quad.easeOut, delay:(i * 0.1), x:Random.Range(455, 950), y:Random.Range(260, 415) });
+				target = Random.Position2D(mFloatPieceArea);
+				TweenLite.to(piece, 2, { ease:Quad.easeOut, delay:(i * 0.1), x:target.x, y:target.y });
 				TweenLite.to(piece, 1, { ease:Elastic.easeOut, delay:(i * 0.1), scaleX:1, scaleY:1 });
 			}
 			
@@ -569,6 +605,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			var miniBitmap:Bitmap;
 			var piece:Piece;
 			var color:int;
+			var bubble:Bitmap;
+			var target:Point;
 			if (mDraggedPiece.getBounds(this).intersects(mLevel.Mini.getBounds(this)))
 			{
 				color = (ChunkIsRequired(mDraggedPiece.Label) ? ActivityType.WORD_CRAFTING.ColorCode : Palette.DIALOG_BOX);
@@ -599,6 +637,23 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				mCraftingTray.Insert(mDraggedPiece, mPreviousPosition);
 				
 				UpdateAnswer();
+				
+				if (!mFloatPieceList.length)
+				{
+					if (mToolTray.Empty)
+					{
+						removeChild(mDialogBox);
+					}
+					else
+					{
+						mDialogBox.Content = new BoxLabel("Give a word to the Mini.", 45, Palette.DIALOG_CONTENT);
+						mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+						mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
+							598 - (mDialogBox.height / 2));
+						
+						(new Asset.GameHintSound[5]() as Sound).play();
+					}
+				}
 			}
 			else
 			{
@@ -617,7 +672,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addEventListener(MouseEvent.CLICK, OnClickFloatPiece);
 				piece.addEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
 				//piece.StartDecay();
-				var bubble:Bitmap = new Asset.BubbleBitmap();
+				bubble = new Asset.BubbleBitmap();
 				bubble.smoothing = true;
 				bubble.width = Math.max(bubble.width, piece.width + 30);
 				bubble.scaleY = bubble.scaleX;
@@ -626,7 +681,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				piece.addChild(bubble);
 				addChild(piece);
 				mFloatPieceList.push(piece);
-				TweenLite.to(piece, 2, { ease:Quad.easeOut, x:Random.Range(455, 950), y:Random.Range(260, 415) });
+				//target = Random.Position2D(mFloatPieceArea);
+				//TweenLite.to(piece, 2, { ease:Quad.easeOut, x:target.x, y:target.y });
+				target = DisplayObjectUtil.GetPosition(piece);
+				if (!mFloatPieceArea.containsPoint(target))
+				{
+					target.x = MathUtil.MinMax(target.x, mFloatPieceArea.left, mFloatPieceArea.right);
+					target.y = MathUtil.MinMax(target.y, mFloatPieceArea.top, mFloatPieceArea.bottom);
+					TweenLite.to(piece, 2, { ease:Quad.easeOut, x:target.x, y:target.y });
+				}
 				
 				mDraggedPiece.Dispose();
 				removeChild(mDraggedPiece);
@@ -741,6 +804,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function OnClickSubmitBtn(aEvent:MouseEvent):void
 		{
+			mStoredCraftingTrayChunkList = mCraftingTray.AssembleChunkList();
+			
 			var answer:String = mCraftingTray.AssembleWord();
 			if (answer.length)
 			{
@@ -773,6 +838,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				}
 				else
 				{
+					if (mResult == Result.GREAT)
+					{
+						(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
+					}
+					
 					var bounceDuration:Number = mCraftingTray.BounceInSequence();
 					var submitWordTimer:Timer = new Timer(bounceDuration * 1000, 1);
 					submitWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSumbitWordTimerComplete);
@@ -850,7 +920,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				
 				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, x:target.x, y:target.y, scaleX:1, scaleY:1 } );
 				
-				(new Asset.FusionSound() as Sound).play();
+				//(new Asset.FusionSound() as Sound).play();
+				//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
 			}
 			else if (mResult == Result.VALID)
 			{
@@ -892,10 +963,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			removeChild(mSubmitedWord);
 			mSubmitedWord = null;
 			
-			if (mResult == Result.GREAT)
-			{
-				(new Asset.SentenceSound["_i_need_to_fill_up_this_cup"]() as Sound).play();
-			}
+			//if (mResult == Result.GREAT)
+			//{
+				//(new Asset.SentenceSound["_i_need_to_fill_up_this_cup"]() as Sound).play();
+			//}
 		}
 		
 		private function OnTweenHideSubmissionHighlight():void
@@ -920,23 +991,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			
 			if (mResult != Result.GREAT)
 			{
-				mToolTray.Clear(mTemplate.WordList);
+				//mToolTray.Clear(mTemplate.WordList);
 				
-				mCraftingTray.Clear();
+				mCraftingTray.Clear(mStoredCraftingTrayChunkList);
 				mCraftingTray.visible = true;
 				
-				for (var i:int = 0, endi:int = mFloatPieceList.length; i < endi; ++i)
-				{
-					mFloatPieceList[i].removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
-					mFloatPieceList[i].removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
-					mFloatPieceList[i].removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
-					
-					mFloatPieceList[i].Dispose();
-					
-					TweenLite.to(mFloatPieceList[i], 1, { ease:Strong.easeOut, delay:(i * 0.1), onComplete:OnTweenHideFloatPiece,
-						onCompleteParams:[mFloatPieceList[i]], alpha:0 });
-				}
-				mFloatPieceList.splice(0, mFloatPieceList.length);
+				mStoredCraftingTrayChunkList = null;
+				
+				//for (var i:int = 0, endi:int = mFloatPieceList.length; i < endi; ++i)
+				//{
+					//mFloatPieceList[i].removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDownFloatPiece);
+					//mFloatPieceList[i].removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
+					//mFloatPieceList[i].removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
+					//
+					//mFloatPieceList[i].Dispose();
+					//
+					//TweenLite.to(mFloatPieceList[i], 1, { ease:Strong.easeOut, delay:(i * 0.1), onComplete:OnTweenHideFloatPiece,
+						//onCompleteParams:[mFloatPieceList[i]], alpha:0 });
+				//}
+				//mFloatPieceList.splice(0, mFloatPieceList.length);
 				
 				UpdateAnswer();
 			}

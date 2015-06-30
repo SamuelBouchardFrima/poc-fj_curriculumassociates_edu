@@ -7,6 +7,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -59,6 +60,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			body.y = title.y + title.height + (space / 2);
 			
 			addEventListener(MouseEvent.CLICK, OnClick);
+			
+			(new mTemplate.VO() as Sound).play();
 		}
 		
 		override public function Dispose():void

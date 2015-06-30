@@ -15,6 +15,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			mCurve = aValue;
 		}
 		
+		override public function get Size():Point	{ return new Point(mSize.width, mSize.height); }
 		override public function set Size(aValue:Point):void
 		{
 			super.Size = aValue;

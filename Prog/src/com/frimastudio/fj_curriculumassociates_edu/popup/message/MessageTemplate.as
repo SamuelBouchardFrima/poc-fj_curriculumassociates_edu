@@ -7,11 +7,13 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 	{		
 		private var mTitle:String;
 		private var mBody:String;
+		private var mVO:Class;
 		
 		public function get Title():String	{ return mTitle; }
 		public function get Body():String	{ return mBody; }
+		public function get VO():Class	{ return mVO; }
 		
-		public function MessageTemplate(aLevel:Level, aTitle:String, aBody:String)
+		public function MessageTemplate(aLevel:Level, aTitle:String, aBody:String, aVO:Class)
 		{
 			super(aLevel);
 			
@@ -19,6 +21,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			
 			mTitle = aTitle;
 			mBody = aBody;
+			mVO = aVO;
 		}
 	}
 }

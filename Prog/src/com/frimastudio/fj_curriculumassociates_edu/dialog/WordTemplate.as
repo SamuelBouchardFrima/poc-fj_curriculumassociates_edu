@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		private var mActivityToLaunch:ActivityType;
 		private var mColorCode:int;
 		private var mProgressDone:Boolean;
+		private var mVO:String;
 		
 		public function get ChunkList():Vector.<String>	{ return mChunkList; }
 		public function set ChunkList(aValue:Vector.<String>):void	{ mChunkList = aValue; }
@@ -28,14 +29,17 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		public function get ProgressDone():Boolean	{ return mProgressDone; }
 		public function set ProgressDone(aValue:Boolean):void	{ mProgressDone = aValue; }
 		
-		public function WordTemplate(aChunkList:Vector.<String>, aPunctuation:String = "",
-			aActivityToLaunch:ActivityType = null, aColorCodeOverride:int = -1, aProgressDone:Boolean = false)
+		public function get VO():String	{ return mVO; }
+		
+		public function WordTemplate(aChunkList:Vector.<String>, aPunctuation:String = "", aActivityToLaunch:ActivityType = null,
+			aColorCodeOverride:int = -1, aProgressDone:Boolean = false, aVO:String = null)
 		{
 			mChunkList = aChunkList;
 			mPunctuation = aPunctuation;
 			mActivityToLaunch = (aActivityToLaunch ? aActivityToLaunch : ActivityType.NONE);
 			mColorCode = (aColorCodeOverride == -1 ? mActivityToLaunch.ColorCode : aColorCodeOverride);
 			mProgressDone = aProgressDone;
+			mVO = aVO;
 		}
 	}
 }

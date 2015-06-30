@@ -61,6 +61,19 @@ package com.frimastudio.fj_curriculumassociates_edu.util
 			}
 		}
 		
+		public static function ToLetterOnly(aString:String):String
+		{
+			var string:String = aString;
+			for (var i:int = string.length - 1; i >= 0; --i)
+			{
+				if (!CharIsAlphabet(string.charAt(i)))
+				{
+					string = string.substring(0, i) + string.substring(i + 1);
+				}
+			}
+			return string;
+		}
+		
 		public function StringUtil()
 		{
 			throw new Error("StringUtil is a static class not intended for instantiation.");

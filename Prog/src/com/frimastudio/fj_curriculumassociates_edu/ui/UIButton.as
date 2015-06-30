@@ -22,7 +22,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		
 		public function UIButton(aContent:String, aColor:int = 0xFFFFFF)
 		{
-			super(new Point(70, 70), aColor, new BoxLabel(aContent, 60, Palette.DIALOG_CONTENT), 12, null, Axis.HORIZONTAL);
+			super(new Point(60, 60), aColor, new BoxLabel(aContent, 45, Palette.DIALOG_CONTENT), 12, null, Axis.HORIZONTAL);
 		}
 		
 		public function Dispose():void
@@ -33,13 +33,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 		{
 			if (aSpecialAnim)
 			{
+				// TODO:	replace glow with shining
 				filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
 				TweenLite.to(this, 0.5, { ease:Strong.easeOut, onComplete:OnTweenAttentionShowGlow, glowFilter:{ alpha:1 } });
 			}
 			else
 			{
 				TweenLite.to(this, 0.1, { ease:Quad.easeOut, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
-					y: -25, scaleX:0.9, scaleY:1.1 });
+					y:-25, scaleX:0.9, scaleY:1.1 });
 			}
 		}
 		

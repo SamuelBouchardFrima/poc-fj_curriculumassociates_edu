@@ -18,8 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	
 	public class PieceTray extends Sprite
 	{
-		private var mTrayExplosion:MovieClip;
-		protected static const OFFSET:Number = 10;
+		protected static const OFFSET:Number = 20;
 		protected static const DEADZONE:Number = 50;
 		
 		protected var mEnablePieceDelete:Boolean;
@@ -27,6 +26,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		protected var mLastPiece:Piece;
 		//protected var mAttentionPiece:Piece;
 		protected var mAttentionCallingTimer:Timer;
+		protected var mTrayExplosion:MovieClip;
 		
 		public function get Center():Number
 		{
@@ -131,7 +131,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				while (piece)
 				{
 					TweenLite.to(piece, 0.25, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenBouncePiece,
-						onCompleteParams:[piece], y: -50, scaleX:0.85, scaleY:1.15 } );
+						onCompleteParams:[piece], x:(piece.x - (i * 10)), y: -50, scaleX:0.85, scaleY:1.15 } );
 					
 					++i;
 					piece = piece.NextPiece;
