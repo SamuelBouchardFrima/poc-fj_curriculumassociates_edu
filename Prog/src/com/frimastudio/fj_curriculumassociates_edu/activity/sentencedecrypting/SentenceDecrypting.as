@@ -69,6 +69,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		private var mMiniDefaultScale:Number;
 		private var mDialogBox:CurvedBox;
 		private var mActivityBox:ActivityBox;
+		private var mCurrentLetterList:String;
 		
 		public function SentenceDecrypting(aTemplate:SentenceDecryptingTemplate)
 		{
@@ -160,6 +161,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			var areaH:Number = (mLevel.Mini.y - (mLevel.Mini.height / 2) - 50) - areaY;
 			//mFloatPieceArea = new Rectangle(100, areaY, 824, 400 - areaY);
 			mFloatPieceArea = new Rectangle(100, areaY, 824, areaH);
+			
+			mCurrentLetterList = "";
 			
 			mDragAutostartTimer = new Timer(500, 1);
 			mDragAutostartTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDragAutostartTimerComplete);
@@ -356,6 +359,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		
 		private function ChunkIsRequired(aChunk:String):Boolean
 		{
+			//if (mCurrentLetterList.split(aChunk).length - 1 >= mTemplate.Answer.split(aChunk).length - 1)
+			//{
+				//return false;
+			//}
+			
 			//var letterList:String = "";
 			var i:int, endi:int;
 			var wordTemplate:EncryptedWordTemplate;
@@ -370,7 +378,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 					while (index != -1)
 					{
 						char = wordTemplate.Answer.charAt(index).toLowerCase();
-						if (char == aChunk)
+						if (char == aChunk && mCurrentLetterList.indexOf(char) == -1)
 						{
 							return true;
 						}
@@ -981,13 +989,33 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			//StartFloatPieceDrag();
 			
 			var piece:Piece = aEvent.currentTarget as Piece;
-			piece.removeChildAt(piece.numChildren - 1);
-			addChild(piece);
+			var letter:String = piece.Label;
+			
+			var newPiece:Piece;
+			//var target:Point;
+			var slotList:Vector.<Point> = mActivityBox.SlotListForLetter(letter);
+			for (var i:int = 0, endi:int = slotList.length; i < endi; ++i)
+			{
+				newPiece = new Piece(null, null, letter, DisplayObjectUtil.GetPosition(piece),
+					ActivityType.SENTENCE_DECRYPTING.ColorCode);
+				//target = new Point();	// TODO:	find the position of the next slot for letter
+				TweenLite.to(newPiece, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendPieceToActivitySlot,
+					onCompleteParams:[newPiece], x:slotList[i].x, y:slotList[i].y } );
+				addChild(newPiece);
+			}
+			
+			TweenLite.to(this, 1, { onComplete:OnTweenSendPieceListToCorrespondingSlot, onCompleteParams:[letter] });
+			
+			//piece.removeChildAt(piece.numChildren - 1);
+			//addChild(piece);
+			removeChild(piece);
 			if (mFloatPieceList.indexOf(piece) > -1)
 			{
 				mFloatPieceList.splice(mFloatPieceList.indexOf(piece), 1);
 				//trace("REMOVED DUE TO BEING SELECTED");
 			}
+			
+			mCurrentLetterList += letter;
 			
 			var bubbleSplash:Bitmap = new Asset.BubbleSplashBitmap();
 			bubbleSplash.x = piece.x - (bubbleSplash.width / 2);
@@ -997,27 +1025,34 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				onCompleteParams:[bubbleSplash], alpha:0 });
 			
 			//var target:Point = mActivityBox.CurrentActivityEmptySlot;
-			var target:Point = mActivityBox.SentenceCenter;
-			TweenLite.to(piece, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendPieceToActivitySlot,
-				onCompleteParams:[piece], x:target.x, y:target.y });
+			//var target:Point = mActivityBox.SentenceCenter;
+			//TweenLite.to(piece, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendPieceToActivitySlot,
+				//onCompleteParams:[piece], x:target.x, y:target.y });
 		}
 		
 		private function OnTweenSendPieceToActivitySlot(aPiece:Piece):void
 		{
-			var effective:Boolean = mActivityBox.DecryptSentence(aPiece.Label);
+			removeChild(aPiece);
+		}
+		
+		//private function OnTweenSendPieceToActivitySlot(aPiece:Piece, aSlot:int):void
+		private function OnTweenSendPieceListToCorrespondingSlot(aLetter:String):void
+		{
+			var effective:Boolean = mActivityBox.DecryptSentence(aLetter);
+			//var effective:Boolean = mActivityBox.DecryptCharacter(aPiece.Label, aSlot);
 			if (effective)
 			{
-				removeChild(aPiece);
+				//removeChild(aPiece);
 				
 				if (mActivityBox.SentenceDecryptionFinished)
 				{
 					dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE, null, mActivityBox.WordTemplateList));
 				}
 			}
-			else
-			{
+			//else
+			//{
 				// TODO:	return piece to float area
-			}
+			//}
 		}
 		
 		private function OnTweenHideBubbleSplash(aBubbleSplash:Bitmap):void

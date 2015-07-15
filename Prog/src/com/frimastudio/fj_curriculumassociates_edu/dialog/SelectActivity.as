@@ -97,7 +97,19 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			var sound:Sound = new mTemplate.ActivityVO() as Sound;
 			sound.play();
 			
-			var completeQuestStepTimer:Timer = new Timer(sound.length + 200, 1);
+			var earCrescendoSFXTimer:Timer = new Timer(sound.length, 1);
+			earCrescendoSFXTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
+			earCrescendoSFXTimer.start();
+		}
+		
+		private function OnEarCrescendoSFXTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
+			
+			var sound:Sound = new Asset.CrescendoSound() as Sound;
+			sound.play();
+			
+			var completeQuestStepTimer:Timer = new Timer(sound.length, 1);
 			completeQuestStepTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteQuestStepTimerComplete);
 			completeQuestStepTimer.start();
 		}

@@ -157,7 +157,55 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			}
 		}
 		
+		public function SlotListForLetter(aLetter:String):Vector.<Point>
+		{
+			//var amount:int = 0;
+			var slotList:Vector.<Point> = new Vector.<Point>();
+			var encryptedWord:EncryptedWordTemplate;
+			var word:String;
+			var index:int;
+			var slot:Point;
+			for (var i:int = 0, endi:int = mWordTemplateList.length; i < endi; ++i)
+			{
+				if (mWordTemplateList[i].ActivityToLaunch == ActivityType.SENTENCE_DECRYPTING)
+				{
+					encryptedWord = mWordTemplateList[i] as EncryptedWordTemplate;
+					word = encryptedWord.ChunkList.join("");
+					index = word.indexOf("_");
+					while (index != -1)
+					{
+						if (encryptedWord.Answer.charAt(index).toLowerCase() == aLetter)
+						{
+							//++amount;
+							slot = Geometry.RectangleCenter(mChunkListList[i][0].BoundaryOfLabelCharacter(index));
+							slot = slot.add(DisplayObjectUtil.GetPosition(mChunkListList[i][0]));
+							slot = slot.add(DisplayObjectUtil.GetPosition(mWordList[i]));
+							slot = slot.add(DisplayObjectUtil.GetPosition(mContent));
+							slot = slot.add(DisplayObjectUtil.GetPosition(this));
+							
+							//position = DisplayObjectUtil.GetPosition(mDraggedPiece);
+							//position = position.subtract(DisplayObjectUtil.GetPosition(mContent));
+							slotList.push(slot);
+						}
+						index = word.indexOf("_", index + 1);
+					}
+				}
+			}
+			//return amount;
+			return slotList;
+		}
+		
+		//public function CenterForLetterSlot(aLetter:String, aSlot:int):Point
+		//{
+			//var center:Point;
+			//for (var i:int = 0, endi:int = AmountRequiredForLetter(aLetter); i < endi; ++i)
+			//{
+				//
+			//}
+		//}
+		
 		public function DecryptSentence(aLetter:String):Boolean
+		//public function DecryptCharacter(aLetter:String, aSlot:int):Boolean
 		{
 			var effective:Boolean;
 			var encryptedWord:EncryptedWordTemplate;
@@ -1321,15 +1369,17 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 				case ActivityType.WORD_UNSCRAMBLING:
 					var scrambledWord:ScrambledWordTemplate = mWordTemplateList[index] as ScrambledWordTemplate;
 					activityToLaunch = new WordUnscramblingTemplate(mQuestStep.StepLevel, scrambledWord,
-						FindAnswerVO(scrambledWord.Answer), mWordTemplateList, mLineBreakList, mPointDirection);
+						//FindAnswerVO(scrambledWord.Answer), mWordTemplateList, mLineBreakList, mPointDirection);
+						mSentenceVO, mWordTemplateList, mLineBreakList, mPointDirection);
 					break;
 				case ActivityType.WORD_CRAFTING:
 					var emptyWord:EmptyWordTemplate = mWordTemplateList[index] as EmptyWordTemplate;
 					activityToLaunch = new WordCraftingTemplate(mQuestStep.StepLevel, emptyWord,
-						FindAnswerVO(emptyWord.Answer), mWordTemplateList, mLineBreakList, mPointDirection);
+						//FindAnswerVO(emptyWord.Answer), mWordTemplateList, mLineBreakList, mPointDirection);
+						mSentenceVO, mWordTemplateList, mLineBreakList, mPointDirection);
 					break;
 				case ActivityType.SENTENCE_DECRYPTING:
-					activityToLaunch = new SentenceDecryptingTemplate(mQuestStep.StepLevel, null, mWordTemplateList,
+					activityToLaunch = new SentenceDecryptingTemplate(mQuestStep.StepLevel, mSentenceVO, mWordTemplateList,
 						mLineBreakList, mPointDirection);
 					break;
 				//case ActivityType.SENTENCE_UNSCRAMBLING:

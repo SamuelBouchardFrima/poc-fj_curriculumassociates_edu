@@ -77,6 +77,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mDialogBox:CurvedBox;
 		private var mActivityBox:ActivityBox;
 		private var mStoredCraftingTrayChunkList:Vector.<String>;
+		private var mCurrentLetterList:String;
 		
 		public function WordCrafting(aTemplate:WordCraftingTemplate)
 		{
@@ -164,6 +165,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			var areaH:Number = (mLevel.Mini.y - (mLevel.Mini.height / 2) - 50) - areaY;
 			//mFloatPieceArea = new Rectangle(100, areaY, 824, 400 - areaY);
 			mFloatPieceArea = new Rectangle(100, areaY, 824, areaH);
+			
+			mCurrentLetterList = "";
 			
 			mDragAutostartTimer = new Timer(500, 1);
 			mDragAutostartTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDragAutostartTimerComplete);
@@ -321,6 +324,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		private function ChunkIsRequired(aChunk:String):Boolean
 		{
+			if (mCurrentLetterList.split(aChunk).length - 1 >= mTemplate.Answer.toLowerCase().split(aChunk).length - 1)
+			{
+				return false;
+			}
 			return mActivityBox.IsCharacterRequired(aChunk);
 		}
 		
@@ -877,6 +884,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			{
 				mFloatPieceList.splice(mFloatPieceList.indexOf(piece), 1);
 			}
+			
+			mCurrentLetterList += piece.Label;
 			
 			var bubbleSplash:Bitmap = new Asset.BubbleSplashBitmap();
 			bubbleSplash.x = piece.x - (bubbleSplash.width / 2);

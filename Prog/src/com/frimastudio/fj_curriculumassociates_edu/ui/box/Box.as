@@ -501,6 +501,23 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 			return Geometry.RectangleAdd(leftBoundary.union(rightBoundary), DisplayObjectUtil.GetPosition(field));
 		}
 		
+		public function BoundaryOfLabelCharacter(aIndex:int):Rectangle
+		{
+			if (!(mContentTemplate is BoxLabel))
+			{
+				throw new Error("This box does not have a BoxLabel content.");
+				return null;
+			}
+			
+			var field:TextField = mContent.getChildAt(0) as TextField;
+			if (!field)
+			{
+				throw new Error("This box's label is not set.");
+			}
+			
+			return Geometry.RectangleAdd(field.getCharBoundaries(aIndex), DisplayObjectUtil.GetPosition(field));
+		}
+		
 		private function OnMouseOver(aEvent:MouseEvent):void
 		{
 			filters = [new GlowFilter(BoxColor, 0.5, 16, 16, 2, BitmapFilterQuality.HIGH)];
