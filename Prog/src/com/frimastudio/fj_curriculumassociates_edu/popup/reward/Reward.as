@@ -22,6 +22,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 	{
 		private var mTemplate:RewardTemplate;
 		private var mCurrentReward:int;
+		private var mPlayRewardTypeTimer:Timer;
+		private var mPlayNextRewardTimer:Timer;
 		
 		public function Reward(aTemplate:RewardTemplate)
 		{
@@ -57,7 +59,18 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			body.wordWrap = true;
 			body.multiline = true;
 			body.autoSize = TextFieldAutoSize.CENTER;
-			body.text = mTemplate.Body;
+			switch (mTemplate.Type)
+			{
+				case RewardType.WORD:
+					body.text = "Words:";
+					break;
+				case RewardType.LETTER_PATTERN_CARD:
+					body.text = "Letter Pattern Cards:";
+					break;
+				default:
+					throw new Error("Reward type " + mTemplate.Type.Description + " not handled.");
+					break;
+			}
 			body.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 48, Palette.DIALOG_CONTENT,
 				null, null, null, null, null, TextFormatAlign.CENTER));
 			body.x = 512 - (body.width / 2);
@@ -65,10 +78,23 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			
 			var rewardContainer:Sprite = new Sprite();
 			var reward:CurvedBox;
+			var rewardColor:int = 0x000000;
+			switch (mTemplate.Type)
+			{
+				case RewardType.WORD:
+					rewardColor = 0xCCCCCC;
+					break;
+				case RewardType.LETTER_PATTERN_CARD:
+					rewardColor = 0xCC99FF;
+					break;
+				default:
+					throw new Error("Reward type " + mTemplate.Type.Description + " not handled.");
+					break;
+			}
 			var offset:Number = 0;
 			for (var i:int = 0, endi:int = mTemplate.RewardList.length; i < endi; ++i)
 			{
-				reward = new CurvedBox(new Point(60, 60), 0xCCCCCC,
+				reward = new CurvedBox(new Point(60, 60), rewardColor,
 					new BoxLabel(mTemplate.RewardList[i], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
 				reward.ColorBorderOnly = true;
 				offset += reward.width / 2;
@@ -85,16 +111,27 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			body.y = title.y + title.height;
 			rewardContainer.y = body.y + body.height + (space / 2);
 			
-			var sound:Sound = new mTemplate.VO() as Sound;
+			var sound:Sound = new mTemplate.TitleVO() as Sound;
 			sound.play();
 			
-			var playRewardTypeTimer:Timer = new Timer(sound.length, 1);
-			playRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
-			playRewardTypeTimer.start();
+			mPlayRewardTypeTimer = new Timer(sound.length, 1);
+			mPlayRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
+			mPlayRewardTypeTimer.start();
+			
+			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		override public function Dispose():void
 		{
+			mPlayRewardTypeTimer.reset();
+			mPlayRewardTypeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
+			
+			if (mPlayNextRewardTimer)
+			{
+				mPlayNextRewardTimer.reset();
+				mPlayNextRewardTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+			}
+			
 			removeEventListener(MouseEvent.CLICK, OnClick);
 			
 			super.Dispose();
@@ -102,36 +139,81 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 		
 		private function OnPlayRewardTypeTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
+			mPlayRewardTypeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
 			
-			var sound:Sound = new Asset.RewardSound[5]() as Sound;
-			sound.play();
+			var sound:Sound;
+			switch (mTemplate.Type)
+			{
+				case RewardType.WORD:
+					sound = new Asset.RewardSound[5]() as Sound;
+					break;
+				case RewardType.LETTER_PATTERN_CARD:
+					sound = new Asset.RewardSound[4]() as Sound;
+					break;
+				default:
+					throw new Error("Reward type " + mTemplate.Type.Description + " not handled.");
+					break;
+			}
+			
+			if (sound)
+			{
+				sound.play();
+				
+				mPlayNextRewardTimer = new Timer(sound.length, 1);
+			}
+			else
+			{
+				mPlayNextRewardTimer = new Timer(300, 1);
+			}
 			
 			mCurrentReward = 0;
 			
-			var playNextRewardTimer:Timer = new Timer(sound.length, 1);
-			playNextRewardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
-			playNextRewardTimer.start();
+			mPlayNextRewardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+			mPlayNextRewardTimer.start();
 		}
 		
 		private function OnPlayNextRewardTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
+			mPlayNextRewardTimer.reset();
 			
 			if (mCurrentReward < mTemplate.RewardList.length)
 			{
-				var sound:Sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
-				sound.play();
+				var sound:Sound;
+				if (Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]])
+				{
+					sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+				}
+				else if (Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]])
+				{
+					sound = new Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+				}
+				else if (Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]])
+				{
+					sound = new Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+				}
+				else
+				{
+					trace("Warning: sound " + mTemplate.RewardList[mCurrentReward] + " could not be found.");
+				}
+				
+				if (sound)
+				{
+					sound.play();
+					
+					mPlayNextRewardTimer.delay = sound.length;
+				}
+				else
+				{
+					mPlayNextRewardTimer.delay = 300;
+				}
 				
 				++mCurrentReward;
 				
-				var playNextRewardTimer:Timer = new Timer(sound.length, 1);
-				playNextRewardTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
-				playNextRewardTimer.start();
+				mPlayNextRewardTimer.start();
 			}
 			else
 			{
-				addEventListener(MouseEvent.CLICK, OnClick);
+				mPlayNextRewardTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayNextRewardTimerComplete);
 			}
 		}
 		

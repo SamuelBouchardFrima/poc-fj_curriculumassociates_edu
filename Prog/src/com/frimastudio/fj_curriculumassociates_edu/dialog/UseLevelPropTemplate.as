@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.dialog
 {
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;

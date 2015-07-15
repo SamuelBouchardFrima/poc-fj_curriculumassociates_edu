@@ -1,6 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.dialog
 {
-	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.ActivityBox;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;

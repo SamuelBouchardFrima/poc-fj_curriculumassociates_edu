@@ -1,7 +1,9 @@
 package com.frimastudio.fj_curriculumassociates_edu.dialog
 {
-	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBox;
-	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityBoxEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.ActivityBox;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.ActivityBoxEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
@@ -17,10 +19,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.media.Sound;
+	import flash.utils.Timer;
 	
 	public class SelectActivity extends QuestStep
 	{
@@ -36,66 +40,73 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.ActivityVO,
 				mTemplate.PhylacteryArrow, false, true);
+			mActivityBox.StepTemplate = mTemplate;
 			mActivityBox.x = 512;
 			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
+			mActivityBox.addEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			
-			var message:String = "Click the sentence.";
-			
-			if (mTemplate.SelectWholeBox)
-			{
-				mActivityBox.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
-				TweenLite.to(mActivityBox, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter: { alpha:0.75 } });
-				//mActivityBox.addEventListener(MouseEvent.CLICK, OnClickActivityBox);
-				
-				(new Asset.GameHintSound[10]() as Sound).play();
-			}
-			else
-			{
-				var activityFound:Boolean = false;
-				for (var i:int = 0, endi:int = mTemplate.ActivityWordList.length; i < endi && !activityFound; ++i)
-				{
-					switch (mTemplate.ActivityWordList[i].ActivityToLaunch)
-					{
-						case ActivityType.WORD_UNSCRAMBLING:
-							activityFound = true;
-							message = "Click the scrambled word.";
-							(new Asset.GameHintSound[26]() as Sound).play();
-							break;
-						case ActivityType.WORD_CRAFTING:
-							activityFound = true;
-							message = "Click the word.";
-							(new Asset.GameHintSound[25]() as Sound).play();
-							break;
-						default:
-							break;
-					}
-				}
-				
-				if (!activityFound)
-				{
-					throw new Error("Unable to find activity word to select.");
-				}
-			}
-			
-			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(message, 45,
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored word.", 45,
 				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
 			addChild(mActivityBox);
-			
-			mActivityBox.addEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 		}
 		
 		override public function Dispose():void
 		{
 			TweenLite.killTweensOf(mActivityBox);
-			//mActivityBox.removeEventListener(MouseEvent.CLICK, OnClickActivityBox);
 			mActivityBox.removeEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			mActivityBox.Dispose();
 			
 			super.Dispose();
+		}
+		
+		public function CompleteCurrentActivity(aNewWordList:Vector.<WordTemplate>):void
+		{
+			mActivityBox.WordTemplateList = aNewWordList;
+			mActivityBox.UpdateContent();
+			addChildAt(mLevel, 0);
+			
+			if (mActivityBox.IsComplete)
+			{
+				removeChild(mDialogBox);
+				
+				if (mActivityBox.SentenceDecrypted && !mActivityBox.SentenceScrambled)
+				{
+					var bounceLength:Number = mActivityBox.BounceInSequence();
+					
+					var earQuestStepVOTimer:Timer = new Timer(bounceLength, 1);
+					earQuestStepVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
+					earQuestStepVOTimer.start();
+				}
+				else
+				{
+					var completeQuestStepTimer:Timer = new Timer(200, 1);
+					completeQuestStepTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteQuestStepTimerComplete);
+					completeQuestStepTimer.start();
+				}
+			}
+		}
+		
+		private function OnEarQuestStepVOTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
+			
+			var sound:Sound = new mTemplate.ActivityVO() as Sound;
+			sound.play();
+			
+			var completeQuestStepTimer:Timer = new Timer(sound.length + 200, 1);
+			completeQuestStepTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteQuestStepTimerComplete);
+			completeQuestStepTimer.start();
+		}
+		
+		private function OnCompleteQuestStepTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteQuestStepTimerComplete);
+			
+			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}
 		
 		private function OnTweenGlowStrong():void
@@ -108,14 +119,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			TweenLite.to(mActivityBox, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter:{ alpha:0.75 } });
 		}
 		
-		//private function OnClickActivityBox(aEvent:MouseEvent):void
-		//{
-			//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
-		//}
-		
 		private function OnLaunchActivity(aEvent:ActivityBoxEvent):void
 		{
-			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+			//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+			dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_ACTIVITY, aEvent.ActivityToLaunch));
 		}
 	}
 }

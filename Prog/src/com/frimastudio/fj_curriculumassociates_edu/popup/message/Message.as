@@ -18,6 +18,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 	public class Message extends Popup
 	{
 		private var mTemplate:MessageTemplate;
+		private var mPlayBodyVOTimer:Timer;
 		
 		public function Message(aTemplate:MessageTemplate)
 		{
@@ -66,13 +67,18 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			var sound:Sound = new mTemplate.TitleVO() as Sound;
 			sound.play();
 			
-			var playBodyVOTimer:Timer = new Timer(sound.length, 1);
-			playBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
-			playBodyVOTimer.start();
+			mPlayBodyVOTimer = new Timer(sound.length, 1);
+			mPlayBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			mPlayBodyVOTimer.start();
+			
+			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		override public function Dispose():void
 		{
+			mPlayBodyVOTimer.reset();
+			mPlayBodyVOTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			
 			removeEventListener(MouseEvent.CLICK, OnClick);
 			
 			super.Dispose();
@@ -80,21 +86,9 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 		
 		private function OnPlayBodyVOTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			mPlayBodyVOTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
 			
-			var sound:Sound = new mTemplate.BodyVO() as Sound;
-			sound.play();
-			
-			var enableClickTimer:Timer = new Timer(sound.length, 1);
-			enableClickTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEnableClickTimerComplete);
-			enableClickTimer.start();
-		}
-		
-		private function OnEnableClickTimerComplete(aEvent:TimerEvent):void
-		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
-			
-			addEventListener(MouseEvent.CLICK, OnClick);
+			(new mTemplate.BodyVO() as Sound).play();
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

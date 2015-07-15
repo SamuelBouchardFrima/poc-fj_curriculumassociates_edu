@@ -1,11 +1,13 @@
 package com.frimastudio.fj_curriculumassociates_edu.quest
 {
+	import com.frimastudio.fj_curriculumassociates_edu.dialog.SelectActivity;
 	import flash.display.Sprite;
 	
 	public class Quest extends Sprite
 	{
 		protected var mStepList:Vector.<QuestStepTemplate>;
 		protected var mStep:QuestStep;
+		protected var mTempStep:QuestStep;
 		
 		public function Quest()
 		{
@@ -23,15 +25,20 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		{
 			if (mStep)
 			{
+				mStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 				mStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
 				mStep.Dispose();
-				removeChild(mStep);
+				if (contains(mStep))
+				{
+					removeChild(mStep);
+				}
 			}
 			
 			if (mStepList.length)
 			{
 				var template:QuestStepTemplate = mStepList.shift();
 				mStep = new template.StepClass(template);
+				mStep.addEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 				mStep.addEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
 				addChild(mStep);
 			}
@@ -39,6 +46,51 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			{
 				dispatchEvent(new QuestEvent(QuestEvent.COMPLETE));
 			}
+		}
+		
+		private function OnLaunchActivity(aEvent:QuestStepEvent):void
+		{
+			if (mTempStep)
+			{
+				mTempStep.removeEventListener(QuestStepEvent.LEAVE, OnLeaveActivity);
+				mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
+				mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+				removeChild(mTempStep);
+				mTempStep = null;
+			}
+			else
+			{
+				removeChild(mStep);
+			}
+			
+			mTempStep = new aEvent.ActivityToLaunch.StepClass(aEvent.ActivityToLaunch);
+			mTempStep.addEventListener(QuestStepEvent.LEAVE, OnLeaveActivity);
+			mTempStep.addEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
+			mTempStep.addEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			addChild(mTempStep);
+		}
+		
+		private function OnLeaveActivity(aEvent:QuestStepEvent):void
+		{
+			mTempStep.removeEventListener(QuestStepEvent.LEAVE, OnLeaveActivity);
+			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
+			mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			removeChild(mTempStep);
+			mTempStep = null;
+			
+			addChild(mStep);
+		}
+		
+		private function OnCompleteActivity(aEvent:QuestStepEvent):void
+		{
+			mTempStep.removeEventListener(QuestStepEvent.LEAVE, OnLeaveActivity);
+			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
+			mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			removeChild(mTempStep);
+			mTempStep = null;
+			
+			(mStep as SelectActivity).CompleteCurrentActivity(aEvent.WordList);
+			addChild(mStep);
 		}
 		
 		private function OnCompleteStep(aEvent:QuestStepEvent):void

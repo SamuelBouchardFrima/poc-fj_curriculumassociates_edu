@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.util
 {
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	public class MathUtil
 	{
@@ -22,6 +23,11 @@ package com.frimastudio.fj_curriculumassociates_edu.util
 		public static function MinPoint(aValue1:Point, aValue2:Point):Point
 		{
 			return new Point(Math.min(aValue1.x, aValue2.x), Math.min(aValue1.y, aValue2.y));
+		}
+		
+		public static function MinMaxPoint(aPoint:Point, aRectangle:Rectangle):Point
+		{
+			return MinPoint(MaxPoint(aPoint.clone(), aRectangle.topLeft), aRectangle.bottomRight);
 		}
 		
 		public function MathUtil()

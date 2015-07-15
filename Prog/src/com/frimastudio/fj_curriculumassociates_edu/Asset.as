@@ -13,6 +13,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var GroceryStoreBGBitmap:Class;
 		[Embed(source = "../../../../art/POC/background/CA_BG_Stage_Rock_V3.jpg")]
 		public static var TheaterBGBitmap:Class;
+		[Embed(source = "../../../../art/POC/background/CA_BG_LabGreen_V3.jpg")]
+		public static var TheForestBGBitmap:Class;
 		
 		[Embed(source = "../../../../art/POC/lucu/Persos.png")]
 		public static var LucuDuoBitmap:Class;
@@ -594,6 +596,78 @@ package com.frimastudio.fj_curriculumassociates_edu
 			_dont:WordContent_21_dont, _sing:WordContent_22_sing, _but:WordContent_23_but, _can:WordContent_24_can,
 			_rap:WordContent_25_rap, _fit:WordContent_26_fit, _mix:WordContent_27_mix, _up:WordContent_28_up,
 			_and:WordContent_29_and, _take:WordContent_30_take, _a:WordContent_31_3_a_uh };
+		
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/02_its.mp3")]
+		private static var NewWord_02_its:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/03_pip.mp3")]
+		private static var NewWord_03_pip:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/04_did.mp3")]
+		private static var NewWord_04_did:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/05_mid.mp3")]
+		private static var NewWord_05_mid:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/06_nit.mp3")]
+		private static var NewWord_06_nit:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/07_sin.mp3")]
+		private static var NewWord_07_sin:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/08_din.mp3")]
+		private static var NewWord_08_din:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/09_tin.mp3")]
+		private static var NewWord_09_tin:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/10_rim.mp3")]
+		private static var NewWord_10_rim:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/11b_tim.mp3")]
+		private static var NewWord_11b_tim:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/12b_sid.mp3")]
+		private static var NewWord_12b_sid:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/13_pat.mp3")]
+		private static var NewWord_13_pat:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/14_tap.mp3")]
+		private static var NewWord_14_tap:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/15_dad.mp3")]
+		private static var NewWord_15_dad:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/16_rad.mp3")]
+		private static var NewWord_16_rad:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/17_fad.mp3")]
+		private static var NewWord_17_fad:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/18_tad.mp3")]
+		private static var NewWord_18_tad:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/19_dip.mp3")]
+		private static var NewWord_19_dip:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/20_art.mp3")]
+		private static var NewWord_20_art:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/21_id.mp3")]
+		private static var NewWord_21_id:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/22_fart.mp3")]
+		private static var NewWord_22_fart:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/23_frat.mp3")]
+		private static var NewWord_23_frat:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/24_trap.mp3")]
+		private static var NewWord_24_trap:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/25_drip.mp3")]
+		private static var NewWord_25_drip:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/26_trip.mp3")]
+		private static var NewWord_26_trip:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/27_dart.mp3")]
+		private static var NewWord_27_dart:Class;
+		public static var NewWordSound:Object = { _its:NewWord_02_its, _pip:NewWord_03_pip, _did:NewWord_04_did,
+			_mid:NewWord_05_mid, _nit:NewWord_06_nit, _sin:NewWord_07_sin, _din:NewWord_08_din, _tin:NewWord_09_tin,
+			_rim:NewWord_10_rim, _tim:NewWord_11b_tim, _sid:NewWord_12b_sid, _pat:NewWord_13_pat, _tap:NewWord_14_tap,
+			_dad:NewWord_15_dad, _rad:NewWord_16_rad, _fad:NewWord_17_fad, _tad:NewWord_18_tad, _dip:NewWord_19_dip,
+			_art:NewWord_20_art, _id:NewWord_21_id, _fart:NewWord_22_fart, _frat:NewWord_23_frat, _trap:NewWord_24_trap,
+			_drip:NewWord_25_drip, _trip:NewWord_26_trip, _dart:NewWord_27_dart };
+		
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/Possible Chunks/01_ip.mp3")]
+		private static var NewChunk_01_ip:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/Possible Chunks/02_it.mp3")]
+		private static var NewChunk_02_it:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/Possible Chunks/03_id.mp3")]
+		private static var NewChunk_03_id:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/Possible Chunks/04_im.mp3")]
+		private static var NewChunk_04_im:Class;
+		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/Possible Chunks/05_at.mp3")]
+		private static var NewChunk_05_at:Class;
+		public static var NewChunkSound:Object = { _ip:NewChunk_01_ip, _it:NewChunk_02_it, _id:NewChunk_03_id,
+			_im:NewChunk_04_im, _at:NewChunk_05_at };
 		
 		[Embed(source = "../../../../audio/game/whereIsTheField.mp3")]
 		public static var WhereIsTheFieldSound:Class;

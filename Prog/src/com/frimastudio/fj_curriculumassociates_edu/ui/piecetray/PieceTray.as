@@ -13,12 +13,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.utils.Timer;
 	
 	public class PieceTray extends Sprite
 	{
-		protected static const OFFSET:Number = 20;
+		protected static const OFFSET:Number = 15;
 		protected static const DEADZONE:Number = 50;
 		
 		protected var mEnablePieceDelete:Boolean;
@@ -27,6 +28,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		//protected var mAttentionPiece:Piece;
 		protected var mAttentionCallingTimer:Timer;
 		protected var mTrayExplosion:MovieClip;
+		protected var mStartWithUppercase:Boolean;
 		
 		public function get Center():Number
 		{
@@ -38,6 +40,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			return x;
 		}
 		
+		public function get Bounds():Rectangle
+		{
+			var bounds:Rectangle = new Rectangle();
+			bounds.left = mFirstPiece.Position.x - (mFirstPiece.width / 2);
+			bounds.top = mFirstPiece.Position.y - (mFirstPiece.height / 2);
+			bounds.right = mLastPiece.Position.x + (mLastPiece.width / 2);
+			bounds.bottom = mLastPiece.Position.y + (mLastPiece.height / 2);
+			return bounds;
+		}
+		
 		public function get NextSlotPosition():Number
 		{
 			if (mLastPiece)
@@ -45,6 +57,69 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				return x + mLastPiece.Position.x + (mLastPiece.width / 2) + OFFSET;
 			}
 			return x + OFFSET;
+		}
+		
+		public function get HasEmptySlot():Boolean
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				if (piece.Label == "_")
+				{
+					return true;
+				}
+				
+				piece = piece.NextPiece;
+			}
+			return false;
+		}
+		
+		public function get NextEmptySlotIndex():int
+		{
+			var piece:Piece = mFirstPiece;
+			var index:int = 0;
+			while (piece)
+			{
+				if (piece.Label == "_")
+				{
+					return index;
+				}
+				++index;
+				piece = piece.NextPiece;
+			}
+			return -1;
+		}
+		
+		public function get FirstEmptySlotPosition():Number
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				if (piece.Label == "_")
+				{
+					return x + piece.Position.x;
+				}
+				
+				piece = piece.NextPiece;
+			}
+			throw new Error("No empty slot in the tray.");
+			return 0;
+		}
+		
+		public function set FirstEmptySlotValue(aValue:String):void
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				if (piece.Label == "_")
+				{
+					piece.Label = aValue;
+					return;
+				}
+				
+				piece = piece.NextPiece;
+			}
+			throw new Error("No empty slot in the tray.");
 		}
 		
 		public function get MoreThanOne():Boolean
@@ -57,7 +132,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			return !mFirstPiece;
 		}
 		
-		public function set Color(aValue:int):void
+		public function get BoxColor():int	{ return (mFirstPiece ? mFirstPiece.BoxColor : 0xFFFFFF); }
+		public function set BoxColor(aValue:int):void
 		{
 			var piece:Piece = mFirstPiece;
 			while (piece)
@@ -66,6 +142,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				piece = piece.NextPiece;
 			}
 		}
+		
+		//public function set Color(aValue:int):void
+		//{
+			//var piece:Piece = mFirstPiece;
+			//while (piece)
+			//{
+				//piece.BoxColor = aValue;
+				//piece = piece.NextPiece;
+			//}
+		//}
 		
 		public function set ContentColor(aValue:int):void
 		{
@@ -77,11 +163,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 		}
 		
-		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null)
+		public function get StartWithUppercase():Boolean	{ return mStartWithUppercase; }
+		public function set StartWithUppercase(aValue:Boolean):void	{ mStartWithUppercase = aValue; }
+		
+		public function PieceTray(aEnablePieceDelete:Boolean, aContentList:Vector.<String> = null,
+			aStartWithUppercase:Boolean = false)
 		{
 			super();
 			
 			mEnablePieceDelete = aEnablePieceDelete;
+			mStartWithUppercase = aStartWithUppercase;
 			
 			if (aContentList)
 			{
@@ -131,7 +222,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				while (piece)
 				{
 					TweenLite.to(piece, 0.25, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenBouncePiece,
-						onCompleteParams:[piece], x:(piece.x - (i * (OFFSET - 15))), y: -50, scaleX:0.85, scaleY:1.15 } );
+						onCompleteParams:[piece], x:(piece.x - (i * (OFFSET - 15))), y: -50, scaleX:0.85, scaleY:1.15 });
 					
 					++i;
 					piece = piece.NextPiece;
@@ -151,6 +242,25 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				}
 				return (0.7 + ((i - 1) * 0.05));
 			}
+		}
+		
+		public function Fizzle():void
+		{
+			var piece:Piece = mFirstPiece;
+			var i:int = 0;
+			
+			while (piece)
+			{
+				TweenLite.to(piece, 0.05, { ease:Strong.easeOut, delay:(i * 0.05), onComplete:OnTweenFizzleUpPiece,
+					onCompleteParams:[piece], y:-2, scaleX:1, scaleY:1 });
+				
+				++i;
+				piece = piece.NextPiece;
+			}
+			
+			var stopFizzleTimer:Timer = new Timer(700, 1);
+			stopFizzleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnStopFizzleTimerComplete);
+			stopFizzleTimer.start();
 		}
 		
 		public function FizzleAndExplode(aAsSentence:Boolean = false):Number
@@ -299,7 +409,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			return chunkList;
 		}
 		
-		public function MakePlace(aPiece:Piece):void
+		public function MakePlace(aPiece:Piece, aPosition:Point = null):void
 		{
 			if (!mFirstPiece)
 			{
@@ -315,9 +425,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			UpdatePositionFrom(mFirstPiece);
 			
 			var piece:Piece = mFirstPiece;
-			var relativePosition:Point = aPiece.Position.clone();
-			relativePosition.x -= x;
-			relativePosition.y -= y;
+			var relativePosition:Point = aPosition;
+			if (!relativePosition)
+			{
+				relativePosition = aPiece.Position.clone();
+				relativePosition.x -= x;
+				relativePosition.y -= y;
+			}
 			while (piece)
 			{
 				if (relativePosition.x <= piece.Position.x && ((piece == mFirstPiece && (!mEnablePieceDelete ||
@@ -352,7 +466,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			UpdatePositionFrom(mFirstPiece);
 		}
 		
-		public function Insert(aPiece:Piece, aPreviousPosition:Piece = null):void
+		public function Insert(aPiece:Piece, aPreviousPosition:Piece = null, aPosition:Point = null):void
 		{
 			if (Contain(aPiece))
 			{
@@ -362,9 +476,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			var newPosition:Boolean;
 			
-			var relativePosition:Point = aPiece.Position.clone();
-			relativePosition.x -= x;
-			relativePosition.y -= y;
+			var relativePosition:Point = aPosition;
+			if (!relativePosition)
+			{
+				relativePosition = aPiece.Position.clone();
+				relativePosition.x -= x;
+				relativePosition.y -= y;
+			}
 			if (mFirstPiece)
 			{
 				var piece:Piece = mFirstPiece;
@@ -420,7 +538,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		
 		public function InsertFirst(aContent:String):void
 		{
-			mFirstPiece = new Piece(null, mFirstPiece, aContent);
+			mFirstPiece = new Piece(null, mFirstPiece, aContent, null, BoxColor);
 			mFirstPiece.EnableMouseOver();
 			if (!mLastPiece)
 			{
@@ -438,7 +556,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		
 		public function InsertLast(aContent:String, aStartPosition:Point, aSkipSound:Boolean = false):void
 		{
-			mLastPiece = new Piece(mLastPiece, null, aContent, aStartPosition);
+			mLastPiece = new Piece(mLastPiece, null, aContent, aStartPosition, BoxColor);
 			mLastPiece.EnableMouseOver();
 			if (!mFirstPiece)
 			{
@@ -465,7 +583,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				return;
 			}
 			
-			var piece:Piece = new Piece(aPiece.PreviousPiece, aPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
+			var piece:Piece = new Piece(aPiece.PreviousPiece, aPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()),
+				BoxColor);
 			piece.EnableMouseOver();
 			aPiece.PreviousPiece = piece;
 			if (mFirstPiece == aPiece)
@@ -490,7 +609,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				return;
 			}
 			
-			var piece:Piece = new Piece(aPiece, aPiece.NextPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()));
+			var piece:Piece = new Piece(aPiece, aPiece.NextPiece, aContent, (aDefaultPosition ? aDefaultPosition : new Point()),
+				BoxColor);
 			piece.EnableMouseOver();
 			aPiece.NextPiece = piece;
 			if (mLastPiece == aPiece)
@@ -620,12 +740,27 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			}
 			
 			var piece:Piece = aPiece;
-			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position.x + (piece.PreviousPiece.width / 2) : 0);
+			//var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position.x + (piece.PreviousPiece.width / 2) : 0);
+			var position:Number = (piece.PreviousPiece ? piece.PreviousPiece.Position.x + (piece.PreviousPiece.width / 2) + OFFSET : 0);
 			while (piece)
 			{
-				position += OFFSET + (piece.width / 2);
-				piece.Position = new Point(position, 0);
+				if (mStartWithUppercase)
+				{
+					if (piece == mFirstPiece)
+					{
+						piece.Label = piece.Label.charAt(0).toUpperCase() + piece.Label.substring(1);
+					}
+					else
+					{
+						piece.Label = piece.Label.charAt(0).toLowerCase() + piece.Label.substring(1);
+					}
+				}
+				
+				
+				//position += OFFSET + (piece.width / 2);
 				position += piece.width / 2;
+				piece.Position = new Point(position, 0);
+				position += piece.width / 2 + OFFSET;
 				piece = piece.NextPiece;
 			}
 		}
@@ -716,6 +851,22 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		{
 			TweenLite.to(aPiece, 0.05, { ease:Strong.easeOut, onComplete:OnTweenFizzleUpPiece,
 				onCompleteParams:[aPiece], y:-2, scaleX:1, scaleY:1 });
+		}
+		
+		private function OnStopFizzleTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnStopFizzleTimerComplete);
+			
+			var piece:Piece = mFirstPiece;
+			var i:int = 0;
+			var whiteBox:CurvedBox;
+			while (piece)
+			{
+				TweenLite.killTweensOf(piece);
+				TweenLite.to(piece, 0.05, { ease:Strong.easeOut, y:0 });
+				
+				piece = piece.NextPiece;
+			}
 		}
 		
 		private function OnExplodeTimerComplete(aEvent:TimerEvent):void

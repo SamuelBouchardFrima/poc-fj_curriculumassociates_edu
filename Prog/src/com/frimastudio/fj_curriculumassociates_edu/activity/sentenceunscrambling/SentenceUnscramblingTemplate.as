@@ -1,7 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscrambling
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
-	import com.frimastudio.fj_curriculumassociates_edu.dialog.WordTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Direction;
 	
