@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.itemunlocked
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import flash.display.Bitmap;
@@ -80,7 +81,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.itemunlocked
 			
 			addEventListener(MouseEvent.CLICK, OnClick);
 			
-			(new mTemplate.VO() as Sound).play();
+			//(new mTemplate.VO() as Sound).play();
+			SoundManager.PlayVO(mTemplate.VO);
 		}
 		
 		override public function Dispose():void

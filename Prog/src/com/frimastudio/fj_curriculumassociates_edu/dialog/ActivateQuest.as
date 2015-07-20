@@ -44,8 +44,19 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				onCompleteParams:[0], y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
 			mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
 			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
 			mDialogBox = new CurvedBox(new Point(100, 100), Palette.DIALOG_BOX,
-				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT);
+				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);

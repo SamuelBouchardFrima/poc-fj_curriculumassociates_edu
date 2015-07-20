@@ -1,8 +1,10 @@
 package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -95,7 +97,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			for (var i:int = 0, endi:int = mTemplate.RewardList.length; i < endi; ++i)
 			{
 				reward = new CurvedBox(new Point(60, 60), rewardColor,
-					new BoxLabel(mTemplate.RewardList[i], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
+					new BoxLabel(mTemplate.RewardList[i], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
 				reward.ColorBorderOnly = true;
 				offset += reward.width / 2;
 				reward.x = offset;
@@ -111,10 +113,11 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			body.y = title.y + title.height;
 			rewardContainer.y = body.y + body.height + (space / 2);
 			
-			var sound:Sound = new mTemplate.TitleVO() as Sound;
-			sound.play();
+			//var sound:Sound = new mTemplate.TitleVO() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.TitleVO);
 			
-			mPlayRewardTypeTimer = new Timer(sound.length, 1);
+			mPlayRewardTypeTimer = new Timer(soundLength, 1);
 			mPlayRewardTypeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
 			mPlayRewardTypeTimer.start();
 			
@@ -141,14 +144,17 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 		{
 			mPlayRewardTypeTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayRewardTypeTimerComplete);
 			
-			var sound:Sound;
+			//var sound:Sound;
+			var sound:Class;
 			switch (mTemplate.Type)
 			{
 				case RewardType.WORD:
-					sound = new Asset.RewardSound[5]() as Sound;
+					//sound = new Asset.RewardSound[5]() as Sound;
+					sound = Asset.RewardSound[5];
 					break;
 				case RewardType.LETTER_PATTERN_CARD:
-					sound = new Asset.RewardSound[4]() as Sound;
+					//sound = new Asset.RewardSound[4]() as Sound;
+					sound = Asset.RewardSound[4];
 					break;
 				default:
 					throw new Error("Reward type " + mTemplate.Type.Description + " not handled.");
@@ -157,9 +163,10 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			
 			if (sound)
 			{
-				sound.play();
+				//sound.play();
+				var soundLength:Number = SoundManager.PlayVO(sound);
 				
-				mPlayNextRewardTimer = new Timer(sound.length, 1);
+				mPlayNextRewardTimer = new Timer(soundLength, 1);
 			}
 			else
 			{
@@ -178,18 +185,22 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			
 			if (mCurrentReward < mTemplate.RewardList.length)
 			{
-				var sound:Sound;
+				//var sound:Sound;
+				var sound:Class;
 				if (Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]])
 				{
-					sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					//sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					sound = Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]];
 				}
 				else if (Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]])
 				{
-					sound = new Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					//sound = new Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					sound = Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]];
 				}
 				else if (Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]])
 				{
-					sound = new Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					//sound = new Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					sound = Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]];
 				}
 				else
 				{
@@ -198,9 +209,11 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 				
 				if (sound)
 				{
-					sound.play();
+					//sound.play();
+					//var soundLength:Number = SoundManager.PlayVO(sound);
+					var soundLength:Number = SoundManager.PlaySFX(sound);
 					
-					mPlayNextRewardTimer.delay = sound.length;
+					mPlayNextRewardTimer.delay = soundLength;
 				}
 				else
 				{
@@ -219,6 +232,25 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 		
 		private function OnClick(aEvent:MouseEvent):void
 		{
+			var i:int, endi:int;
+			switch (mTemplate.Type)
+			{
+				case RewardType.WORD:
+					for (i = 0, endi = mTemplate.RewardList.length; i < endi; ++i)
+					{
+						Inventory.AddWord(mTemplate.RewardList[i]);
+					}
+					break;
+				case RewardType.LETTER_PATTERN_CARD:
+					for (i = 0, endi = mTemplate.RewardList.length; i < endi; ++i)
+					{
+						Inventory.AddLetterPatternCard(mTemplate.RewardList[i]);
+					}
+					break;
+				default:
+					break;
+			}
+			
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}
 	}

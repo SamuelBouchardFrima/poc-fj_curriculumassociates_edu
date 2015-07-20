@@ -19,6 +19,19 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../art/POC/lucu/Persos.png")]
 		public static var LucuDuoBitmap:Class;
 		
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Idle.png")]
+		public static var WildLucuIdleBitmap:Class;
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Smile.png")]
+		public static var WildLucuSmileBitmap:Class;
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Smirk.png")]
+		public static var WildLucuSmirkBitmap:Class;
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Open.png")]
+		public static var WildLucuOpenBitmap:Class;
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Burp.png")]
+		public static var WildLucuBurpBitmap:Class;
+		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Vacuum.png")]
+		public static var WildLucuVacuumBitmap:Class;
+		
 		[Embed(source = "../../../../art/POC/npc/CA_NPC_Cop_V1.png")]
 		public static var CopNPCBitmap:Class;
 		[Embed(source = "../../../../art/POC/npc/CA_NPC_Chef_V2.png")]
@@ -80,6 +93,9 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var UnlockPopupBitmap:Class;
 		[Embed(source = "../../../../art/POC/Fliers.png")]
 		public static var FliersBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/ui/PlayerPortrait.png")]
+		public static var PlayerPortrait:Class;
 		
 		[Embed(source = "../../../../art/lesson/labLucu.png")]
 		public static var LabLucuBitmap:Class;

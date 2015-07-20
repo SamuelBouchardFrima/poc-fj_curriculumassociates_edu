@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.PopupTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
@@ -71,7 +72,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			for (i = 0, endi = cardList.length; i < endi; ++i)
 			{
 				card = new CurvedBox(new Point(60, 60), 0xCC99FF,
-					new BoxLabel(cardList[i], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
+					new BoxLabel(cardList[i], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
 				card.ColorBorderOnly = true;
 				offset += card.width / 2;
 				card.x = offset;
@@ -103,7 +104,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			offset = 0;
 			for (i = 0, endi = mTemplate.Slot; i < endi; ++i)
 			{
-				slot = new CurvedBox(new Point(60, 60), 0xCCCCCC, null, 3, null, Axis.HORIZONTAL);
+				slot = new CurvedBox(new Point(60, 60), 0xCCCCCC, null, 6, null, Axis.HORIZONTAL);
 				offset += slot.width / 2;
 				slot.x = offset;
 				slot.y = 0;
@@ -117,7 +118,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			background.Size = new Point(Math.max(background.width, title.width, cardContainer.width,
 				body.width, mSlotContainer.width), background.height);
 			
-			mContinueBtn = new CurvedBox(new Point(64, 64), 0xCCCCCC, new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 3);
+			mContinueBtn = new CurvedBox(new Point(64, 64), 0xCCCCCC, new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 			mContinueBtn.x = 512 + (background.width / 2) - 10 - (mContinueBtn.width / 2);
 			addChild(mContinueBtn);
 			
@@ -156,15 +157,21 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			
 			if (Asset.WordContentSound["_" + card.Label])
 			{
-				(new Asset.WordContentSound["_" + card.Label]() as Sound).play();
+				//(new Asset.WordContentSound["_" + card.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.WordContentSound["_" + card.Label]);
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + card.Label]);
 			}
 			else if (Asset.NewWordSound["_" + card.Label])
 			{
-				(new Asset.NewWordSound["_" + card.Label]() as Sound).play();
+				//(new Asset.NewWordSound["_" + card.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.NewWordSound["_" + card.Label]);
+				SoundManager.PlaySFX(Asset.NewWordSound["_" + card.Label]);
 			}
 			else if (Asset.NewChunkSound["_" + card.Label])
 			{
-				(new Asset.NewChunkSound["_" + card.Label]() as Sound).play();
+				//(new Asset.NewChunkSound["_" + card.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.NewChunkSound["_" + card.Label]);
+				SoundManager.PlaySFX(Asset.NewChunkSound["_" + card.Label]);
 			}
 			else
 			{

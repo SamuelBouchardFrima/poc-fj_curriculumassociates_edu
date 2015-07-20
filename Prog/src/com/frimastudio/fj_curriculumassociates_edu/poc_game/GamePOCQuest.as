@@ -53,7 +53,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["the"]),
 				new EncryptedWordTemplate("karaoke", "ka_aoke"),
 				new EncryptedWordTemplate("conte_t", "co__e__", "!")],
-				new <int>[6]));
+				new <int>[5]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["You need more words."],
 				new <Class>[Asset.GameHintSound[6]], Asset.SentenceContentTargetSound[1],
 				new <WordTemplate>[new KnownWordTemplate("Print"),
@@ -63,7 +63,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("the"),
 				new KnownWordTemplate("karaoke"),
 				new EncryptedWordTemplate("contest", "conte_t", "!")],
-				new <int>[6]));
+				new <int>[5]));
 			mStepList.push(new UseLevelPropTemplate(Level.THE_LAB, "Try clicking things to get words.", Asset.GameHintSound[7],
 				new <WordTemplate>[new KnownWordTemplate("Print"),
 				new EncryptedWordTemplate("some", "_ome"),
@@ -72,7 +72,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("the"),
 				new KnownWordTemplate("karaoke"),
 				new EncryptedWordTemplate("contest", "conte_t", "!")],
-				new <int>[6]));
+				new <int>[5]));
 			mStepList.push(new SelectActivityTemplate(Level.THE_LAB, Asset.SentenceContentTargetSound[2],
 				new <WordTemplate>[new KnownWordTemplate("You"),
 				new KnownWordTemplate("can"),
@@ -96,7 +96,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("the"),
 				new KnownWordTemplate("karaoke"),
 				new EncryptedWordTemplate("contest", "conte_t", "!")],
-				new <int>[6]));
+				new <int>[5]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Great job!"], new <Class>[Asset.GameHintSound[1]],
 				Asset.SentenceContentTargetSound[1],
 				new <WordTemplate>[new KnownWordTemplate("Print"),
@@ -106,14 +106,14 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("the"),
 				new KnownWordTemplate("karaoke"),
 				new KnownWordTemplate("contest", "!", true)],
-				new <int>[6]));
+				new <int>[5]));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "QUEST REWARD", Asset.RewardSound[3], RewardType.WORD,
 				new <String>["pit", "sip"]));
 			mStepList.push(new ItemUnlockedTemplate(Level.THE_LAB, "You have fliers!", Asset.FliersBitmap, Asset.RewardSound[6]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Now give the fliers to people in town!"],
 				new <Class>[Asset.GameHintSound[8]]));
 			mStepList.push(new LocationUnlockedTemplate(Level.THE_LAB, "Town Square Unlocked!", Asset.RewardSound[8]));
-			mStepList.push(new NavigationTemplate(Level.THE_LAB, "CHOOSE A LOCATION", new <String>["The Lab", "Town Square"],
+			mStepList.push(new NavigationTemplate(Level.THE_LAB, "Choose a location.", new <String>["The Lab", "Town Square"],
 				new <Boolean>[false, true], new <int>[1, 2]));
 			
 			// TOWN SQUARE
@@ -147,7 +147,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mStepList.push(new RewardTemplate(Level.TOWN_SQUARE, "QUEST REWARD", Asset.RewardSound[3], RewardType.WORD,
 				new <String>["sit", "rid", "dim", "in"]));
 			mStepList.push(new LocationUnlockedTemplate(Level.TOWN_SQUARE, "Grocery Store Unlocked!", Asset.RewardSound[7]));
-			mStepList.push(new NavigationTemplate(Level.TOWN_SQUARE, "CHOOSE A LOCATION",
+			mStepList.push(new NavigationTemplate(Level.TOWN_SQUARE, "Choose a location.",
 				new <String>["The Lab", "Grocery Store", "Town Square"], new <Boolean>[false, true, false], new <int>[1, 3, 2]));
 			
 			// GROCERY STORE
@@ -180,7 +180,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new <String>["We need more people for the contest! Maybe we will find some at the Theater."],
 				new <Class>[Asset.GameHintSound[11]]));
 			mStepList.push(new LocationUnlockedTemplate(Level.GROCERY_STORE, "Theater Unlocked!", Asset.RewardSound[9]));
-			mStepList.push(new NavigationTemplate(Level.GROCERY_STORE, "CHOOSE A LOCATION",
+			mStepList.push(new NavigationTemplate(Level.GROCERY_STORE, "Choose a location.",
 				new <String>["The Lab", "Grocery Store", "Town Square", "Theater"], new <Boolean>[false, false, false, true],
 				new <int>[1, 3, 2, 4]));
 			
@@ -198,7 +198,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("I"),
 				new KnownWordTemplate("can"),
 				new EmptyWordTemplate("rap", ".")],
-				null, Direction.DOWN));
+				new <int>[6], Direction.DOWN));
 			mStepList.push(new UseLevelPropTemplate(Level.THEATER, "Find something in the room that will help you.",
 				Asset.GameHintSound[13],
 				new <WordTemplate>[new KnownWordTemplate("I"),
@@ -208,7 +208,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("I"),
 				new KnownWordTemplate("can"),
 				new EmptyWordTemplate("rap", ".")],
-				null, Direction.DOWN));
+				new <int>[6], Direction.DOWN));
 			mStepList.push(new SentenceUnscramblingTemplate(Level.THEATER, new <String>["at", "rat!", "fat", "Look", "the"],
 				"Look at the fat rat!", "", Asset.SentenceContentTargetSound[6],
 				new <WordTemplate>[new WordTemplate(new <String>["at"], "", ActivityType.SENTENCE_UNSCRAMBLING, -1, false, "look"),
@@ -230,7 +230,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("I"),
 				new KnownWordTemplate("can"),
 				new EmptyWordTemplate("rap", ".")],
-				null, Direction.DOWN));
+				new <int>[6], Direction.DOWN));
 			mStepList.push(new DialogTemplate(Level.THEATER, new <String>["Great job!"], new <Class>[Asset.GameHintSound[1]],
 				Asset.SentenceContentTargetSound[5],
 				new <WordTemplate>[new KnownWordTemplate("I"),
@@ -240,12 +240,12 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("I"),
 				new KnownWordTemplate("can"),
 				new KnownWordTemplate("rap", ".", true)],
-				null, Direction.DOWN));
+				new <int>[6], Direction.DOWN));
 			mStepList.push(new RewardTemplate(Level.THEATER, "QUEST REWARD", Asset.RewardSound[3], RewardType.WORD,
 				new <String>["rap", "in", "if"]));
 			mStepList.push(new DialogTemplate(Level.THEATER, new <String>["Get ready for the karaoke contest!",
 				"Go back to the Lab."], new <Class>[Asset.GameHintSound[15], Asset.GameHintSound[16]]));
-			mStepList.push(new NavigationTemplate(Level.THEATER, "CHOOSE A LOCATION",
+			mStepList.push(new NavigationTemplate(Level.THEATER, "Choose a location.",
 				new <String>["The Lab", "Grocery Store", "Town Square", "Theater"], new <Boolean>[true, false, false, false],
 				new <int>[1, 3, 2, 4]));
 			
@@ -280,8 +280,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "QUEST REWARD", Asset.RewardSound[3], RewardType.WORD,
 				new <String>["nip", "fit"]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB,
-				new <String>["A chicken lip, a lizard hip, and alligator eyes.", "This is original!", "Let met try!",
-				"Monkey legs and buzzard eggs and salamander thighs!"],
+				new <String>["A chicken lip, a lizard hip, and alligator eyes.", "This is original!", "Let me try!",
+				"Monkey legs, and buzzard eggs, and salamander thighs!"],
 				new <Class>[Asset.SentenceContentTargetSound[7], Asset.GameHintSound[18], Asset.GameHintSound[19],
 				Asset.GameHintSound[22]]));
 			
@@ -313,11 +313,11 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				null, Direction.NONE));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "QUEST REWARD", Asset.RewardSound[3], RewardType.WORD,
 				new <String>["it", "sip"]));
-			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Mix it up and take a sip.", "Wow that sounds great!",
+			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["Mix it up and take a sip.", "Wow, that sounds great!",
 				"It's Mama's Soup Surprise!"], new <Class>[Asset.SentenceContentTargetSound[8], Asset.GameHintSound[21],
 				Asset.GameHintSound[23]]));
 			mStepList.push(new DialogTemplate(Level.THE_LAB, new <String>["A chicken lip, a lizard hip, and alligator eyes.",
-				"Monkey legs and buzzard eggs and salamander thighs.", "Mix it up and take a sip.", "It's Mama's Soup Surprise!",
+				"Monkey legs, and buzzard eggs, and salamander thighs.", "Mix it up and take a sip.", "It's Mama's Soup Surprise!",
 				"Rockin' tune! You are ready for the karaoke contest!"], new <Class>[Asset.SentenceContentTargetSound[7],
 				Asset.GameHintSound[22], Asset.SentenceContentTargetSound[8], Asset.GameHintSound[23], Asset.GameHintSound[24]]));
 			mStepList.push(new LocationUnlockedTemplate(Level.THE_LAB, "You unlocked the karaoke contest!", Asset.RewardSound[10]));

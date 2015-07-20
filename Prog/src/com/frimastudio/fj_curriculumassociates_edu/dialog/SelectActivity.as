@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -38,6 +39,23 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			mTemplate = aTemplate;
 			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+			addChild(mDialogBox);
+			
 			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.ActivityVO,
 				mTemplate.PhylacteryArrow, false, true);
 			mActivityBox.StepTemplate = mTemplate;
@@ -45,11 +63,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 			mActivityBox.addEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			
-			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored word.", 45,
-				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
-			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
-			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
+			// TODO:	play "Click a colored box." VO
 			
 			addChild(mActivityBox);
 		}
@@ -68,6 +82,9 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mActivityBox.WordTemplateList = aNewWordList;
 			mActivityBox.UpdateContent();
 			addChildAt(mLevel, 0);
+			
+			//(new Asset.SnappingSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.SnappingSound);
 			
 			if (mActivityBox.IsComplete)
 			{
@@ -88,16 +105,21 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 					completeQuestStepTimer.start();
 				}
 			}
+			else
+			{
+				// TODO:	play "Click a colored word." VO
+			}
 		}
 		
 		private function OnEarQuestStepVOTimerComplete(aEvent:TimerEvent):void
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
 			
-			var sound:Sound = new mTemplate.ActivityVO() as Sound;
-			sound.play();
+			//var sound:Sound = new mTemplate.ActivityVO() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.ActivityVO);
 			
-			var earCrescendoSFXTimer:Timer = new Timer(sound.length, 1);
+			var earCrescendoSFXTimer:Timer = new Timer(soundLength, 1);
 			earCrescendoSFXTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
 			earCrescendoSFXTimer.start();
 		}
@@ -106,10 +128,11 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
 			
-			var sound:Sound = new Asset.CrescendoSound() as Sound;
-			sound.play();
+			//var sound:Sound = new Asset.CrescendoSound() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlaySFX(Asset.CrescendoSound);
 			
-			var completeQuestStepTimer:Timer = new Timer(sound.length, 1);
+			var completeQuestStepTimer:Timer = new Timer(soundLength, 1);
 			completeQuestStepTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteQuestStepTimerComplete);
 			completeQuestStepTimer.start();
 		}

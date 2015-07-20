@@ -13,6 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
@@ -102,6 +103,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			//throw new Error("Could not find a word with a corresponding activity. Use SentenceCenter instead.");
 			return SentenceCenter;
 		}
+		
 		public function get CurrentActivityEmptySlot():Point
 		{
 			var activityCenter:Point = CurrentActivityCenter;
@@ -110,6 +112,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 				activityCenter.x += mActivityTray.FirstEmptySlotPosition;
 			}
 			return activityCenter;
+		}
+		
+		public function GetSlotPosition(aSlot:int):Point
+		{
+			var slotPosition:Point = CurrentActivityCenter;
+			slotPosition.x += mActivityTray.GetSlotPosition(aSlot);
+			return slotPosition;
 		}
 		
 		public function set NextEmptySlotValue(aValue:String):void
@@ -140,7 +149,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 					mActivityTray.BoxColor = ActivityType.WORD_UNSCRAMBLING.ColorCode;
 					
 					mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-						new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 3);
+						new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 					var contentWidth:Number = mActivityTray.Bounds.width + 20 + mSubmitBtn.width;
 					mSubmitBtn.x = (contentWidth / 2) - (mSubmitBtn.width / 2);
 					mSubmitBtn.y = 0;
@@ -366,7 +375,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			
 			super(new Point(1004, ((mLineBreakList.length + 1) * 80) + 40), Palette.DIALOG_BOX, null, 0, aPhylacteryArrow);
 			
-			mContent.x = -382;
+			//mContent.x = -382;
+			mContent.x = -472;
 			
 			//if (mLaunchingActivity)
 			//{
@@ -392,11 +402,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			//}
 			//else
 			//{
-			mMegaphoneBtn = new CurvedBox(new Point(80, 80), Palette.GREAT_BTN, new BoxIcon(Asset.IconEarBitmap, Palette.BTN_CONTENT));
-			mMegaphoneBtn.x = -442;
+			mMegaphoneBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
+				new BoxIcon(Asset.IconEarBitmap, Palette.BTN_CONTENT), 6);
+			mMegaphoneBtn.x = 442;
+			//mMegaphoneBtn.y = -42;
 			mMegaphoneBtn.y = 0;
 			mMegaphoneBtn.addEventListener(MouseEvent.CLICK, OnClickMegaphoneBtn);
 			addChild(mMegaphoneBtn);
+			
+			//mHintBtn = new CurvedBox(new Point(64, 64), Palette.TOOL_BOX,
+				//new BoxIcon(Asset.IconHintBitmap, Palette.BTN_CONTENT), 6);
+			//mHintBtn.x = 442;
+			//mHintBtn.y = 42;
+			//mHintBtn.addEventListener(MouseEvent.CLICK, OnClickHintBtn);
+			//addChild(mHintBtn);
 			//}
 			//
 			//if (mHint)
@@ -532,7 +551,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 							labelColor = mWordTemplateList[i].ColorCode;
 							break;
 					}
-					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(label, 45, labelColor), 3, null, Axis.HORIZONTAL);
+					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
+						new BoxLabel(label, 45, labelColor), 6, null, Axis.HORIZONTAL);
 					chunk.ColorBorderOnly = true;
 					chunkOffset += chunk.width / 2;
 					chunk.x = chunkOffset;
@@ -707,7 +727,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 						}
 						if (chunkList[j].Label != label)
 						{
-							chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(label, 45, labelColor), 3, null, Axis.HORIZONTAL);
+							chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
+								new BoxLabel(label, 45, labelColor), 6, null, Axis.HORIZONTAL);
 							chunk.ColorBorderOnly = true;
 							chunkOffset += chunk.width / 2;
 							chunk.x = chunkList[j].x;
@@ -765,7 +786,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 				}
 				else
 				{
-					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode, new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 3, null, Axis.HORIZONTAL);
+					chunk = new CurvedBox(new Point(60, 60), mWordTemplateList[i].ColorCode,
+						new BoxLabel(mWordTemplateList[i].ChunkList[0], 45, Palette.DIALOG_CONTENT), 6, null, Axis.HORIZONTAL);
 					chunk.ColorBorderOnly = true;
 					chunkOffset += chunk.width / 2;
 					chunk.x = 0;
@@ -928,7 +950,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			if (mWordTemplateList[mCurrentActivityIndex].ActivityToLaunch == ActivityType.WORD_UNSCRAMBLING)
 			{
 				mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
-					new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 3);
+					new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 				var contentWidth:Number = mActivityTray.Bounds.width + 20 + mSubmitBtn.width;
 				mSubmitBtn.x = (contentWidth / 2) - (mSubmitBtn.width / 2);
 				mSubmitBtn.y = 0;
@@ -1032,7 +1054,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			
 			if (Asset.LetterAudioSound["_" + aEvent.EventPiece.Label])
 			{
-				(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
+				SoundManager.PlaySFX(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
 			}
 			
 			mActivityTray.Remove(aEvent.EventPiece);
@@ -1163,7 +1187,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 						break;
 				}
 				chunk = new CurvedBox(new Point(60, 60), scrambledWord.ColorCode, new BoxLabel(label, 45, labelColor),
-					3, null, Axis.HORIZONTAL);
+					6, null, Axis.HORIZONTAL);
 				chunk.ColorBorderOnly = true;
 				chunkOffset += chunk.width / 2;
 				chunk.x = chunkOffset;
@@ -1354,7 +1378,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			var vo:String = mWordTemplateList[index].VO;
 			if (vo)
 			{
-				(new Asset.WordContentSound["_" + vo]() as Sound).play();
+				//(new Asset.WordContentSound["_" + vo]() as Sound).play();
+				//SoundManager.PlayVO(Asset.WordContentSound["_" + vo]);
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + vo]);
 			}
 		}
 		
@@ -1403,7 +1429,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		
 		private function OnClickMegaphoneBtn(aEvent:MouseEvent):void
 		{
-			(new mSentenceVO() as Sound).play();
+			//(new mSentenceVO() as Sound).play();
+			SoundManager.PlayVO(mSentenceVO);
 		}
 	
 		//private function OnClickHintBtn(aEvent:MouseEvent):void

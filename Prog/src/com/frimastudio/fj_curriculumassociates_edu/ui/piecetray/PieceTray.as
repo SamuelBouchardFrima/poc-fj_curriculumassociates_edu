@@ -1,8 +1,10 @@
 package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
 	import com.greensock.easing.Bounce;
 	import com.greensock.easing.Elastic;
@@ -12,6 +14,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.media.Sound;
@@ -103,6 +107,24 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				piece = piece.NextPiece;
 			}
 			throw new Error("No empty slot in the tray.");
+			return 0;
+		}
+		
+		public function GetSlotPosition(aSlot:int):Number
+		{
+			var index:int = 0;
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				if (index == aSlot)
+				{
+					return x + piece.Position.x;
+				}
+				
+				++index;
+				piece = piece.NextPiece;
+			}
+			throw new Error("Slot " + aSlot + " is out of range.");
 			return 0;
 		}
 		
@@ -241,6 +263,16 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 					piece = piece.NextPiece;
 				}
 				return (0.7 + ((i - 1) * 0.05));
+			}
+		}
+		
+		public function ProgressAllWords():void
+		{
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				piece.filters = [new GlowFilter(Palette.GREAT_BTN, 1, 2, 2, 4, BitmapFilterQuality.HIGH)];
+				piece = piece.NextPiece;
 			}
 		}
 		
@@ -551,7 +583,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			UpdatePositionFrom(mFirstPiece);
 			
-			(new Asset.ClickSound() as Sound).play();
+			//(new Asset.ClickSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.ClickSound);
 		}
 		
 		public function InsertLast(aContent:String, aStartPosition:Point, aSkipSound:Boolean = false):void
@@ -571,7 +604,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			if (!aSkipSound)
 			{
-				(new Asset.ClickSound() as Sound).play();
+				//(new Asset.ClickSound() as Sound).play();
+				SoundManager.PlaySFX(Asset.ClickSound);
 			}
 		}
 		
@@ -598,7 +632,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			UpdatePositionFrom(piece);
 			
-			(new Asset.ClickSound() as Sound).play();
+			//(new Asset.ClickSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.ClickSound);
 		}
 		
 		public function InsertAfter(aPiece:Piece, aContent:String, aDefaultPosition:Point = null):void
@@ -624,7 +659,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			
 			UpdatePositionFrom(piece);
 			
-			(new Asset.ClickSound() as Sound).play();
+			//(new Asset.ClickSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.ClickSound);
 		}
 		
 		public function Remove(aPiece:Piece):void
@@ -661,7 +697,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			aPiece.PreviousPiece = null;
 			aPiece.NextPiece = null;
 			
-			(new Asset.SlideSound() as Sound).play();
+			//(new Asset.SlideSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.SlideSound);
 		}
 		
 		public function RemoveFirst():void
@@ -692,7 +729,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				UpdatePositionFrom(mFirstPiece);
 			}
 			
-			(new Asset.SlideSound() as Sound).play();
+			//(new Asset.SlideSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.SlideSound);
 		}
 		
 		public function RemoveLast():Piece
@@ -721,7 +759,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				mLastPiece.NextPiece = null;
 			}
 			
-			(new Asset.SlideSound() as Sound).play();
+			//(new Asset.SlideSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.SlideSound);
 			
 			return piece;
 		}
@@ -917,7 +956,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			TweenLite.to(aWhiteBox, 0.3, { ease:Strong.easeOut, delay:0.2, onComplete:OnTweenHideExplosion,
 				onCompleteParams:[aWhiteBox, explosion], scaleX:2, scaleY:2, alpha:0 });
 			
-			(new Asset.PieceExplosionSound() as Sound).play();
+			//(new Asset.PieceExplosionSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.PieceExplosionSound);
 		}
 		
 		private function OnTweenHideExplosion(aWhiteBox:CurvedBox, aExplosion:MovieClip):void
@@ -931,7 +971,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			mTrayExplosion = new Asset.TrayExplosionClip() as MovieClip;
 			addChild(mTrayExplosion);
 			
-			(new Asset.TrayExplosionSound() as Sound).play();
+			//(new Asset.TrayExplosionSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.TrayExplosionSound);
 		}
 		
 		protected function OnRemovePiece(aEvent:PieceEvent):void

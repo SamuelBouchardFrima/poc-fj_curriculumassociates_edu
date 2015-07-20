@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -52,7 +53,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			for (var i:int = 0, endi:int = mTemplate.LocationList.length; i < endi; ++i)
 			{
 				location = new CurvedBox(new Point(200, 200), (mTemplate.LocationUnlockList[i] ? 0xCCFF99 : 0xCCCCCC),
-					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 3, null, null);
+					new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 6, null, null);
 				offset += location.width / 2;
 				location.x = offset;
 				location.y = 0;
@@ -70,7 +71,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 			title.y = 384 - (background.height / 2) + space;
 			locationContainer.y = title.y + title.height + (space / 2) + (locationContainer.height / 2);
 			
-			(new Asset.NavigationSound[0]() as Sound).play();
+			//(new Asset.NavigationSound[0]() as Sound).play();
+			SoundManager.PlayVO(Asset.NavigationSound[0]);
 		}
 		
 		override public function Dispose():void
@@ -86,7 +88,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 		private function OnClickLocation(aEvent:MouseEvent):void
 		{
 			var vo:int = mTemplate.LocationVOList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)];
-			(new Asset.NavigationSound[vo]() as Sound).play();
+			//(new Asset.NavigationSound[vo]() as Sound).play();
+			SoundManager.PlayVO(Asset.NavigationSound[vo]);
 			
 			if (mTemplate.LocationUnlockList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)])
 			{

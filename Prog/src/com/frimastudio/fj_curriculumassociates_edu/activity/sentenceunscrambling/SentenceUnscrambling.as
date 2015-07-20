@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
@@ -77,15 +78,32 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			mTemplate = aTemplate;
 			
+			//var sound:Sound = new Asset.GameHintSound[14]() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(Asset.GameHintSound[14]);
+			
+			var earAnswerTimer:Timer = new Timer(soundLength, 1);
+			earAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			earAnswerTimer.start();
+			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX,
 				new BoxLabel("Put the words in order to make the sentence.", 45, Palette.DIALOG_CONTENT),
-				3, Direction.UP_LEFT, Axis.BOTH);
+				6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
-				598 - (mDialogBox.height / 2));
+				668 - (mDialogBox.height / 2));
 			addChild(mDialogBox);
-			
-			(new Asset.GameHintSound[14]() as Sound).play();
 			
 			//var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
 			//toolTrayBox.x = 512;
@@ -122,7 +140,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			mCraftingTray = new PieceTray(false, mTemplate.WordList);
 			mCraftingTray.BoxColor = ActivityType.SENTENCE_UNSCRAMBLING.ColorCode;
-			mCraftingTray.x = 130;
+			//mCraftingTray.x = 130;
+			mCraftingTray.x = 40;
 			mCraftingTray.y = 70;
 			mCraftingTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedCraftingTray);
 			addChild(mCraftingTray);
@@ -149,75 +168,91 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mTutorialTimer.start();
 		}
 		
+		private function OnEarAnswerTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			
+			//(new mTemplate.RequestVO() as Sound).play();
+			SoundManager.PlayVO(mTemplate.RequestVO);
+		}
+		
 		private function UpdateAnswer():void
 		{
 			mActivityBox.UpdateCurrentActivityContent(mCraftingTray.AssembleChunkList(), true, false);
-			mSubmitBtn.BoxColor = Palette.GREAT_BTN;
+			//mSubmitBtn.BoxColor = Palette.GREAT_BTN;
 		}
 		
 		private function ShowSuccessFeedback():void
 		{
-			mSuccessFeedback = new Sprite();
-			mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
-			mSuccessFeedback.graphics.beginFill(0x000000, 0);
-			mSuccessFeedback.graphics.drawRect(0, 0, 1024, 768);
-			mSuccessFeedback.graphics.endFill();
-			mSuccessFeedback.alpha = 0;
-			addChild(mSuccessFeedback);
+			//mSuccessFeedback = new Sprite();
+			//mSuccessFeedback.addEventListener(MouseEvent.CLICK, OnClickSuccessFeedback);
+			//mSuccessFeedback.graphics.beginFill(0x000000, 0);
+			//mSuccessFeedback.graphics.drawRect(0, 0, 1024, 768);
+			//mSuccessFeedback.graphics.endFill();
+			//mSuccessFeedback.alpha = 0;
+			//addChild(mSuccessFeedback);
 			
 			//if (mSubmitedSentence)
 			//{
 				//addChild(mSubmitedSentence);
 			//}
 			
-			addChild(mBlocker);
+			//mSubmitBtn.BoxColor = mResult.Color;
 			
-			mSubmitBtn.BoxColor = mResult.Color;
+			//var successLabel:TextField = new TextField();
+			//successLabel.autoSize = TextFieldAutoSize.CENTER;
+			//successLabel.selectable = false;
+			//successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
 			
-			var successLabel:TextField = new TextField();
-			successLabel.autoSize = TextFieldAutoSize.CENTER;
-			successLabel.selectable = false;
-			successLabel.filters = [new DropShadowFilter(1.5, 45, 0x000000, 1, 2, 2, 3, BitmapFilterQuality.HIGH)];
-			
+			//var sound:Sound;
+			var sound:Class;
 			switch (mResult)
 			{
 				case Result.GREAT:
-					successLabel.text = "Click to continue.";
-					(new Asset.CrescendoSound() as Sound).play();
+					//successLabel.text = "Click to continue.";
+					//sound = new Asset.CrescendoSound() as Sound;
+					sound = Asset.CrescendoSound;
 					break;
-				case Result.VALID:
-					successLabel.text = "Great sentence!\nClick to try again.";
-					(new Asset.ValidationSound() as Sound).play();
-					break;
+				//case Result.VALID:
+					////successLabel.text = "Great sentence!\nClick to try again.";
+					//(new Asset.ValidationSound() as Sound).play();
+					//break;
 				case Result.WRONG:
-					successLabel.text = "Click to try again.";
-					(new Asset.ErrorSound() as Sound).play();
+					//successLabel.text = "Click to try again.";
+					//sound = new Asset.ErrorSound() as Sound;
+					sound = Asset.ErrorSound;
 					break;
 				default:
 					throw new Error(mResult ? "Result " + mResult.Description + " is not handled" : "No result to handle.");
 					return;
 			}
+			//sound.play();
+			var soundLength:Number = SoundManager.PlaySFX(sound);
 			
-			successLabel.embedFonts = true;
-			successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
-				null, null, null, null, null, TextFormatAlign.CENTER));
+			var concludeActivitySessionTimer:Timer = new Timer(soundLength, 1);
+			concludeActivitySessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnConcludeActivitySessionTimerComplete);
+			concludeActivitySessionTimer.start();
 			
-			successLabel.x = 512 - (successLabel.width / 2);
-			successLabel.y = 384 - (successLabel.height / 2);
-			var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
-			successBox.alpha = 0.7;
-			successBox.x = 512;
-			successBox.y = 384;
-			mSuccessFeedback.addChild(successBox);
-			mSuccessFeedback.addChild(successLabel);
+			//successLabel.embedFonts = true;
+			//successLabel.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 72, mResult.Color,
+				//null, null, null, null, null, TextFormatAlign.CENTER));
 			
-			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
+			//successLabel.x = 512 - (successLabel.width / 2);
+			//successLabel.y = 384 - (successLabel.height / 2);
+			//var successBox:CurvedBox = new CurvedBox(new Point(successLabel.width + 24, successLabel.height), Palette.DIALOG_BOX);
+			//successBox.alpha = 0.7;
+			//successBox.x = 512;
+			//successBox.y = 384;
+			//mSuccessFeedback.addChild(successBox);
+			//mSuccessFeedback.addChild(successLabel);
+			
+			//TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
 			if (mResult == Result.GREAT)
 			{
-				if (mSubmitedSentence)
-				{
-					TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 });
-				}
+				//if (mSubmitedSentence)
+				//{
+					//TweenLite.to(mSubmitedSentence, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmitedSentence, alpha:0 });
+				//}
 				mActivityBox.ProgressCurrentActivity();
 			}
 			
@@ -225,6 +260,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			{
 				TweenLite.to(mSubmissionHighlight, 0.5, { ease:Strong.easeOut, onComplete:OnTweenHideSubmissionHighlight, alpha:0 });
 			}
+		}
+		
+		private function OnConcludeActivitySessionTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnConcludeActivitySessionTimerComplete);
+			
+			removeChild(mBlocker);
+			
+			if (mResult == Result.GREAT)
+			{
+				dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+			}
+			//else
+			//{
+				//mCraftingTray.Clear(mStoredCraftingTrayChunkList);
+				//mCraftingTray.BoxColor = ActivityType.SENTENCE_UNSCRAMBLING.ColorCode;
+				//mCraftingTray.visible = true;
+				//mStoredCraftingTrayChunkList = null;
+			//}
 		}
 		
 		private function OnTutorialTimer(aEvent:TimerEvent):void
@@ -371,46 +425,55 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 				
 				addChild(mBlocker);
 				
-				mCraftingTray.BoxColor = (mResult == Result.GREAT ? ActivityType.SENTENCE_UNSCRAMBLING.ColorCode : mResult.Color);
+				//mCraftingTray.BoxColor = (mResult == Result.GREAT ? ActivityType.SENTENCE_UNSCRAMBLING.ColorCode : mResult.Color);
 				
 				if (mResult == Result.WRONG)
 				{
-					var explodeDuration:Number = mCraftingTray.FizzleAndExplode(true);
-					var explodeWordTimer:Timer = new Timer(explodeDuration * 1000, 1);
-					explodeWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeSentenceTimerComplete);
-					explodeWordTimer.start();
+					mCraftingTray.Fizzle();
+					var fizzleSentenceTimer:Timer = new Timer(700, 1);
+					fizzleSentenceTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnFizzleSentenceTimerComplete);
+					fizzleSentenceTimer.start();
 				}
 				else
 				{
+					var minimalDuration:Number = 0;
 					if (mResult == Result.GREAT)
 					{
-						(new mTemplate.RequestVO() as Sound).play();
+						//var sound:Sound = new mTemplate.RequestVO() as Sound;
+						//sound.play();
+						var soundLength:Number = SoundManager.PlayVO(mTemplate.RequestVO);
+						minimalDuration = soundLength;
+						
+						//mCraftingTray.BoxColor = ActivityType.SENTENCE_DECRYPTING.ColorCode;
+						mCraftingTray.BoxColor = ActivityType.NONE.ColorCode;
+						mCraftingTray.ProgressAllWords();
 					}
 					
 					var bounceDuration:Number = mCraftingTray.BounceInSequence(true);
-					var submitWordTimer:Timer = new Timer(bounceDuration * 1000, 1);
+					var submitWordTimer:Timer = new Timer(Math.max(bounceDuration * 1000, minimalDuration), 1);
 					submitWordTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSubmitSentenceTimerComplete);
 					submitWordTimer.start();
 				}
 				
-				(new Asset.SnappingSound() as Sound).play();
+				//(new Asset.SnappingSound() as Sound).play();
+				SoundManager.PlaySFX(Asset.SnappingSound);
 			}
-			else
-			{
-				mResult = Result.WRONG;
-				mSubmitBtn.BoxColor = mResult.Color;
-			}
+			//else
+			//{
+				//mResult = Result.WRONG;
+				//mSubmitBtn.BoxColor = mResult.Color;
+			//}
 		}
 		
 		private function OnClickBlocker(aEvent:MouseEvent):void
 		{
 		}
 		
-		private function OnExplodeSentenceTimerComplete(aEvent:TimerEvent):void
+		private function OnFizzleSentenceTimerComplete(aEvent:TimerEvent):void
 		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnExplodeSentenceTimerComplete);
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnFizzleSentenceTimerComplete);
 			
-			mCraftingTray.visible = false;
+			//mCraftingTray.visible = false;
 			
 			ShowSuccessFeedback();
 		}

@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
 	import flash.events.MouseEvent;
@@ -64,10 +65,11 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			title.y = 384 - (background.height / 2) + space;
 			body.y = title.y + title.height + (space / 2);
 			
-			var sound:Sound = new mTemplate.TitleVO() as Sound;
-			sound.play();
+			//var sound:Sound = new mTemplate.TitleVO() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.TitleVO);
 			
-			mPlayBodyVOTimer = new Timer(sound.length, 1);
+			mPlayBodyVOTimer = new Timer(soundLength, 1);
 			mPlayBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
 			mPlayBodyVOTimer.start();
 			
@@ -88,7 +90,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 		{
 			mPlayBodyVOTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
 			
-			(new mTemplate.BodyVO() as Sound).play();
+			//(new mTemplate.BodyVO() as Sound).play();
+			SoundManager.PlayVO(mTemplate.BodyVO);
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

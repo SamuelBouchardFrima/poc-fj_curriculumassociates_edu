@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 	public class CurvedBox extends Box
 	{
 		private var mCurve:Number;
+		private var mMinSize:Number;
 		
 		public function get Curve():Number	{ return mCurve; }
 		public function set Curve(aValue:Number):void
@@ -20,8 +21,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		{
 			super.Size = aValue;
 			
-			mSize.width = Math.max(mSize.width, mCurve * 2);
-			mSize.height = Math.max(mSize.height, mCurve * 2);
+			mSize.width = Math.max(mSize.width, mCurve * 2, mMinSize);
+			mSize.height = Math.max(mSize.height, mCurve * 2, mMinSize);
 			mSize.x = -mSize.width / 2;
 			mSize.y = -mSize.height / 2;
 			
@@ -30,13 +31,14 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		}
 		
 		public function CurvedBox(aSize:Point, aColor:int = -1, aContent:BoxContent = null, aMargin:Number = 0,
-			aPointDirection:Direction = null, aAutoSizeAxis:Axis = null, aCurve:Number = 22)
+			aPointDirection:Direction = null, aAutoSizeAxis:Axis = null, aCurve:Number = 15, aMinSize:Number = 45)
 		{
 			mCurve = aCurve;
+			mMinSize = aMinSize;
 			
 			var size:Point = aSize.clone();
-			size.x = Math.max(size.x, mCurve * 2);
-			size.y = Math.max(size.y, mCurve * 2);
+			size.x = Math.max(size.x, mCurve * 2, mMinSize);
+			size.y = Math.max(size.y, mCurve * 2, mMinSize);
 			
 			super(size, aColor, aContent, aMargin, aPointDirection, aAutoSizeAxis);
 		}

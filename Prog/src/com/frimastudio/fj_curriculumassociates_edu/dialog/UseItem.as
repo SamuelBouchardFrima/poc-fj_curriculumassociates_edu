@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
@@ -51,8 +52,19 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
 			mLevel.NPC.addEventListener(MouseEvent.CLICK, OnClickNPC);
 			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
-				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
@@ -72,7 +84,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			
-			(new mTemplate.InstructionVO() as Sound).play();
+			//(new mTemplate.InstructionVO() as Sound).play();
+			SoundManager.PlayVO(mTemplate.InstructionVO);
 		}
 		
 		override public function Dispose():void

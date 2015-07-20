@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
@@ -72,14 +73,31 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			mTemplate = aTemplate;
 			
+			//var sound:Sound = new Asset.GameHintSound[27]() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(Asset.GameHintSound[27]);
+			
+			var earAnswerTimer:Timer = new Timer(soundLength, 1);
+			earAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			earAnswerTimer.start();
+			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Unscramble the letters.", 45,
-				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
-				598 - (mDialogBox.height / 2));
+				668 - (mDialogBox.height / 2));
 			addChild(mDialogBox);
-			
-			(new Asset.GameHintSound[27]() as Sound).play();
 			
 			//var toolTrayBox:Box = new Box(new Point(1024, 80), Palette.TOOL_BOX);
 			//toolTrayBox.x = 512;
@@ -148,6 +166,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mTutorialTimer.start();
 		}
 		
+		private function OnEarAnswerTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			
+			//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
+			//SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+			SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+		}
+		
 		private function OnLaunchActivity(aEvent:ActivityBoxEvent):void
 		{
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_ACTIVITY, aEvent.ActivityToLaunch));
@@ -205,15 +232,18 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			{
 				case Result.GREAT:
 					successLabel.text = "Click to continue.";
-					(new Asset.CrescendoSound() as Sound).play();
+					//(new Asset.CrescendoSound() as Sound).play();
+					SoundManager.PlaySFX(Asset.CrescendoSound);
 					break;
 				case Result.VALID:
 					successLabel.text = "Great word!\nClick to try again.";
-					(new Asset.ValidationSound() as Sound).play();
+					//(new Asset.ValidationSound() as Sound).play();
+					SoundManager.PlaySFX(Asset.ValidationSound);
 					break;
 				case Result.WRONG:
 					successLabel.text = "Click to try again.";
-					(new Asset.ErrorSound() as Sound).play();
+					//(new Asset.ErrorSound() as Sound).play();
+					SoundManager.PlaySFX(Asset.ErrorSound);
 					break;
 				default:
 					throw new Error(mResult ? "Result " + mResult.Description + " is not handled" : "No result to handle.");
@@ -281,7 +311,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			if (Asset.LetterAudioSound["_" + aEvent.EventPiece.Label])
 			{
 				//(new Asset.LetterSound["_" + aEvent.EventPiece.Label]() as Sound).play();
-				(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
+				SoundManager.PlaySFX(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
 			}
 			
 			mToolTray.Remove(aEvent.EventPiece);
@@ -414,7 +446,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				{
 					if (mResult == Result.GREAT)
 					{
-						(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
+						//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
+						//SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
 					}
 					
 					var bounceDuration:Number = mCraftingTray.BounceInSequence();
@@ -423,7 +457,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 					submitWordTimer.start();
 				}
 				
-				(new Asset.SnappingSound() as Sound).play();
+				//(new Asset.SnappingSound() as Sound).play();
+				SoundManager.PlaySFX(Asset.SnappingSound);
 			}
 			else
 			{
@@ -463,7 +498,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			for (i = 0, endi = chunkLabelList.length; i < endi; ++i)
 			{
 				chunk = new CurvedBox(new Point(60, 60), color, new BoxLabel(chunkLabelList[i], 45, Palette.DIALOG_CONTENT),
-					3, null, Axis.HORIZONTAL);
+					6, null, Axis.HORIZONTAL);
 				chunk.ColorBorderOnly = true;
 				chunkOffset += chunk.width / 2;
 				chunk.x = chunkOffset;

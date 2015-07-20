@@ -10,6 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxTiledLabel;
@@ -52,7 +53,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 	public class SentenceDecrypting extends Activity
 	{
 		private var mTemplate:SentenceDecryptingTemplate;
-		private var mToolTrayField:CurvedBox;
+		//private var mToolTrayField:CurvedBox;
 		private var mToolTray:PieceTray;
 		private var mPreviousPosition:Piece;
 		private var mDraggedPiece:Piece;
@@ -70,6 +71,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		private var mDialogBox:CurvedBox;
 		private var mActivityBox:ActivityBox;
 		private var mCurrentLetterList:String;
+		private var mToolTrayBox:Box;
 		
 		public function SentenceDecrypting(aTemplate:SentenceDecryptingTemplate)
 		{
@@ -80,24 +82,44 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			mMiniDefaultPosition = DisplayObjectUtil.GetPosition(mLevel.Mini);
 			mMiniDefaultScale = mLevel.Mini.scaleX;
 			
-			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
-				Palette.DIALOG_CONTENT), 3, Direction.UP_LEFT, Axis.BOTH);
+			//(new Asset.GameHintSound[5]() as Sound).play();
+			
+			// TODO:	play VO for "Find the missing letters."
+			
+			var earAnswerTimer:Timer = new Timer(1000, 1);
+			earAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			earAnswerTimer.start();
+			
+			mToolTrayBox = new Box(new Point(1024, 130), Palette.TOOL_BOX);
+			mToolTrayBox.x = 512;
+			//mToolTrayBox.y = 728;
+			mToolTrayBox.y = 838;
+			addChild(mToolTrayBox);
+			TweenLite.to(mToolTrayBox, 1.2, { ease:Elastic.easeOut, y:753 });
+			
+			var playerPortrait:Sprite = new Sprite();
+			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
+			playerPortraitBitmap.smoothing = true;
+			playerPortraitBitmap.scaleX = playerPortraitBitmap.scaleY = 0.75;
+			playerPortraitBitmap.x = -playerPortraitBitmap.width / 2;
+			playerPortraitBitmap.y = -playerPortraitBitmap.height / 2;
+			playerPortrait.addChild(playerPortraitBitmap);
+			playerPortrait.x = 5 + (playerPortrait.width / 2);
+			playerPortrait.y = 763 - (playerPortrait.height / 2);
+			addChild(playerPortrait);
+			
+			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Find the missing letters.", 45,
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
 			addChild(mDialogBox);
 			
-			(new Asset.GameHintSound[5]() as Sound).play();
-			
-			var toolTrayBox:Box = new Box(new Point(1024, 90), Palette.TOOL_BOX);
-			toolTrayBox.x = 512;
-			toolTrayBox.y = 723;
-			addChild(toolTrayBox);
-			
-			mToolTrayField = new CurvedBox(new Point(910, 76), Palette.TOOL_BOX);
-			mToolTrayField.x = 482;
-			mToolTrayField.y = 723;
-			addChild(mToolTrayField);
+			//mToolTrayField = new CurvedBox(new Point(910, 76), Palette.TOOL_BOX);
+			//mToolTrayField.x = 482;
+			//mToolTrayField.y = 723;
+			//addChild(mToolTrayField);
 			
 			//var splitedAnswer:Vector.<String> = Vector.<String>(mTemplate.Answer.split(" "));
 			var letterList:String = "";
@@ -124,10 +146,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			}
 			//mToolTray = new PieceTray(false, mTemplate.WordList);
 			mToolTray = new PieceTray(false, Inventory.RequestWordSelection(letterList));
-			mToolTray.x = 90;
-			mToolTray.y = 723;
+			//mToolTray.x = 90;
+			mToolTray.x = playerPortrait.x + (playerPortrait.width / 2) + 15;
+			//mToolTray.y = 723;
+			mToolTray.y = 813;
 			mToolTray.addEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedToolTray);
 			addChild(mToolTray);
+			TweenLite.to(mToolTray, 1.2, { ease:Elastic.easeOut, delay:0.1, y:728 });
+			
+			// TODO:	if word selection is insufficient, ask the player to do a Wild Lucu Taming activity
 			
 			//mAnswer = mTemplate.Request;
 			mAnswer = "";
@@ -174,6 +201,32 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			addEventListener(Event.ENTER_FRAME, OnEnterFrame);
 		}
 		
+		private function OnEarAnswerTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			
+			//var sound:Sound = new mTemplate.RequestVO() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.RequestVO);
+			
+			var earInstructionTimer:Timer = new Timer(soundLength, 1);
+			earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			earInstructionTimer.start();
+		}
+		
+		private function OnEarInstructionTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			
+			//(new Asset.GameHintSound[5]() as Sound).play();
+			SoundManager.PlayVO(Asset.GameHintSound[5]);
+			
+			mDialogBox.Content = new BoxLabel("Give a word to the mini.", 45, Palette.DIALOG_CONTENT);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
+				668 - (mDialogBox.height / 2));
+		}
+		
 		private function OnEnterFrame(aEvent:Event):void
 		{
 			var i:int, endi:int, iTarget:Point;
@@ -218,12 +271,27 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		
 		private function OnLaunchActivity(aEvent:ActivityBoxEvent):void
 		{
-			dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_ACTIVITY, aEvent.ActivityToLaunch));
+			addChild(mBlocker);
+			
+			TweenLite.to(mToolTrayBox, 0.3, { ease:Quad.easeIn, y:838 } );
+			TweenLite.to(mToolTray, 0.3, { ease:Quad.easeIn, delay:0.05, onComplete:OnTweenToolTrayOutroLaunchActivity,
+				onCompleteParams:[aEvent.ActivityToLaunch], y:813 });
+		}
+		
+		private function OnTweenToolTrayOutroLaunchActivity(aActivityToLaunch:ActivityTemplate):void
+		{
+			dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_ACTIVITY, aActivityToLaunch));
 		}
 		
 		private function OnCompleteActivity(aEvent:ActivityBoxEvent):void
 		{
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE, null, mActivityBox.WordTemplateList));
+			
+			//addChild(mBlocker);
+			//
+			//TweenLite.to(mToolTrayBox, 0.3, { ease:Quad.easeIn, y:838 } );
+			//TweenLite.to(mToolTray, 0.3, { ease:Quad.easeIn, delay:0.05, onComplete:OnTweenToolTrayOutroCompleteActivity,
+				//onCompleteParams:[mActivityBox.WordTemplateList], y:813 });
 		}
 		
 		override public function Dispose():void
@@ -337,7 +405,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			if (Asset.LetterAudioSound["_" + mDraggedPiece.Label])
 			{
 				//(new Asset.LetterSound["_" + mDraggedPiece.Label]() as Sound).play();
-				(new Asset.LetterAudioSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//(new Asset.LetterAudioSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.LetterAudioSound["_" + mDraggedPiece.Label]);
+				SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mDraggedPiece.Label]);
 			}
 			//else if (Asset.ChunkSound["_" + mDraggedPiece.Label])
 			//{
@@ -347,7 +417,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			else if (Asset.WordContentSound["_" + mDraggedPiece.Label])
 			{
 				//(new Asset.WordSound["_" + mDraggedPiece.Label]() as Sound).play();
-				(new Asset.WordContentSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//(new Asset.WordContentSound["_" + mDraggedPiece.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.WordContentSound["_" + mDraggedPiece.Label]);
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + mDraggedPiece.Label]);
 			}
 			
 			if (mFloatPieceList.indexOf(mDraggedPiece) > -1)
@@ -433,7 +505,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			mSuccessFeedback.addChild(successBox);
 			mSuccessFeedback.addChild(successLabel);
 			
-			(new Asset.CrescendoSound() as Sound).play();
+			//(new Asset.CrescendoSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.CrescendoSound);
 			
 			TweenLite.to(mSuccessFeedback, 0.5, { ease:Strong.easeOut, onComplete:OnTweenShowSuccessFeedback, alpha:1 });
 		}
@@ -498,7 +571,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
 			
-			(new Asset.GameHintSound[4]() as Sound).play();
+			//(new Asset.GameHintSound[4]() as Sound).play();
+			SoundManager.PlayVO(Asset.GameHintSound[4]);
 			
 			var piece:Piece;
 			var bubble:Bitmap;
@@ -540,12 +614,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				TweenLite.to(piece, 1, { ease:Elastic.easeOut, delay:(i * 0.1), scaleX:1, scaleY:1 });
 			}
 			
-			var sound:Sound = new Asset.BurpSound() as Sound;
-			sound.play();
-			var burpTimer:Timer = new Timer(sound.length, 1);
+			//var sound:Sound = new Asset.BurpSound() as Sound;
+			//sound.play();
+			var soundLength:Number = SoundManager.PlaySFX(Asset.BurpSound);
+			var burpTimer:Timer = new Timer(soundLength, 1);
 			burpTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnBurpTimerComplete);
 			burpTimer.start();
-			TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, delay:(sound.length / 850), y:mMiniDefaultPosition.y,
+			TweenLite.to(mLevel.Mini, 0.5, { ease:Elastic.easeOut, delay:(soundLength / 850), y:mMiniDefaultPosition.y,
 				scaleX:mMiniDefaultScale, scaleY:mMiniDefaultScale });
 			
 			if (mFloatPieceList.indexOf(aPiece) > -1)
@@ -604,7 +679,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			if (Asset.WordContentSound["_" + aEvent.EventPiece.Label])
 			{
 				//(new Asset.WordSound["_" + mDraggedPiece.Label]() as Sound).play();
-				(new Asset.WordContentSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//(new Asset.WordContentSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.WordContentSound["_" + aEvent.EventPiece.Label]);
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + aEvent.EventPiece.Label]);
 			}
 			
 			var color:int = aEvent.EventPiece.BoxColor;
@@ -613,6 +690,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			addChild(sentWord);
 			TweenLite.to(sentWord, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendFedWord,
 				onCompleteParams:[sentWord], x:mMiniDefaultPosition.x, y:mMiniDefaultPosition.y });
+			
+			Inventory.RemoveWord(aEvent.EventPiece.Label);
 			
 			mToolTray.Remove(aEvent.EventPiece);
 		}
@@ -816,7 +895,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 						mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 							668 - (mDialogBox.height / 2));
 						
-						(new Asset.GameHintSound[5]() as Sound).play();
+						//(new Asset.GameHintSound[5]() as Sound).play();
+						SoundManager.PlayVO(Asset.GameHintSound[5]);
 					}
 				}
 			}
@@ -915,6 +995,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				onCompleteParams:[aWhiteBox, explosion], scaleX:2, scaleY:2, alpha:0 });
 			
 			(new Asset.PieceExplosionSound() as Sound).play();
+			SoundManager.PlaySFX(Asset.PieceExplosionSound);
 		}
 		
 		private function OnTweenHideExplosion(aWhiteBox:CurvedBox, aExplosion:MovieClip):void
@@ -991,6 +1072,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			var piece:Piece = aEvent.currentTarget as Piece;
 			var letter:String = piece.Label;
 			
+			//SoundManager.PlayVO(Asset.LetterAudioSound["_" + letter]);
+			SoundManager.PlaySFX(Asset.LetterAudioSound["_" + letter]);
+			
 			var newPiece:Piece;
 			//var target:Point;
 			var slotList:Vector.<Point> = mActivityBox.SlotListForLetter(letter);
@@ -1046,13 +1130,23 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				
 				if (mActivityBox.SentenceDecryptionFinished)
 				{
-					dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE, null, mActivityBox.WordTemplateList));
+					//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE, null, mActivityBox.WordTemplateList));
+					addChild(mBlocker);
+					
+					TweenLite.to(mToolTrayBox, 0.3, { ease:Quad.easeIn, y:838 } );
+					TweenLite.to(mToolTray, 0.3, { ease:Quad.easeIn, delay:0.05, onComplete:OnTweenToolTrayOutroCompleteActivity,
+						onCompleteParams:[mActivityBox.WordTemplateList], y:813 });
 				}
 			}
 			//else
 			//{
 				// TODO:	return piece to float area
 			//}
+		}
+		
+		private function OnTweenToolTrayOutroCompleteActivity(aWordTemplateList:Vector.<WordTemplate>):void
+		{
+			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE, null, aWordTemplateList));
 		}
 		
 		private function OnTweenHideBubbleSplash(aBubbleSplash:Bitmap):void
@@ -1087,7 +1181,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 					mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 						668 - (mDialogBox.height / 2));
 					
-					(new Asset.GameHintSound[5]() as Sound).play();
+					//(new Asset.GameHintSound[5]() as Sound).play();
+					SoundManager.PlayVO(Asset.GameHintSound[5]);
 				}
 			}
 			
@@ -1112,7 +1207,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			
 			if (mAnswer.indexOf("_") == -1)
 			{
-				(new mTemplate.RequestVO() as Sound).play();
+				//(new mTemplate.RequestVO() as Sound).play();
+				SoundManager.PlayVO(mTemplate.RequestVO);
 			}
 		}
 		
