@@ -92,6 +92,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
+			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			addChild(mWildLucuChallengeBtn);
+			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Unscramble the letters.", 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
@@ -187,6 +194,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 		
 		override public function Dispose():void
 		{
+			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			
 			mActivityBox.removeEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			mActivityBox.removeEventListener(ActivityBoxEvent.COMPLETE_ACTIVITY, OnCompleteActivity);
 			mActivityBox.Dispose();

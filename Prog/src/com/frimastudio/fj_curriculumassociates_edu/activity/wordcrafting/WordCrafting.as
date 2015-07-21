@@ -119,6 +119,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
+			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			addChild(mWildLucuChallengeBtn);
+			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Craft the missing word.", 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
@@ -308,6 +315,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		
 		override public function Dispose():void
 		{
+			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			
 			var i:int, endi:int;

@@ -55,6 +55,13 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
+			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			addChild(mWildLucuChallengeBtn);
+			
 			mDialogBox = new CurvedBox(new Point(100, 100), Palette.DIALOG_BOX,
 				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
@@ -68,6 +75,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		
 		override public function Dispose():void
 		{
+			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			
 			//mDisposing = true;
 			
 			mLevel.Lucu.removeEventListener(MouseEvent.CLICK, OnClickLucu);

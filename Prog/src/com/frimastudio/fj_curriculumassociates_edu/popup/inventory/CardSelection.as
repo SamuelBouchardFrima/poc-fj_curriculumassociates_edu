@@ -2,6 +2,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.CardType;
+	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.PopupTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
@@ -266,7 +267,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 				slotList.push(mSlotList[i].Label);
 			}
 			
-			// TODO:	store slotList in inventory
+			Inventory.SelectLetterPatternCardList(slotList);
 			
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}

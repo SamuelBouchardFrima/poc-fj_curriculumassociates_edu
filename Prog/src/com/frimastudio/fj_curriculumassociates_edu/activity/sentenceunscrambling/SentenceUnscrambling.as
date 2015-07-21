@@ -97,6 +97,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
+			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			addChild(mWildLucuChallengeBtn);
+			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX,
 				new BoxLabel("Put the words in order to make the sentence.", 45, Palette.DIALOG_CONTENT),
 				6, Direction.UP_LEFT, Axis.BOTH);
@@ -174,6 +181,30 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			
 			//(new mTemplate.RequestVO() as Sound).play();
 			SoundManager.PlayVO(mTemplate.RequestVO);
+		}
+		
+		override public function Dispose():void 
+		{
+			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			
+			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedCraftingTray);
+			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedCraftingTray);
+			mCraftingTray.Dispose();
+			
+			if (mDraggedPiece)
+			{
+				mDraggedPiece.Dispose();
+			}
+			
+			mActivityBox.Dispose();
+			
+			mSubmitBtn.removeEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
+			mBlocker.removeEventListener(MouseEvent.CLICK, OnClickBlocker);
+			
+			mTutorialTimer.removeEventListener(TimerEvent.TIMER, OnTutorialTimer);
+			mTutorialTimer.reset();
+			
+			super.Dispose();
 		}
 		
 		private function UpdateAnswer():void

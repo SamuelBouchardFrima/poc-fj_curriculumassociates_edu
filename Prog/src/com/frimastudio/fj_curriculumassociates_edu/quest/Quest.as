@@ -1,6 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.quest
 {
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.SelectActivity;
+	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingConfig;
+	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingQuest;
 	import flash.display.Sprite;
 	
 	public class Quest extends Sprite
@@ -8,7 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		protected var mStepList:Vector.<QuestStepTemplate>;
 		protected var mStep:QuestStep;
 		protected var mTempStep:QuestStep;
-		//protected var mLucuTaming:LucuTaming;
+		protected var mLucuTaming:LucuTamingQuest;
 		
 		public function Quest()
 		{
@@ -47,8 +49,13 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			}
 			else
 			{
-				dispatchEvent(new QuestEvent(QuestEvent.COMPLETE));
+				CompleteQuest();
 			}
+		}
+		
+		protected function CompleteQuest():void 
+		{
+			dispatchEvent(new QuestEvent(QuestEvent.COMPLETE));
 		}
 		
 		private function OnLaunchActivity(aEvent:QuestStepEvent):void
@@ -111,7 +118,25 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				removeChild(mStep);
 			}
 			
+			mLucuTaming = new LucuTamingQuest(mStep.StepLevel);
+			mLucuTaming.addEventListener(QuestEvent.COMPLETE, OnCompleteLucuTaming);
+			LucuTamingConfig.Container.addChild(mLucuTaming);
+		}
+		
+		private function OnCompleteLucuTaming(aEvent:QuestEvent):void
+		{
+			LucuTamingConfig.Container.removeChild(mLucuTaming);
+			mLucuTaming.removeEventListener(QuestEvent.COMPLETE, OnCompleteLucuTaming);
+			mLucuTaming = null;
 			
+			if (mTempStep)
+			{
+				addChild(mTempStep);
+			}
+			else
+			{
+				addChild(mStep);
+			}
 		}
 		
 		private function OnCompleteStep(aEvent:QuestStepEvent):void

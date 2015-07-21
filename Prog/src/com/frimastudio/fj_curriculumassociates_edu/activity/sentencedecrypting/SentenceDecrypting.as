@@ -12,6 +12,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxTiledLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
@@ -107,6 +108,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			playerPortrait.x = 5 + (playerPortrait.width / 2);
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
+			
+			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			addChild(mWildLucuChallengeBtn);
 			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Find the missing letters.", 45,
@@ -296,6 +304,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		
 		override public function Dispose():void
 		{
+			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			
 			var i:int, endi:int;
@@ -1082,7 +1092,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			{
 				newPiece = new Piece(null, null, letter, DisplayObjectUtil.GetPosition(piece),
 					ActivityType.SENTENCE_DECRYPTING.ColorCode);
-				//target = new Point();	// TODO:	find the position of the next slot for letter
+				//target = new Point();
 				TweenLite.to(newPiece, 1, { ease:Elastic.easeOut, onComplete:OnTweenSendPieceToActivitySlot,
 					onCompleteParams:[newPiece], x:slotList[i].x, y:slotList[i].y } );
 				addChild(newPiece);

@@ -1,6 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.inventory
 {
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
+	import flash.events.AccelerometerEvent;
 	
 	public class Inventory
 	{
@@ -9,6 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 		
 		private static var sWordList:Array/*Sring*/ = [];
 		private static var sLetterPatternCardList:Array/*Sring*/ = [];
+		private static var sSelectedLetterPatternCardList:Vector.<String> = new Vector.<String>();
 		
 		public static function AddWord(aWord:String):void
 		{
@@ -80,10 +82,26 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 			}
 		}
 		
+		public static function get SelectedLetterPatternCardList():Vector.<String>
+		{
+			return sSelectedLetterPatternCardList;
+		}
+		
+		public static function SelectLetterPatternCardList(aCardList:Vector.<String>):void
+		{
+			sSelectedLetterPatternCardList = aCardList;
+		}
+		
+		public static function UnselectLetterPatternCardList():void
+		{
+			sSelectedLetterPatternCardList.splice(0, sSelectedLetterPatternCardList.length);
+		}
+		
 		public static function Reset():void
 		{
 			sWordList = [];
 			sLetterPatternCardList = [];
+			sSelectedLetterPatternCardList.splice(0, sSelectedLetterPatternCardList.length);
 		}
 		
 		public function Inventory()

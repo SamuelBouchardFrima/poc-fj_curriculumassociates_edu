@@ -402,12 +402,15 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			//}
 			//else
 			//{
-			mMegaphoneBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
+			mMegaphoneBtn = new CurvedBox(new Point(64, 64), (mSentenceVO ? Palette.GREAT_BTN : Palette.TOOL_BOX),
 				new BoxIcon(Asset.IconEarBitmap, Palette.BTN_CONTENT), 6);
 			mMegaphoneBtn.x = 442;
 			//mMegaphoneBtn.y = -42;
 			mMegaphoneBtn.y = 0;
-			mMegaphoneBtn.addEventListener(MouseEvent.CLICK, OnClickMegaphoneBtn);
+			if (mSentenceVO)
+			{
+				mMegaphoneBtn.addEventListener(MouseEvent.CLICK, OnClickMegaphoneBtn);
+			}
 			addChild(mMegaphoneBtn);
 			
 			//mHintBtn = new CurvedBox(new Point(64, 64), Palette.TOOL_BOX,
@@ -1430,7 +1433,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		private function OnClickMegaphoneBtn(aEvent:MouseEvent):void
 		{
 			//(new mSentenceVO() as Sound).play();
-			SoundManager.PlayVO(mSentenceVO);
+			if (mSentenceVO)
+			{
+				SoundManager.PlayVO(mSentenceVO);
+			}
 		}
 	
 		//private function OnClickHintBtn(aEvent:MouseEvent):void
