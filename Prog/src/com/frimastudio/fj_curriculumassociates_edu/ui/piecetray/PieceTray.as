@@ -47,10 +47,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 		public function get Bounds():Rectangle
 		{
 			var bounds:Rectangle = new Rectangle();
-			bounds.left = mFirstPiece.Position.x - (mFirstPiece.width / 2);
-			bounds.top = mFirstPiece.Position.y - (mFirstPiece.height / 2);
-			bounds.right = mLastPiece.Position.x + (mLastPiece.width / 2);
-			bounds.bottom = mLastPiece.Position.y + (mLastPiece.height / 2);
+			if (mFirstPiece)
+			{
+				bounds.left = mFirstPiece.Position.x - (mFirstPiece.width / 2);
+				bounds.top = mFirstPiece.Position.y - (mFirstPiece.height / 2);
+				bounds.right = mLastPiece.Position.x + (mLastPiece.width / 2);
+				bounds.bottom = mLastPiece.Position.y + (mLastPiece.height / 2);
+			}
 			return bounds;
 		}
 		
@@ -548,7 +551,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 				if (relativePosition.x >= -DEADZONE - (aPiece.width / 2) && relativePosition.x <= DEADZONE + (aPiece.width / 2) &&
 					relativePosition.y >= -((2 * OFFSET) + aPiece.height) && relativePosition.y <= (2 * OFFSET) + aPiece.height)
 				{
-					InsertFirst(aPiece.Label);
+					InsertFirst(aPiece.Label, relativePosition);
 					newPosition = true;
 				}
 			}
@@ -568,9 +571,9 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			dispatchEvent(new PieceTrayEvent(PieceTrayEvent.PIECE_CAPTURED, aPiece));
 		}
 		
-		public function InsertFirst(aContent:String):void
+		public function InsertFirst(aContent:String, aStartPosition:Point = null):void
 		{
-			mFirstPiece = new Piece(null, mFirstPiece, aContent, null, BoxColor);
+			mFirstPiece = new Piece(null, mFirstPiece, aContent, aStartPosition, BoxColor);
 			mFirstPiece.EnableMouseOver();
 			if (!mLastPiece)
 			{

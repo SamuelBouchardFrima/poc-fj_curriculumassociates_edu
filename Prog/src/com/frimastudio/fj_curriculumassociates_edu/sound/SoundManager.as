@@ -13,6 +13,11 @@ package com.frimastudio.fj_curriculumassociates_edu.sound
 		
 		public static function PlayVO(aVO:Class, aTarget:* = null, aCallback:Function = null, aInterrupt:Boolean = true):Number
 		{
+			if (!aVO)
+			{
+				return 0;
+			}
+			
 			if (sVOSoundUnit)
 			{
 				if (aInterrupt)
@@ -39,6 +44,11 @@ package com.frimastudio.fj_curriculumassociates_edu.sound
 		
 		public static function PlaySFX(aSFX:Class, aTarget:* = null, aCallback:Function = null):Number
 		{
+			if (!aSFX)
+			{
+				return 0;
+			}
+			
 			if (sSFXSoundUnitList.length >= MAX_SFX)
 			{
 				sSFXSoundUnitList[0].Interrupt();

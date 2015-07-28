@@ -8,7 +8,8 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 	public class QuestStep extends Sprite
 	{
 		protected var mLevel:Level;
-		protected var mWildLucuChallengeBtn:CurvedBox;
+		//protected var mWildLucuChallengeBtn:CurvedBox;
+		protected var mWildLucu:Sprite;
 		
 		public function get StepLevel():Level	{ return mLevel; }
 		
@@ -28,9 +29,16 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			mLevel.Reset();
 		}
 		
-		protected function OnClickWildLucuChallengeBtn(aEvent:MouseEvent):void
+		//protected function OnClickWildLucuChallengeBtn(aEvent:MouseEvent):void
+		//{
+			//dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_LUCU_TAMING));
+		//}
+		protected function OnClickWildLucu(aEvent:MouseEvent):void
 		{
-			dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_LUCU_TAMING));
+			if (mLevel != Level.THE_LAB && mLevel != Level.NONE)
+			{
+				dispatchEvent(new QuestStepEvent(QuestStepEvent.LAUNCH_LUCU_TAMING));
+			}
 		}
 	}
 }

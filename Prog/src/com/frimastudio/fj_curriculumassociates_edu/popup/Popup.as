@@ -26,11 +26,22 @@ package com.frimastudio.fj_curriculumassociates_edu.popup
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
-			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
-				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
-			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
-			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
-			addChild(mWildLucuChallengeBtn);
+			mWildLucu = new Sprite();
+			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			wildLucuBitmap.smoothing = true;
+			wildLucuBitmap.scaleY = 0.5;
+			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			mWildLucu.addChild(wildLucuBitmap);
+			mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			addChild(mWildLucu);
+		}
+		
+		override public function Dispose():void 
+		{
+			super.Dispose();
 		}
 	}
 }

@@ -754,7 +754,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 								highlight.addChild(highlightBitmap);
 								addChild(highlight);
 								
-								TweenLite.to(highlight, 0.2, {ease: Strong.easeIn, onComplete: OnTweenShowHighlight, onCompleteParams: [highlight], scaleX: 1, scaleY: 1, alpha: 1, rotation: 30});
+								TweenLite.to(highlight, 0.2, { ease:Strong.easeIn, onComplete:OnTweenShowHighlight,
+									onCompleteParams:[highlight], scaleX:1, scaleY:1, alpha:1, rotation:30});
 								
 									//chunk.alpha = 0;
 									//
@@ -961,7 +962,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 				mActivityElement.addChild(mSubmitBtn);
 				
 				mActivityTray.x = -(contentWidth / 2);
-				mActivityWorkArea.Size = new Point(contentWidth + 20, mActivityWorkArea.Size.y);;
+				mActivityWorkArea.Size = new Point(contentWidth + 20, mActivityWorkArea.Size.y);
 			}
 			//switch (mWordTemplateList[mCurrentActivityIndex].ActivityToLaunch)
 			//{
@@ -1289,7 +1290,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		
 		private function OnTweenShowHighlight(aHighlight:Sprite):void
 		{
-			TweenLite.to(aHighlight, 1.5, {ease: Strong.easeOut, onComplete: OnTweenHideHighlight, onCompleteParams: [aHighlight], scaleX: 0.5, scaleY: 0.5, alpha: 0, rotation: 255});
+			TweenLite.to(aHighlight, 1.5, { ease:Strong.easeOut, onComplete:OnTweenHideHighlight,
+				onCompleteParams:[aHighlight], scaleX:0.5, scaleY:0.5, alpha:0, rotation:255 });
 		}
 		
 		private function OnTweenHideHighlight(aHighlight:Sprite):void
@@ -1299,7 +1301,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		
 		private function OnTweenAttentionJump(aJumpAmount:int, aWord:Sprite, aDefaultY:Number):void
 		{
-			TweenLite.to(aWord, 0.4, {ease: Bounce.easeOut, onComplete: OnTweenAttentionBounce, onCompleteParams: [aJumpAmount, aWord, aDefaultY], y: aDefaultY, scaleX: 1, scaleY: 1});
+			TweenLite.to(aWord, 0.4, { ease:Bounce.easeOut, onComplete:OnTweenAttentionBounce,
+				onCompleteParams:[aJumpAmount, aWord, aDefaultY], y:aDefaultY, scaleX:1, scaleY:1});
 		}
 		
 		private function OnTweenAttentionBounce(aJumpAmount:int, aWord:Sprite, aDefaultY:Number):void

@@ -14,6 +14,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.UseItemTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.UseLevelPropTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.itemunlocked.ItemUnlockedTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked.LocationUnlockedTemplate;
@@ -30,6 +31,19 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 		public function GamePOCQuest()
 		{
 			mStepList = new Vector.<QuestStepTemplate>();
+			
+			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.SentenceContentTargetSound[3],
+				//new <WordTemplate>[new KnownWordTemplate("I'll"),
+				//new KnownWordTemplate("watch"),
+				//new ScrambledWordTemplate("it", "ti"),
+				//new ScrambledWordTemplate("if", "fi"),
+				//new KnownWordTemplate("I"),
+				//new KnownWordTemplate("can"),
+				//new EmptyWordTemplate("sit"),
+				////new EmptyWordTemplate(WordDictionary.RhymingSelection("it")),
+				//new ScrambledWordTemplate("in", "ni"),
+				//new KnownWordTemplate("front", ".")],
+				//new <int>[7], Direction.DOWN));
 			
 			// LESSON 13
 			

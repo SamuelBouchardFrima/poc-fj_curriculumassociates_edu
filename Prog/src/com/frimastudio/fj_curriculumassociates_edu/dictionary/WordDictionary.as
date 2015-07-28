@@ -11273,13 +11273,9 @@ duel
 		private static const GRADE_5:XML = new XML("<data>" + (<![CDATA[
 			]]>).toString() + "</data>");
 		
+		private static var sGradeList:Vector.<XML> = new <XML>[GRADE_K, GRADE_1, GRADE_2, GRADE_3, GRADE_4, GRADE_5];
 		private static var sValidatorList:Vector.<Validator> = new <Validator>[new Validator(GRADE_K), new Validator(GRADE_1),
 			new Validator(GRADE_2), new Validator(GRADE_3), new Validator(GRADE_4), new Validator(GRADE_5)];
-		
-		public function WordDictionary()
-		{
-			throw new Error("WordDictionary is static and not intended for instantiation.");
-		}
 		
 		public static function Validate(aWord:String, aGrade:int):Boolean
 		{
@@ -11291,6 +11287,31 @@ duel
 				}
 			}
 			return false;
+		}
+		
+		public static function RhymingSelection(aRhyme:String, aGrade:int):Vector.<String>
+		{
+			var selection:Vector.<String> = new Vector.<String>();
+			for (var i:int = 0, endi:int = aGrade; i <= endi; ++i)
+			{
+				selection = selection.concat(WordSelection.RhymingSelection(aRhyme, aGrade, sGradeList[i]));
+			}
+			return selection;
+		}
+		
+		public static function AlliteratingSelection(aAlliteration:String, aGrade:int):Vector.<String>
+		{
+			var selection:Vector.<String> = new Vector.<String>();
+			for (var i:int = 0, endi:int = aGrade; i <= endi; ++i)
+			{
+				selection = selection.concat(WordSelection.AlliteratingSelection(aAlliteration, aGrade, sGradeList[i]));
+			}
+			return selection;
+		}
+		
+		public function WordDictionary()
+		{
+			throw new Error("WordDictionary is static and not intended for instantiation.");
 		}
 	}
 }

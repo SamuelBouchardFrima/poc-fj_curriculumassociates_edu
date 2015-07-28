@@ -4,6 +4,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.CardType;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.inventory.CardSelectionTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward.LucuTamingRewardTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.reward.RewardTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.reward.RewardType;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.Quest;
@@ -21,8 +22,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			
 			mStepList.push(new CardSelectionTemplate(null, CardType.LETTER_PATTERN, 3));
 			mStepList.push(new LucuTamingTemplate(aLevel));
-			mStepList.push(new RewardTemplate(null, "WILD LUCU CHALLENGE REWARD", Asset.RewardSound[2], RewardType.WORD,
-				new <String>[/*WordList*/]));
+			mStepList.push(new LucuTamingRewardTemplate(null));
 			
 			super();
 			

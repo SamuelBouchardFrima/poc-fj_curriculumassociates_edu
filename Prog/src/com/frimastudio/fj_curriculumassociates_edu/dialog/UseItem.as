@@ -46,10 +46,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDefaultY = mLevel.NPC.y;
 			mDefaultScale = mLevel.NPC.scaleX;
 			
-			//mLevel.NPC.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
-			//TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
-			TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
-				y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
+			mLevel.NPC.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
+			//TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
+				//y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
 			mLevel.NPC.addEventListener(MouseEvent.CLICK, OnClickNPC);
 			
 			var playerPortrait:Sprite = new Sprite();
@@ -63,12 +63,24 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
-			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
-				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
-			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
-			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
-			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
-			addChild(mWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				//new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			//mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//addChild(mWildLucuChallengeBtn);
+			mWildLucu = new Sprite();
+			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			wildLucuBitmap.smoothing = true;
+			wildLucuBitmap.scaleY = 0.5;
+			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			mWildLucu.addChild(wildLucuBitmap);
+			mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			addChild(mWildLucu);
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
@@ -97,7 +109,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		
 		override public function Dispose():void
 		{
-			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
 			
 			//mDisposing = true;
 			
@@ -106,58 +119,58 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			TweenLite.killTweensOf(mLevel.NPC);
 			mLevel.NPC.y = mDefaultY;
 			mLevel.NPC.scaleX = mLevel.NPC.scaleY = mDefaultScale;
-			//mLevel.NPC.filters = [];
+			mLevel.NPC.filters = [];
 			mLevel.NPC.removeEventListener(MouseEvent.CLICK, OnClickNPC);
 			
 			super.Dispose();
 		}
 		
-		//private function OnTweenGlowStrong():void
+		private function OnTweenGlowStrong():void
+		{
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowWeak, glowFilter:{ alpha:0.25 } });
+		}
+		
+		private function OnTweenGlowWeak():void
+		{
+			TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter:{ alpha:0.75 } });
+		}
+		
+		//private function OnTweenAttentionJump(aJumpAmount:int):void
 		//{
-			//TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowWeak, glowFilter:{ alpha:0.25 } });
+			////if (mDisposing)
+			////{
+				////mLevel.NPC.y = aDefaultY;
+				////mLevel.NPC.scaleX = mLevel.NPC.scaleY = aDefaultScale;
+				////TweenLite.killTweensOf(mLevel.NPC);
+				////return;
+			////}
+			//
+			//TweenLite.to(mLevel.NPC, 0.4, { ease:Bounce.easeOut, onComplete:OnTweenAttentionBounce,
+				//onCompleteParams:[aJumpAmount], y:mDefaultY, scaleX:mDefaultScale, scaleY:mDefaultScale });
 		//}
 		//
-		//private function OnTweenGlowWeak():void
+		//private function OnTweenAttentionBounce(aJumpAmount:int):void
 		//{
-			//TweenLite.to(mLevel.NPC, 1, { ease:Quad.easeInOut, onComplete:OnTweenGlowStrong, glowFilter:{ alpha:0.75 } });
+			////if (mDisposing)
+			////{
+				////mLevel.NPC.y = aDefaultY;
+				////mLevel.NPC.scaleX = mLevel.NPC.scaleY = aDefaultScale;
+				////TweenLite.killTweensOf(mLevel.NPC);
+				////return;
+			////}
+			//
+			//++aJumpAmount;
+			//if (aJumpAmount < 3)
+			//{
+				//TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, onComplete:OnTweenAttentionJump, onCompleteParams:[aJumpAmount],
+					//y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:mDefaultScale });
+			//}
+			//else
+			//{
+				//TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
+					//y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
+			//}
 		//}
-		
-		private function OnTweenAttentionJump(aJumpAmount:int):void
-		{
-			//if (mDisposing)
-			//{
-				//mLevel.NPC.y = aDefaultY;
-				//mLevel.NPC.scaleX = mLevel.NPC.scaleY = aDefaultScale;
-				//TweenLite.killTweensOf(mLevel.NPC);
-				//return;
-			//}
-			
-			TweenLite.to(mLevel.NPC, 0.4, { ease:Bounce.easeOut, onComplete:OnTweenAttentionBounce,
-				onCompleteParams:[aJumpAmount], y:mDefaultY, scaleX:mDefaultScale, scaleY:mDefaultScale });
-		}
-		
-		private function OnTweenAttentionBounce(aJumpAmount:int):void
-		{
-			//if (mDisposing)
-			//{
-				//mLevel.NPC.y = aDefaultY;
-				//mLevel.NPC.scaleX = mLevel.NPC.scaleY = aDefaultScale;
-				//TweenLite.killTweensOf(mLevel.NPC);
-				//return;
-			//}
-			
-			++aJumpAmount;
-			if (aJumpAmount < 3)
-			{
-				TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, onComplete:OnTweenAttentionJump, onCompleteParams:[aJumpAmount],
-					y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:mDefaultScale });
-			}
-			else
-			{
-				TweenLite.to(mLevel.NPC, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
-					y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
-			}
-		}
 		
 		private function OnMouseMove(aEvent:MouseEvent):void
 		{

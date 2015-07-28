@@ -11,6 +11,8 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 		private static var sWordList:Array/*Sring*/ = [];
 		private static var sLetterPatternCardList:Array/*Sring*/ = [];
 		private static var sSelectedLetterPatternCardList:Vector.<String> = new Vector.<String>();
+		private static var sCompletedLucuTamingWordList:Vector.<String> = new Vector.<String>();
+		static private var sSelectableLucuTamingWord:int = 0;
 		
 		public static function AddWord(aWord:String):void
 		{
@@ -97,11 +99,19 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 			sSelectedLetterPatternCardList.splice(0, sSelectedLetterPatternCardList.length);
 		}
 		
+		public static function get CompletedLucuTamingWordList():Vector.<String>	{ return sCompletedLucuTamingWordList; }
+		public static function set CompletedLucuTamingWordList(aValue:Vector.<String>):void	{ sCompletedLucuTamingWordList = aValue; }
+		
+		public static function get SelectableLucuTamingWord():int	{ return sSelectableLucuTamingWord; }
+		public static function set SelectableLucuTamingWord(aValue:int):void	{ sSelectableLucuTamingWord = aValue; }
+		
 		public static function Reset():void
 		{
 			sWordList = [];
 			sLetterPatternCardList = [];
 			sSelectedLetterPatternCardList.splice(0, sSelectedLetterPatternCardList.length);
+			sCompletedLucuTamingWordList.splice(0, sCompletedLucuTamingWordList.length);
+			sSelectableLucuTamingWord = 0;
 		}
 		
 		public function Inventory()

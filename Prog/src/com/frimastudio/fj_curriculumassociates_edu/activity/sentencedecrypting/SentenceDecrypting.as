@@ -109,12 +109,24 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
-			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
-				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
-			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
-			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
-			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
-			addChild(mWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				//new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			//mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//addChild(mWildLucuChallengeBtn);mWildLucu = new Sprite();
+			mWildLucu = new Sprite();
+			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			wildLucuBitmap.smoothing = true;
+			wildLucuBitmap.scaleY = 0.5;
+			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			mWildLucu.addChild(wildLucuBitmap);
+			mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			addChild(mWildLucu);
 			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Find the missing letters.", 45,
@@ -249,6 +261,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 					mFloatPieceList.splice(i, 1);
 				}
 			}
+			var minDistance:Number;
 			var distance:Point;
 			for (i = 0, endi = mFloatPieceList.length; i < endi; ++i)
 			{
@@ -256,11 +269,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 				{
 					if (j != i)
 					{
+						minDistance = (mFloatPieceList[j].width / 2) + (mFloatPieceList[i].width / 2);
 						distance = DisplayObjectUtil.GetPosition(mFloatPieceList[j]);
 						distance = distance.subtract(DisplayObjectUtil.GetPosition(mFloatPieceList[i]));
 						if (distance.length <= (mFloatPieceList[j].width / 2) + (mFloatPieceList[i].width / 2))
 						{
-							distance.normalize(distance.length / 2);
+							distance.normalize((minDistance - distance.length) * 2);
 							
 							jTarget = DisplayObjectUtil.GetPosition(mFloatPieceList[j]).add(distance);
 							jTarget = MathUtil.MinMaxPoint(jTarget, mFloatPieceArea);
@@ -304,7 +318,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 		
 		override public function Dispose():void
 		{
-			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
 			
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			

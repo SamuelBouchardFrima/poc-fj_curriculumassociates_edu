@@ -14,16 +14,16 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		
 		public static const NONE:Level = new Level(sI++, "NONE");
 		public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap,
-			new Point(89, 466), 0.47111, new Point(634, 505), 0.8, new Point(409, 466), 0.47111,
+			new Point(89, 466), 0.47111, new Point(634, 505), 0.8, //new Point(409, 466), 0.47111,
 			null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.55289);
 		public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap,
-			new Point(149, 478), 0.4, new Point(864, 535), 0.5, new Point(700, 498), 0.4,
+			new Point(149, 478), 0.4, new Point(864, 535), 0.5, //new Point(700, 498), 0.4,
 			Asset.CopNPCBitmap, new Point(542, 487), 0.20667);
 		public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap,
-			new Point(149, 466), 0.35333, new Point(335, 470), 0.53333, new Point(640, 496), 0.45333,
+			new Point(149, 466), 0.35333, new Point(335, 470), 0.53333, //new Point(640, 496), 0.45333,
 			Asset.ChefNPCBitmap, new Point(600, 370), 0.33333);
 		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap,
-			new Point(169, 431), 0.35333, new Point(844, 460), 0.6, new Point(429, 431), 0.35333,
+			new Point(169, 431), 0.35333, new Point(844, 460), 0.6, //new Point(429, 431), 0.35333,
 			Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, Asset.RatPropBitmap, new Point(326, 467), 0.66667, true);
 		
 		private var mID:int;
@@ -31,7 +31,7 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		private var mBackground:Sprite;
 		private var mLucu:Sprite;
 		private var mMini:Sprite;
-		private var mWildLucu:Sprite;
+		//private var mWildLucu:Sprite;
 		private var mNPC:Sprite;
 		private var mProp:Sprite;
 		
@@ -39,13 +39,13 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		public function get Description():String	{ return mDescription; }
 		public function get Lucu():Sprite	{ return mLucu; }
 		public function get Mini():Sprite	{ return mMini; }
-		public function get WildLucu():Sprite	{ return mWildLucu; }
+		//public function get WildLucu():Sprite	{ return mWildLucu; }
 		public function get NPC():Sprite	{ return mNPC; }
 		public function get Prop():Sprite	{ return mProp; }
 		
 		public function Level(aID:int, aDescription:String, aBackgroundAsset:Class = null,
 			aLucuPosition:Point = null, aLucuScale:Number = 1, aMiniPosition:Point = null, aMiniScale:Number = 1,
-			aWildLucuPosition:Point = null, aWildLucuScale:Number = 1,
+			//aWildLucuPosition:Point = null, aWildLucuScale:Number = 1,
 			aNPCAsset:Class = null, aNPCPosition:Point = null, aNPCScale:Number = 1,
 			aPropAsset:Class = null, aPropPosition:Point = null, aPropScale:Number = 1, aInitialized:Boolean = false)
 		{
@@ -104,18 +104,18 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 				addChild(mMini);
 			}
 			
-			if (aWildLucuPosition)
-			{
-				mWildLucu = new Sprite();
-				DisplayObjectUtil.SetPosition(mWildLucu, aWildLucuPosition);
-				var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-				wildLucuBitmap.smoothing = true;
-				wildLucuBitmap.x = -wildLucuBitmap.width / 2;
-				wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-				mWildLucu.addChild(wildLucuBitmap);
-				mWildLucu.scaleX = mWildLucu.scaleY = aWildLucuScale;
-				addChild(mWildLucu);
-			}
+			//if (aWildLucuPosition)
+			//{
+				//mWildLucu = new Sprite();
+				//DisplayObjectUtil.SetPosition(mWildLucu, aWildLucuPosition);
+				//var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+				//wildLucuBitmap.smoothing = true;
+				//wildLucuBitmap.x = -wildLucuBitmap.width / 2;
+				//wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+				//mWildLucu.addChild(wildLucuBitmap);
+				//mWildLucu.scaleX = mWildLucu.scaleY = aWildLucuScale;
+				//addChild(mWildLucu);
+			//}
 			
 			if (aNPCAsset)
 			{
@@ -183,19 +183,19 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 				//mMini.filters = [];
 				addChild(mMini);
 			}
-			if (mWildLucu)
-			{
-				mWildLucu.removeChildAt(0);
-				var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-				wildLucuBitmap.smoothing = true;
-				wildLucuBitmap.x = -wildLucuBitmap.width / 2;
-				wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-				mWildLucu.addChild(wildLucuBitmap);
-				
-				//TweenLite.killTweensOf(mWildLucu);
-				//mWildLucu.filters = [];
-				addChild(mWildLucu);
-			}
+			//if (mWildLucu)
+			//{
+				//mWildLucu.removeChildAt(0);
+				//var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+				//wildLucuBitmap.smoothing = true;
+				//wildLucuBitmap.x = -wildLucuBitmap.width / 2;
+				//wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+				//mWildLucu.addChild(wildLucuBitmap);
+				//
+				////TweenLite.killTweensOf(mWildLucu);
+				////mWildLucu.filters = [];
+				//addChild(mWildLucu);
+			//}
 			if (mNPC)
 			{
 				//TweenLite.killTweensOf(mNPC);

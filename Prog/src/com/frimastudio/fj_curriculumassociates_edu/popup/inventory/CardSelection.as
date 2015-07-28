@@ -25,9 +25,10 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 	{
 		private var mTemplate:CardSelectionTemplate;
 		private var mCardList:Vector.<CurvedBox>;
-		private var mSlotList:Vector.<CurvedBox>;
+		//private var mSlotList:Vector.<CurvedBox>;
 		private var mContinueBtn:CurvedBox;
-		private var mSlotContainer:Sprite;
+		//private var mSlotContainer:Sprite;
+		private var mSlotList:Vector.<String>;
 		
 		public function CardSelection(aTemplate:CardSelectionTemplate)
 		{
@@ -44,23 +45,24 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			background.y = 384;
 			addChild(background);
 			
-			var title:TextField = new TextField();
-			title.embedFonts = true;
-			title.selectable = false;
-			title.autoSize = TextFieldAutoSize.CENTER;
-			switch (mTemplate.Type)
-			{
-				case CardType.LETTER_PATTERN:
-					title.text = "Letter Pattern Cards";
-					break;
-				default:
-					throw new Error("Card type " + mTemplate.Type.Description + " not handled.");
-					break;
-			}
-			title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
-				null, null, null, null, null, TextFormatAlign.CENTER));
-			title.x = 512 - (title.width / 2);
-			addChild(title);
+			//var title:TextField = new TextField();
+			//title.embedFonts = true;
+			//title.selectable = false;
+			//title.autoSize = TextFieldAutoSize.CENTER;
+			////switch (mTemplate.Type)
+			////{
+				////case CardType.LETTER_PATTERN:
+					////title.text = "Letter Pattern Cards";
+					////break;
+				////default:
+					////throw new Error("Card type " + mTemplate.Type.Description + " not handled.");
+					////break;
+			////}
+			//title.text = "Wild Lucu Taming";
+			//title.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 60, Palette.DIALOG_CONTENT,
+				//null, null, null, null, null, TextFormatAlign.CENTER));
+			//title.x = 512 - (title.width / 2);
+			//addChild(title);
 			
 			var offset:Number;
 			var i:int, endi:int;
@@ -93,46 +95,61 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			body.wordWrap = true;
 			body.multiline = true;
 			body.autoSize = TextFieldAutoSize.CENTER;
-			body.text = "Choose " + mTemplate.Slot + " cards";
+			//body.text = "Choose " + mTemplate.Slot + " cards";
+			body.text = "Select " + mTemplate.Slot + " letter pattern cards.";
 			body.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 48, Palette.DIALOG_CONTENT,
 				null, null, null, null, null, TextFormatAlign.CENTER));
 			body.x = 512 - (body.width / 2);
 			addChild(body);
 			
-			mSlotList = new Vector.<CurvedBox>();
-			mSlotContainer = new Sprite();
-			var slot:CurvedBox;
-			offset = 0;
-			for (i = 0, endi = mTemplate.Slot; i < endi; ++i)
-			{
-				slot = new CurvedBox(new Point(60, 60), 0xCCCCCC, null, 6, null, Axis.HORIZONTAL);
-				offset += slot.width / 2;
-				slot.x = offset;
-				slot.y = 0;
-				offset += (slot.width / 2) + 10;
-				mSlotContainer.addChild(slot);
-				mSlotList.push(slot);
-			}
-			mSlotContainer.x = 512 - (mSlotContainer.width / 2);
-			addChild(mSlotContainer);
+			mSlotList = new Vector.<String>();
 			
-			background.Size = new Point(Math.max(background.width, title.width, cardContainer.width,
-				body.width, mSlotContainer.width), background.height);
+			//mSlotList = new Vector.<CurvedBox>();
+			//mSlotContainer = new Sprite();
+			//var slot:CurvedBox;
+			//offset = 0;
+			//for (i = 0, endi = mTemplate.Slot; i < endi; ++i)
+			//{
+				//slot = new CurvedBox(new Point(60, 60), 0xCCCCCC, null, 6, null, Axis.HORIZONTAL);
+				//offset += slot.width / 2;
+				//slot.x = offset;
+				//slot.y = 0;
+				//offset += (slot.width / 2) + 10;
+				//mSlotContainer.addChild(slot);
+				//mSlotList.push(slot);
+			//}
+			//mSlotContainer.x = 512 - (mSlotContainer.width / 2);
+			//addChild(mSlotContainer);
+			
+			//background.Size = new Point(Math.max(background.width, title.width, cardContainer.width,
+			background.Size = new Point(Math.max(background.width, cardContainer.width,
+				//body.width, mSlotContainer.width), background.height);
+				body.width), background.height);
 			
 			mContinueBtn = new CurvedBox(new Point(64, 64), 0xCCCCCC, new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 			mContinueBtn.x = 512 + (background.width / 2) - 10 - (mContinueBtn.width / 2);
 			addChild(mContinueBtn);
 			
-			var space:Number = (background.height - (title.height + cardContainer.height + body.height +
-				mSlotContainer.height + mContinueBtn.height)) / 6;
-			title.y = 384 - (background.height / 2) + space;
-			cardContainer.y = title.y + title.height + space + (cardContainer.height / 2);
-			body.y = cardContainer.y + (cardContainer.height / 2) + space;
-			mSlotContainer.y = body.y + body.height + space + (mSlotContainer.height / 2);
-			mContinueBtn.y = mSlotContainer.y + (mSlotContainer.height / 2) + space + (mContinueBtn.height / 2);
+			//var space:Number = (background.height - (title.height + cardContainer.height + body.height +
+			//var space:Number = (background.height - (cardContainer.height + body.height +
+			var space:Number = (background.height - (cardContainer.height + body.height)) / 4;
+				//mSlotContainer.height + mContinueBtn.height)) / 6;
+				//mContinueBtn.height)) / 6;
+			//title.y = 384 - (background.height / 2) + space;
+			//cardContainer.y = title.y + title.height + space + (cardContainer.height / 2);
+			//cardContainer.y = 384 - (background.height / 2) + space + (cardContainer.height / 2);
+			//body.y = cardContainer.y + (cardContainer.height / 2) + space;
+			body.y = 384 - (background.height / 2) + space + (cardContainer.height / 2);
+			cardContainer.y = body.y + body.height + space + (cardContainer.height / 2);
+			//mSlotContainer.y = body.y + body.height + space + (mSlotContainer.height / 2);
+			//mContinueBtn.y = mSlotContainer.y + (mSlotContainer.height / 2) + space + (mContinueBtn.height / 2);
+			//mContinueBtn.y = body.y + body.height + space + (mContinueBtn.height / 2);
+			//mContinueBtn.y = cardContainer.y + (cardContainer.height / 2) + space + (mContinueBtn.height / 2);
+			mContinueBtn.y = cardContainer.y;
 			
-			background.Size = new Point(background.width, Math.max(background.height,
-				mContinueBtn.y + (mContinueBtn.height / 2) - title.y));
+			//background.Size = new Point(background.width, Math.max(background.height,
+				////mContinueBtn.y + (mContinueBtn.height / 2) - title.y));
+				//mContinueBtn.y + (mContinueBtn.height / 2)));
 		}
 		
 		override public function Dispose():void
@@ -142,10 +159,10 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			{
 				mCardList[i].removeEventListener(MouseEvent.CLICK, OnClickCard);
 			}
-			for (i = 0, endi = mSlotList.length; i < endi; ++i)
-			{
-				mSlotList[i].removeEventListener(MouseEvent.CLICK, OnClickSlot);
-			}
+			//for (i = 0, endi = mSlotList.length; i < endi; ++i)
+			//{
+				//mSlotList[i].removeEventListener(MouseEvent.CLICK, OnClickSlot);
+			//}
 			
 			mContinueBtn.removeEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
 			
@@ -179,95 +196,119 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 				trace("Warning: sound " + card.Label + " could not be found.");
 			}
 			
-			var i:int, endi:int;
-			for (i = 0, endi = mSlotList.length; i < endi; ++i)
+			if (!card.ColorBorderOnly)
 			{
-				if (mSlotList[i].Label == "")
-				{
-					mSlotList[i].Content = new BoxLabel(card.Label, 45, Palette.DIALOG_CONTENT);
-					mSlotList[i].BoxColor = 0xCC99FF;
-					mSlotList[i].ColorBorderOnly = true;
-					mSlotList[i].addEventListener(MouseEvent.CLICK, OnClickSlot);
-					
-					card.ColorBorderOnly = false;
-					//card.BoxColor = 0xCCCCCC;
-					card.removeEventListener(MouseEvent.CLICK, OnClickCard);
-					
-					break;
-				}
-			}
-			
-			var complete:Boolean = true;
-			var offset:int = 0;
-			for (i = 0, endi = mSlotList.length; i < endi; ++i)
-			{
-				if (mSlotList[i].Label == "")
-				{
-					complete = false;
-				}
+				//card.ColorBorderOnly = false;
+				card.ColorBorderOnly = true;
+				mSlotList.splice(mSlotList.indexOf(card.Label), 1);
 				
-				offset += mSlotList[i].width / 2;
-				mSlotList[i].x = offset;
-				offset += (mSlotList[i].width / 2) + 10;
-			}
-			mSlotContainer.x = 512 - (mSlotContainer.width / 2);
-			
-			if (complete)
-			{
-				mContinueBtn.BoxColor = Palette.GREAT_BTN;
-				mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
-			}
-		}
-		
-		private function OnClickSlot(aEvent:MouseEvent):void
-		{
-			var slot:CurvedBox = aEvent.currentTarget as CurvedBox;
-			
-			var incomplete:Boolean = false;
-			for (var i:int = 0, endi:int = mCardList.length; i < endi; ++i)
-			{
-				if (mCardList[i].Label == slot.Label)
-				{
-					mCardList[i].ColorBorderOnly = true;
-					//mCardList[i].BoxColor = 0xCC99FF;
-					mCardList[i].addEventListener(MouseEvent.CLICK, OnClickCard);
-					
-					slot.Content = null;
-					slot.BoxColor = 0xCCCCCC;
-					slot.ColorBorderOnly = false;
-					slot.removeEventListener(MouseEvent.CLICK, OnClickSlot);
-					
-					incomplete = true;
-					
-					break;
-				}
-			}
-			
-			var offset:int = 0;
-			for (i = 0, endi = mSlotList.length; i < endi; ++i)
-			{
-				offset += mSlotList[i].width / 2;
-				mSlotList[i].x = offset;
-				offset += (mSlotList[i].width / 2) + 10;
-			}
-			mSlotContainer.x = 512 - (mSlotContainer.width / 2);
-			
-			if (incomplete)
-			{
 				mContinueBtn.BoxColor = 0xCCCCCC;
 				mContinueBtn.removeEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
 			}
+			else if (mSlotList.length < mTemplate.Slot)
+			{
+				mSlotList.push(card.Label);
+				
+				//card.ColorBorderOnly = true;
+				card.ColorBorderOnly = false;
+				
+				if (mSlotList.length >= mTemplate.Slot)
+				{
+					mContinueBtn.BoxColor = Palette.GREAT_BTN;
+					mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
+				}
+			}
+			
+			//var i:int, endi:int;
+			//for (i = 0, endi = mSlotList.length; i < endi; ++i)
+			//{
+				//if (mSlotList[i].Label == "")
+				//{
+					//mSlotList[i].Content = new BoxLabel(card.Label, 45, Palette.DIALOG_CONTENT);
+					//mSlotList[i].BoxColor = 0xCC99FF;
+					//mSlotList[i].ColorBorderOnly = true;
+					//mSlotList[i].addEventListener(MouseEvent.CLICK, OnClickSlot);
+					//
+					//card.ColorBorderOnly = false;
+					////card.BoxColor = 0xCCCCCC;
+					//card.removeEventListener(MouseEvent.CLICK, OnClickCard);
+					//
+					//break;
+				//}
+			//}
+			
+			//var complete:Boolean = true;
+			//var offset:int = 0;
+			//for (i = 0, endi = mSlotList.length; i < endi; ++i)
+			//{
+				//if (mSlotList[i].Label == "")
+				//{
+					//complete = false;
+				//}
+				//
+				//offset += mSlotList[i].width / 2;
+				//mSlotList[i].x = offset;
+				//offset += (mSlotList[i].width / 2) + 10;
+			//}
+			//mSlotContainer.x = 512 - (mSlotContainer.width / 2);
+			
+			//if (complete)
+			//{
+				//mContinueBtn.BoxColor = Palette.GREAT_BTN;
+				//mContinueBtn.addEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
+			//}
 		}
+		
+		//private function OnClickSlot(aEvent:MouseEvent):void
+		//{
+			//var slot:CurvedBox = aEvent.currentTarget as CurvedBox;
+			//
+			//var incomplete:Boolean = false;
+			//for (var i:int = 0, endi:int = mCardList.length; i < endi; ++i)
+			//{
+				//if (mCardList[i].Label == slot.Label)
+				//{
+					//mCardList[i].ColorBorderOnly = true;
+					////mCardList[i].BoxColor = 0xCC99FF;
+					//mCardList[i].addEventListener(MouseEvent.CLICK, OnClickCard);
+					//
+					//slot.Content = null;
+					//slot.BoxColor = 0xCCCCCC;
+					//slot.ColorBorderOnly = false;
+					//slot.removeEventListener(MouseEvent.CLICK, OnClickSlot);
+					//
+					//incomplete = true;
+					//
+					//break;
+				//}
+			//}
+			//
+			//var offset:int = 0;
+			////for (i = 0, endi = mSlotList.length; i < endi; ++i)
+			////{
+				////offset += mSlotList[i].width / 2;
+				////mSlotList[i].x = offset;
+				////offset += (mSlotList[i].width / 2) + 10;
+			////}
+			////mSlotContainer.x = 512 - (mSlotContainer.width / 2);
+			//
+			//if (incomplete)
+			//{
+				//mContinueBtn.BoxColor = 0xCCCCCC;
+				//mContinueBtn.removeEventListener(MouseEvent.CLICK, OnClickCompleteBtn);
+			//}
+		//}
 		
 		private function OnClickCompleteBtn(aEvent:MouseEvent):void
 		{
-			var slotList:Vector.<String> = new Vector.<String>();
-			for (var i:int = 0, endi:int = mSlotList.length; i < endi; ++i)
-			{
-				slotList.push(mSlotList[i].Label);
-			}
+			//var slotList:Vector.<String> = new Vector.<String>();
+			//for (var i:int = 0, endi:int = mSlotList.length; i < endi; ++i)
+			//{
+				//slotList.push(mSlotList[i].Label);
+			//}
 			
-			Inventory.SelectLetterPatternCardList(slotList);
+			//Inventory.SelectLetterPatternCardList(slotList);
+			Inventory.SelectLetterPatternCardList(mSlotList);
 			
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}

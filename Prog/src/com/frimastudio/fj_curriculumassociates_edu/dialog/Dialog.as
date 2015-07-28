@@ -45,8 +45,9 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDefaultY = mLevel.Lucu.y;
 			mDefaultScale = mLevel.Lucu.scaleX;
 			
-			TweenLite.to(mLevel.Lucu, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
-				y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
+			//TweenLite.to(mLevel.Lucu, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
+			//TweenLite.to(mLevel.Lucu, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump, onCompleteParams:[0],
+				//y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
 			mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
 			
 			var playerPortrait:Sprite = new Sprite();
@@ -60,12 +61,24 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
-			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
-				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
-			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
-			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
-			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
-			addChild(mWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				//new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			//mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//addChild(mWildLucuChallengeBtn);
+			mWildLucu = new Sprite();
+			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			wildLucuBitmap.smoothing = true;
+			wildLucuBitmap.scaleY = 0.5;
+			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			mWildLucu.addChild(wildLucuBitmap);
+			mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			addChild(mWildLucu);
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.DialogList[mStep], 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
@@ -92,7 +105,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		
 		override public function Dispose():void
 		{
-			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
 			
 			//mDisposing = true;
 			

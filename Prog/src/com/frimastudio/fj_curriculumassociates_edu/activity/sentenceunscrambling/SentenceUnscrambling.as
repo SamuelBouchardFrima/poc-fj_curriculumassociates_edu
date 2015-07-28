@@ -97,12 +97,24 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			playerPortrait.y = 763 - (playerPortrait.height / 2);
 			addChild(playerPortrait);
 			
-			mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
-				new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
-			mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
-			mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
-			mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
-			addChild(mWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn = new CurvedBox(new Point(64, 64), 0xD18B25,
+				//new BoxIcon(Asset.WildLucuIdleBitmap, Palette.BTN_CONTENT), 6);
+			//mWildLucuChallengeBtn.x = 1014 - (mWildLucuChallengeBtn.width / 2);
+			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
+			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//addChild(mWildLucuChallengeBtn);
+			mWildLucu = new Sprite();
+			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			wildLucuBitmap.smoothing = true;
+			wildLucuBitmap.scaleY = 0.5;
+			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			mWildLucu.addChild(wildLucuBitmap);
+			mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			addChild(mWildLucu);
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX,
 				new BoxLabel("Put the words in order to make the sentence.", 45, Palette.DIALOG_CONTENT),
@@ -185,7 +197,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		
 		override public function Dispose():void 
 		{
-			mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
+			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
 			
 			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedCraftingTray);
 			mCraftingTray.removeEventListener(PieceTrayEvent.PIECE_FREED, OnPieceFreedCraftingTray);
