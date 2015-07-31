@@ -66,18 +66,21 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
 			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			//addChild(mWildLucuChallengeBtn);
-			mWildLucu = new Sprite();
-			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
-			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-			mWildLucu.addChild(wildLucuBitmap);
-			mWildLucu.x = 1014 - (mWildLucu.width / 2);
-			mWildLucu.y = 758 - (mWildLucu.height / 2);
-			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
-			addChild(mWildLucu);
+			//mWildLucu = new Sprite();
+			//var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			//wildLucuBitmap.smoothing = true;
+			//wildLucuBitmap.scaleY = 0.5;
+			//wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			//wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			//wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			//mWildLucu.addChild(wildLucuBitmap);
+			//mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			//mWildLucu.y = 758 - (mWildLucu.height / 2);
+			//mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			//addChild(mWildLucu);
+			
+			InitializeMap();
+			InitializeWildLucu();
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
@@ -85,11 +88,14 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
-			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.InstructionVO,
-				mTemplate.PhylacteryArrow);
-			mActivityBox.x = 512;
-			mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
-			addChild(mActivityBox);
+			if (mTemplate.ActivityWordList)
+			{
+				mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.InstructionVO,
+					mTemplate.PhylacteryArrow);
+				mActivityBox.x = 512;
+				mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
+				addChild(mActivityBox);
+			}
 			
 			//(new mTemplate.InstructionVO() as Sound).play();
 			SoundManager.PlayVO(mTemplate.InstructionVO);
@@ -108,7 +114,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mLevel.Prop.filters = [];
 			mLevel.Prop.removeEventListener(MouseEvent.CLICK, OnClickProp);
 			
-			mActivityBox.Dispose();
+			if (mActivityBox)
+			{
+				mActivityBox.Dispose();
+			}
 			
 			super.Dispose();
 		}

@@ -14,6 +14,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		private var mActivityWordList:Vector.<WordTemplate>;
 		private var mLineBreakList:Vector.<int>;
 		private var mPhylacteryArrow:Direction;
+		//private var mUseToolTray:Boolean;
+		private var mUseWordBubble:Boolean;
 		
 		public function get WordList():Vector.<String>	{ return mWordList; }
 		public function get Answer():String	{ return mAnswer; }
@@ -22,10 +24,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 		public function get ActivityWordList():Vector.<WordTemplate>	{ return mActivityWordList; }
 		public function get LineBreakList():Vector.<int>	{ return mLineBreakList; }
 		public function get PhylacteryArrow():Direction	{ return mPhylacteryArrow; }
+		//public function get UseToolTray():Boolean	{ return mUseToolTray; }
+		public function get UseWordBubble():Boolean	{ return mUseWordBubble; }
 		
 		public function SentenceUnscramblingTemplate(aLevel:Level, aWordList:Vector.<String>, aAnswer:String, aRequest:String,
 			aRequestVO:Class, aActivityWordList:Vector.<WordTemplate>, aLineBreakList:Vector.<int> = null,
-			aPhylacteryArrow:Direction = null)
+			//aPhylacteryArrow:Direction = null, aUseToolTray:Boolean = false)
+			aPhylacteryArrow:Direction = null, aUseWordBubble:Boolean = false)
 		{
 			super(aLevel);
 			
@@ -38,6 +43,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mActivityWordList = aActivityWordList;
 			mLineBreakList = (aLineBreakList ? aLineBreakList : new Vector.<int>());
 			mPhylacteryArrow = (aPhylacteryArrow ? aPhylacteryArrow : Direction.DOWN_LEFT);
+			//mUseToolTray = aUseToolTray;
+			mUseWordBubble = aUseWordBubble;
 		}
 	}
 }

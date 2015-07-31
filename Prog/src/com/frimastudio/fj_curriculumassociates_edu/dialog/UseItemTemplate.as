@@ -13,7 +13,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		public function get InstructionVO():Class	{ return mInstructionVO; }
 		public function get ItemAsset():Class	{ return mItemAsset; }
 		
-		public function UseItemTemplate(aLevel:Level, aInstruction:String, aInstructionVO:Class, aItemAsset:Class)
+		public function UseItemTemplate(aLevel:Level, aInstruction:String = null, aInstructionVO:Class = null, aItemAsset:Class = null)
 		{
 			super(aLevel);
 			

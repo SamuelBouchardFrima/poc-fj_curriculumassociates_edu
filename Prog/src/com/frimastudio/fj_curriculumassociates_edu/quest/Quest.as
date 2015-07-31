@@ -2,6 +2,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 {
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.SelectActivity;
 	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingConfig;
+	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingEnergy;
 	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingQuest;
 	import flash.display.Sprite;
 	
@@ -11,6 +12,15 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		protected var mStep:QuestStep;
 		protected var mTempStep:QuestStep;
 		protected var mLucuTaming:LucuTamingQuest;
+		
+		public function get CurrentStep():QuestStep
+		{
+			if (mTempStep)
+			{
+				return mTempStep;
+			}
+			return mStep;
+		}
 		
 		public function Quest()
 		{
@@ -24,6 +34,22 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			NextStep();
 		}
 		
+		public function Refresh():void
+		{
+			if (mLucuTaming)
+			{
+				mLucuTaming.Refresh();
+			}
+			else if (mTempStep)
+			{
+				mTempStep.Refresh();
+			}
+			else
+			{
+				mStep.Refresh();
+			}
+		}
+		
 		private function NextStep():void
 		{
 			if (mStep)
@@ -31,6 +57,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				mStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 				mStep.removeEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 				mStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
+				mStep.removeEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 				mStep.Dispose();
 				if (contains(mStep))
 				{
@@ -45,6 +72,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				mStep.addEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 				mStep.addEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 				mStep.addEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
+				mStep.addEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 				addChild(mStep);
 			}
 			else
@@ -66,6 +94,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 				mTempStep.removeEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 				mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+				mTempStep.removeEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 				removeChild(mTempStep);
 				mTempStep = null;
 			}
@@ -79,6 +108,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			mTempStep.addEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			mTempStep.addEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 			mTempStep.addEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			mTempStep.addEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 			addChild(mTempStep);
 		}
 		
@@ -88,6 +118,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 			mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			mTempStep.removeEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 			removeChild(mTempStep);
 			mTempStep = null;
 			
@@ -100,6 +131,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			mTempStep.removeEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 			mTempStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteActivity);
+			mTempStep.removeEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
 			removeChild(mTempStep);
 			mTempStep = null;
 			
@@ -109,6 +141,13 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		
 		private function OnLaunchLucuTaming(aEvent:QuestStepEvent):void
 		{
+			if (!LucuTamingEnergy.Instance.Charged)
+			{
+				return;
+			}
+			
+			LucuTamingEnergy.Instance.Discharge();
+			
 			if (mTempStep)
 			{
 				removeChild(mTempStep);
@@ -129,6 +168,8 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			mLucuTaming.removeEventListener(QuestEvent.COMPLETE, OnCompleteLucuTaming);
 			mLucuTaming = null;
 			
+			LucuTamingEnergy.Instance.Charging = true;
+			
 			if (mTempStep)
 			{
 				addChild(mTempStep);
@@ -142,6 +183,11 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		private function OnCompleteStep(aEvent:QuestStepEvent):void
 		{
 			NextStep();
+		}
+		
+		private function OnOpenMap(aEvent:QuestStepEvent):void
+		{
+			dispatchEvent(new QuestEvent(QuestEvent.OPEN_MAP));
 		}
 	}
 }

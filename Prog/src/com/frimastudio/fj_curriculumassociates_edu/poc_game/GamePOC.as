@@ -2,6 +2,9 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingConfig;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.ExplorableLevel;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.NavigationManager;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.NavigationManagerConfig;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
@@ -14,7 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	
 	public class GamePOC extends Sprite
 	{
-		private static const VERSION:String = "v3.3";
+		private static const VERSION:String = "v3.4";
 		
 		public function GamePOC():void
 		{
@@ -29,9 +32,13 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			
 			TweenPlugin.activate([GlowFilterPlugin]);
 			
-			var quest:GamePOCQuest = new GamePOCQuest();
-			quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
-			addChild(quest);
+			//var quest:GamePOCQuest = new GamePOCQuest();
+			//quest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+			//addChild(quest);
+			
+			var navigationContainer:Sprite = new Sprite();
+			addChild(navigationContainer);
+			NavigationManagerConfig.Container = navigationContainer;
 			
 			var lucuTamingContainer:Sprite = new Sprite();
 			addChild(lucuTamingContainer);
@@ -42,20 +49,24 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			version.x = (version.width / 2) + 2;
 			version.y = (version.height / 2) + 2;
 			addChild(version);
+			
+			NavigationManager.Unlock(ExplorableLevel.THE_LAB);
+			NavigationManager.Navigate(ExplorableLevel.THE_LAB);
+			ExplorableLevel.THE_LAB.Start();
 		}
 		
-		private function OnCompleteQuest(aEvent:QuestEvent):void
-		{
-			var quest:GamePOCQuest = aEvent.currentTarget as GamePOCQuest;
-			quest.removeEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
-			
-			Inventory.Reset();
-			
-			var newQuest:GamePOCQuest = new GamePOCQuest();
-			newQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
-			addChildAt(newQuest, getChildIndex(quest));
-			
-			removeChild(quest);
-		}
+		//private function OnCompleteQuest(aEvent:QuestEvent):void
+		//{
+			//var quest:GamePOCQuest = aEvent.currentTarget as GamePOCQuest;
+			//quest.removeEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+			//
+			//Inventory.Reset();
+			//
+			//var newQuest:GamePOCQuest = new GamePOCQuest();
+			//newQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+			//addChildAt(newQuest, getChildIndex(quest));
+			//
+			//removeChild(quest);
+		//}
 	}
 }

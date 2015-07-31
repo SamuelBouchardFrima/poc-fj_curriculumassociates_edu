@@ -69,42 +69,54 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
 			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			//addChild(mWildLucuChallengeBtn);
-			mWildLucu = new Sprite();
-			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
-			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-			mWildLucu.addChild(wildLucuBitmap);
-			mWildLucu.x = 1014 - (mWildLucu.width / 2);
-			mWildLucu.y = 758 - (mWildLucu.height / 2);
-			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
-			addChild(mWildLucu);
+			//mWildLucu = new Sprite();
+			//var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			//wildLucuBitmap.smoothing = true;
+			//wildLucuBitmap.scaleY = 0.5;
+			//wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			//wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			//wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			//mWildLucu.addChild(wildLucuBitmap);
+			//mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			//mWildLucu.y = 758 - (mWildLucu.height / 2);
+			//mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			//addChild(mWildLucu);
 			
-			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
-				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
-			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
-			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
+			InitializeMap();
+			InitializeWildLucu();
 			
-			mItem = new Sprite();
-			mItem.mouseEnabled = false;
-			mItem.x = mouseX;
-			mItem.y = mouseY;
-			mItem.scaleX = mItem.scaleY = 0.01;
-			var itemBitmap:Bitmap = new mTemplate.ItemAsset() as Bitmap;
-			itemBitmap.smoothing = true;
-			itemBitmap.x = -itemBitmap.width / 2;
-			itemBitmap.y = -itemBitmap.height / 2;
-			mItem.addChild(itemBitmap);
-			addChild(mItem);
-			TweenLite.to(mItem, 1, { ease:Elastic.easeOut, scaleX:0.5, scaleY:0.5 });
+			if (mTemplate.Instruction)
+			{
+				mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel(mTemplate.Instruction, 45,
+					Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+				mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+				mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+				addChild(mDialogBox);
+			}
 			
-			addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+			if (mTemplate.ItemAsset)
+			{
+				mItem = new Sprite();
+				mItem.mouseEnabled = false;
+				mItem.x = mouseX;
+				mItem.y = mouseY;
+				mItem.scaleX = mItem.scaleY = 0.01;
+				var itemBitmap:Bitmap = new mTemplate.ItemAsset() as Bitmap;
+				itemBitmap.smoothing = true;
+				itemBitmap.x = -itemBitmap.width / 2;
+				itemBitmap.y = -itemBitmap.height / 2;
+				mItem.addChild(itemBitmap);
+				addChild(mItem);
+				TweenLite.to(mItem, 1, { ease:Elastic.easeOut, scaleX:0.5, scaleY:0.5 });
+				
+				addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+			}
 			
-			//(new mTemplate.InstructionVO() as Sound).play();
-			SoundManager.PlayVO(mTemplate.InstructionVO);
+			if (mTemplate.InstructionVO)
+			{
+				//(new mTemplate.InstructionVO() as Sound).play();
+				SoundManager.PlayVO(mTemplate.InstructionVO);
+			}
 		}
 		
 		override public function Dispose():void
@@ -174,7 +186,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		
 		private function OnMouseMove(aEvent:MouseEvent):void
 		{
-			TweenLite.to(mItem, 0.8, { ease:Elastic.easeOut, x:mouseX, y:mouseY });
+			if (mItem)
+			{
+				TweenLite.to(mItem, 0.8, { ease:Elastic.easeOut, x:mouseX, y:mouseY });
+			}
 		}
 		
 		private function OnClickNPC(aEvent:MouseEvent):void
@@ -182,8 +197,15 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			mLevel.NPC.removeEventListener(MouseEvent.CLICK, OnClickNPC);
 			
-			TweenLite.to(mItem, 0.5, { ease:Strong.easeOut, onComplete:OnTweenItemGiven,
-				x:mouseX, y:mouseY, scaleX:1, scaleY:1, alpha:0 });
+			if (mItem)
+			{
+				TweenLite.to(mItem, 0.5, { ease:Strong.easeOut, onComplete:OnTweenItemGiven,
+					x:mouseX, y:mouseY, scaleX:1, scaleY:1, alpha:0 });
+			}
+			else
+			{
+				dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+			}
 		}
 		
 		private function OnTweenItemGiven():void

@@ -115,7 +115,10 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			mDecayTimer.reset();
 			
 			removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			if (stage)
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+			}
 			removeEventListener(MouseEvent.CLICK, OnClick);
 		}
 		

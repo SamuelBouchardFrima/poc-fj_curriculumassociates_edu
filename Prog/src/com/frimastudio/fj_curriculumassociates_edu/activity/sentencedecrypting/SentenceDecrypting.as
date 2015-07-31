@@ -9,6 +9,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
+	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingEnergy;
+	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingEnergyEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
@@ -115,18 +118,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
 			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			//addChild(mWildLucuChallengeBtn);mWildLucu = new Sprite();
-			mWildLucu = new Sprite();
-			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
-			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-			mWildLucu.addChild(wildLucuBitmap);
-			mWildLucu.x = 1014 - (mWildLucu.width / 2);
-			mWildLucu.y = 758 - (mWildLucu.height / 2);
-			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
-			addChild(mWildLucu);
+			
+			InitializeMap();
+			InitializeWildLucu();
 			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Find the missing letters.", 45,

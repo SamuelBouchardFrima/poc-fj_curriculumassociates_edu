@@ -1,6 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.ExplorableLevel;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.NavigationManager;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
@@ -65,6 +67,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 			
 			//(new mTemplate.VO() as Sound).play();
 			SoundManager.PlayVO(mTemplate.VO);
+			
+			NavigationManager.Unlock(mTemplate.UnlockedLevel);
 		}
 		
 		override public function Dispose():void

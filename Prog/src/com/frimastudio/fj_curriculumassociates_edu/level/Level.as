@@ -18,10 +18,10 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 			null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.55289);
 		public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap,
 			new Point(149, 478), 0.4, new Point(864, 535), 0.5, //new Point(700, 498), 0.4,
-			Asset.CopNPCBitmap, new Point(542, 487), 0.20667);
+			Asset.CopNPCBitmap, new Point(542, 487), 0.20667, Asset.RatPropBitmap, new Point(326, 467), 0.55556);
 		public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap,
 			new Point(149, 466), 0.35333, new Point(335, 470), 0.53333, //new Point(640, 496), 0.45333,
-			Asset.ChefNPCBitmap, new Point(600, 370), 0.33333);
+			Asset.ChefNPCBitmap, new Point(600, 370), 0.33333, Asset.RatPropBitmap, new Point(626, 467), 0.59259);
 		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap,
 			new Point(169, 431), 0.35333, new Point(844, 460), 0.6, //new Point(429, 431), 0.35333,
 			Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, Asset.RatPropBitmap, new Point(326, 467), 0.66667, true);

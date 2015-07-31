@@ -69,17 +69,23 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.message
 			//sound.play();
 			var soundLength:Number = SoundManager.PlayVO(mTemplate.TitleVO);
 			
-			mPlayBodyVOTimer = new Timer(soundLength, 1);
-			mPlayBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
-			mPlayBodyVOTimer.start();
+			if (mTemplate.BodyVO)
+			{
+				mPlayBodyVOTimer = new Timer(soundLength, 1);
+				mPlayBodyVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+				mPlayBodyVOTimer.start();
+			}
 			
 			addEventListener(MouseEvent.CLICK, OnClick);
 		}
 		
 		override public function Dispose():void
 		{
-			mPlayBodyVOTimer.reset();
-			mPlayBodyVOTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			if (mPlayBodyVOTimer)
+			{
+				mPlayBodyVOTimer.reset();
+				mPlayBodyVOTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnPlayBodyVOTimerComplete);
+			}
 			
 			removeEventListener(MouseEvent.CLICK, OnClick);
 			

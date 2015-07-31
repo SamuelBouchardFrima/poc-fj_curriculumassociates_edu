@@ -19,8 +19,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		public function get LineBreakList():Vector.<int>	{ return mLineBreakList; }
 		public function get PhylacteryArrow():Direction	{ return mPhylacteryArrow; }
 		
-		public function UseLevelPropTemplate(aLevel:Level, aInstruction:String, aInstructionVO:Class,
-			aActivityWordList:Vector.<WordTemplate>, aLineBreakList:Vector.<int> = null, aPhylacteryArrow:Direction = null)
+		public function UseLevelPropTemplate(aLevel:Level, aInstruction:String = "", aInstructionVO:Class = null,
+			aActivityWordList:Vector.<WordTemplate> = null, aLineBreakList:Vector.<int> = null, aPhylacteryArrow:Direction = null)
 		{
 			super(aLevel);
 			

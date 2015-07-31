@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 	public class QuestEvent extends Event
 	{
 		public static const COMPLETE:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent::COMPLETE";
+		public static const OPEN_MAP:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent::OPEN_MAP";
 		
 		public function QuestEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
 		{

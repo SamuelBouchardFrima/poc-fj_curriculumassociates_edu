@@ -35,6 +35,8 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
@@ -155,12 +157,16 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				(mDialogBox.height / 2), 668 - (mDialogBox.height / 2));
 			addChild(mDialogBox);
 			
+			LucuTamingEnergy.Instance.Discharge();
+			
+			InitializeMap();
+			
 			mWildLucu = new Sprite();
 			SetWildLucu(Asset.WildLucuIdleBitmap);
-			mWildLucu.x = 1014 - (mWildLucu.width / 2);
-			mWildLucu.y = 758 - (mWildLucu.height / 2);
+			mWildLucu.x = 1024 - 10 - (mWildLucu.width / 2);
+			mWildLucu.y = mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2);
 			addChild(mWildLucu);
-			TweenLite.to(mWildLucu, 1, {ease: Strong.easeInOut, x: 512, y: (384 - 5), onComplete: OnTweenMoveLucuUp});
+			TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, x:512, y:(384 - 5), onComplete:OnTweenMoveLucuUp });
 			
 			mActivityBox = new ActivityBox(new Vector.<WordTemplate>(), new Vector.<int>(), null, Direction.DOWN);
 			mActivityBox.x = 512;
@@ -606,7 +612,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
 			}
 		}
 		
@@ -637,7 +643,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
 			}
 		}
 		
@@ -831,7 +837,8 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			bubbleSplash.x = piece.x - (bubbleSplash.width / 2);
 			bubbleSplash.y = piece.y - (bubbleSplash.height / 2);
 			addChild(bubbleSplash);
-			TweenLite.to(bubbleSplash, 1, {ease: Strong.easeOut, onComplete: OnTweenHideBubbleSplash, onCompleteParams: [bubbleSplash], alpha: 0});
+			TweenLite.to(bubbleSplash, 1, { ease:Strong.easeOut, onComplete:OnTweenHideBubbleSplash,
+				onCompleteParams:[bubbleSplash], alpha:0 });
 			
 			mSubmission += piece.Label;
 			

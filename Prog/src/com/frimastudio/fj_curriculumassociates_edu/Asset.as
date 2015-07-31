@@ -449,6 +449,82 @@ package com.frimastudio.fj_curriculumassociates_edu
 			GameHint_23_mommas_soup, GameHint_24_rockin_tune_ready, GameHint_25_click_word, GameHint_26_click_scrambled,
 			GameHint_27_unscramble_letters, GameHint_28_dont_sing, GameHint_29_look_at, GameHint_30_mix_it_up];
 		
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/did_lesson_13.mp3")]
+		private static var QuestFlow_01:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/singing_contest.mp3")]
+		private static var QuestFlow_02:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/good_words.mp3")]
+		private static var QuestFlow_03:Class;
+		//[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/we_more_words.mp3")]
+		//private static var QuestFlow_04:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/sit_on_chair.mp3")]
+		private static var QuestFlow_05:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/great_job.mp3")]
+		private static var QuestFlow_06:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/spread_word.mp3")]
+		private static var QuestFlow_07:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/tip_orange_guy.mp3")]
+		private static var QuestFlow_08:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/word_rhyme_tip.mp3")]
+		private static var QuestFlow_09:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/feed_tip.mp3")]
+		private static var QuestFlow_10:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/feed_more_policeman.mp3")]
+		private static var QuestFlow_11:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/word_parts_rhyme_tip.mp3")]
+		private static var QuestFlow_12:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/make_sip_dip_rip.mp3")]
+		private static var QuestFlow_13:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/you_more_words.mp3")]
+		private static var QuestFlow_14:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TownSquare/forget_tip.mp3")]
+		private static var QuestFlow_15:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/win_chop_chef.mp3")]
+		private static var QuestFlow_16:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/words_like_dim.mp3")]
+		private static var QuestFlow_17:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/feed_dim.mp3")]
+		private static var QuestFlow_18:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/chef_feed_more.mp3")]
+		private static var QuestFlow_19:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/word_parts_begins_dim.mp3")]
+		private static var QuestFlow_20:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/make_did_dip.mp3")]
+		private static var QuestFlow_21:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/bit_more_words.mp3")]
+		private static var QuestFlow_22:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/GroceryStore/theater_write_song.mp3")]
+		private static var QuestFlow_23:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/song_sing_rock_it.mp3")]
+		private static var QuestFlow_24:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/go_for_it.mp3")]
+		private static var QuestFlow_25:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/you_do_i_do.mp3")]
+		private static var QuestFlow_26:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/fan_man.mp3")]
+		private static var QuestFlow_27:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/wait_singing_contest.mp3")]
+		private static var QuestFlow_28:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/unlocked.mp3")]
+		private static var QuestFlow_29:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/next_lesson.mp3")]
+		private static var QuestFlow_30:Class;
+		public static var QuestFlowSound:Object = [null,
+			QuestFlow_01, QuestFlow_02, QuestFlow_03, null, QuestFlow_05, QuestFlow_06, QuestFlow_07,
+			QuestFlow_08, QuestFlow_09, QuestFlow_10, QuestFlow_11, QuestFlow_12, QuestFlow_13, QuestFlow_14, QuestFlow_15,
+			QuestFlow_16, QuestFlow_17, QuestFlow_18, QuestFlow_19, QuestFlow_20, QuestFlow_21, QuestFlow_22, QuestFlow_23,
+			QuestFlow_24, QuestFlow_25, QuestFlow_26, QuestFlow_27, QuestFlow_28, QuestFlow_29, QuestFlow_30];
+		
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/words_from_yoop.mp3")]
+		private static var NewHint_01:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/select_3_cards.mp3")]
+		private static var NewHint_02:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/craft_new_words.mp3")]
+		private static var NewHint_03:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/click_colored_box.mp3")]
+		private static var NewHint_04:Class;
+		public static var NewHintSound:Object = [null, NewHint_01, NewHint_02, NewHint_03, NewHint_04];
+		
 		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/01_t_.mp3")]
 		private static var LetterSound_01_t_:Class;
 		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/02-1_i_short.mp3")]

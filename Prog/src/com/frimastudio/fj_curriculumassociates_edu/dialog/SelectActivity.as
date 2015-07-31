@@ -57,18 +57,21 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			//mWildLucuChallengeBtn.y = 758 - (mWildLucuChallengeBtn.height / 2);
 			//mWildLucuChallengeBtn.addEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			//addChild(mWildLucuChallengeBtn);
-			mWildLucu = new Sprite();
-			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
-			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
-			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
-			mWildLucu.addChild(wildLucuBitmap);
-			mWildLucu.x = 1014 - (mWildLucu.width / 2);
-			mWildLucu.y = 758 - (mWildLucu.height / 2);
-			mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
-			addChild(mWildLucu);
+			//mWildLucu = new Sprite();
+			//var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			//wildLucuBitmap.smoothing = true;
+			//wildLucuBitmap.scaleY = 0.5;
+			//wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			//wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			//wildLucuBitmap.y = -wildLucuBitmap.height / 2;
+			//mWildLucu.addChild(wildLucuBitmap);
+			//mWildLucu.x = 1014 - (mWildLucu.width / 2);
+			//mWildLucu.y = 758 - (mWildLucu.height / 2);
+			//mWildLucu.addEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			//addChild(mWildLucu);
+			
+			InitializeMap();
+			InitializeWildLucu();
 			
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
