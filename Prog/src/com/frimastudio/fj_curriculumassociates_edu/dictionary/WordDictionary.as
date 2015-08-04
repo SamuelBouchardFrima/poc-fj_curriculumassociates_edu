@@ -11095,7 +11095,32 @@ cheerless
 cheeriness
 cheery
 
-
+its
+pip
+did
+mid
+nit
+sin
+din
+tin
+rim
+tim
+sid
+pat
+tap
+dad
+rad
+fad
+tad
+dip
+art
+id
+fart
+frat
+trap
+drip
+trip
+dart
 
 fair
 fare

@@ -147,6 +147,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			//mContinueBtn.y = cardContainer.y + (cardContainer.height / 2) + space + (mContinueBtn.height / 2);
 			mContinueBtn.y = cardContainer.y;
 			
+			SoundManager.PlayVO(Asset.NewHintSound[2]);
+			
 			//background.Size = new Point(background.width, Math.max(background.height,
 				////mContinueBtn.y + (mContinueBtn.height / 2) - title.y));
 				//mContinueBtn.y + (mContinueBtn.height / 2)));

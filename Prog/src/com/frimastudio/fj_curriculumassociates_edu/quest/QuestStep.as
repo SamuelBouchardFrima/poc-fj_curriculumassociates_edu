@@ -63,6 +63,11 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			}
 		}
 		
+		public function Skip():void
+		{
+			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+		}
+		
 		public function Refresh():void
 		{
 			if (mLevel && mLevel != Level.NONE)
@@ -86,8 +91,8 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			
 			mMap = new CurvedBox(new Point(64, 64), (aEnabled ? 0xCCFF99 : 0xCCCCCC),
 				new BoxLabel("M", 48, Palette.DIALOG_CONTENT), 6);
-			mMap.x = 1024 - 10 - (mMap.width / 2);
-			mMap.y = 768 - 10 - (mMap.height / 2);
+			mMap.x = 1024 - 7.5 - (mMap.width / 2);
+			mMap.y = 768 - 7.5 - (mMap.height / 2);
 			addChild(mMap);
 			
 			if (aEnabled)
@@ -104,11 +109,11 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		protected function InitializeWildLucu(aEnabled:Boolean = true):void
 		{
 			mWildLucu = new Sprite();
-			var wildLucuBitmap:Bitmap = new Asset.WildLucuIdleBitmap() as Bitmap;
+			var wildLucuBitmap:Bitmap = new Asset.YoopBitmap() as Bitmap;
 			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.scaleX = wildLucuBitmap.scaleY = 0.2;
+			//wildLucuBitmap.scaleX = -wildLucuBitmap.scaleY;
+			wildLucuBitmap.x = -wildLucuBitmap.width / 2;
 			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
 			mWildLucu.addChild(wildLucuBitmap);
 			mWildLucu.x = 1024 - 10 - (mWildLucu.width / 2);

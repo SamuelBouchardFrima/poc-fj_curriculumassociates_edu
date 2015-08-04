@@ -18,6 +18,10 @@ package com.frimastudio.fj_curriculumassociates_edu
 		
 		[Embed(source = "../../../../art/POC/lucu/Persos.png")]
 		public static var LucuDuoBitmap:Class;
+		[Embed(source = "../../../../art/POC/lucu/Plory_New_Eyes.png")]
+		public static var PloryBitmap:Class;
+		[Embed(source = "../../../../art/POC/lucu/Yoop_New_Eyes.png")]
+		public static var YoopBitmap:Class;
 		
 		[Embed(source = "../../../../art/POC/wildlucu/WildLucu_Idle.png")]
 		public static var WildLucuIdleBitmap:Class;
@@ -43,6 +47,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var ChairPropBitmap:Class;
 		[Embed(source = "../../../../art/POC/prop/Rat.png")]
 		public static var RatPropBitmap:Class;
+		[Embed(source = "../../../../art/POC/prop/Fan.png")]
+		public static var FanPropBitmap:Class;
 		
 		[Embed(source = "../../../../art/TheFieldIsOnAHill.png")]
 		public static var TheFieldIsOnAHillBitmap:Class;
@@ -523,38 +529,103 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var NewHint_03:Class;
 		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/click_colored_box.mp3")]
 		private static var NewHint_04:Class;
-		public static var NewHintSound:Object = [null, NewHint_01, NewHint_02, NewHint_03, NewHint_04];
+		[Embed(source = "../../../../audio/POC Audio/Game Hints/make_words.mp3")]
+		private static var NewHint_05:Class;
+		[Embed(source = "../../../../audio/POC Audio/Game Hints/make_words_rhyme.mp3")]
+		private static var NewHint_06:Class;
+		[Embed(source = "../../../../audio/POC Audio/Game Hints/make_words_start_same.mp3")]
+		private static var NewHint_07:Class;
+		public static var NewHintSound:Object = [null, NewHint_01, NewHint_02, NewHint_03, NewHint_04, NewHint_05,
+			NewHint_06, NewHint_07];
 		
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/01_t_.mp3")]
-		private static var LetterSound_01_t_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/02-1_i_short.mp3")]
-		private static var LetterSound_02_1_i_short:Class;
-		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/02-2_i_long.mp3")]
-		//private static var LetterSound_02_2_i_long:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/03_p_.mp3")]
-		private static var LetterSound_03_p_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/04_r_.mp3")]
-		private static var LetterSound_04_r_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/05_n_.mp3")]
-		private static var LetterSound_05_n_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/06_d_.mp3")]
-		private static var LetterSound_06_d_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/07_m_.mp3")]
-		private static var LetterSound_07_m_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/08_f_.mp3")]
-		private static var LetterSound_08_f_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/09_s_.mp3")]
-		private static var LetterSound_09_s_:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/10-1_a_short.mp3")]
-		private static var LetterSound_10_1_a_short:Class;
-		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/10-2_a_long.mp3")]
-		private static var LetterSound_10_2_a_long:Class;
-		//public static var LetterAudioSound:Object = [null, LetterSound_01_t_, LetterSound_02_1_i_short, LetterSound_03_p_,
-			//LetterSound_04_r_, LetterSound_05_n_, LetterSound_06_d_, LetterSound_07_m_, LetterSound_08_f_, LetterSound_09_s_,
-			//LetterSound_10_1_a_short];
-		public static var LetterAudioSound:Object = { _t:LetterSound_01_t_, _i:LetterSound_02_1_i_short, _p:LetterSound_03_p_,
-			_r:LetterSound_04_r_, _n:LetterSound_05_n_, _d:LetterSound_06_d_, _m:LetterSound_07_m_, _f:LetterSound_08_f_,
-			_s:LetterSound_09_s_, _a:LetterSound_10_1_a_short };
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/01_t_.mp3")]
+		//private static var LetterSound_01_t_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/02-1_i_short.mp3")]
+		//private static var LetterSound_02_1_i_short:Class;
+		////[Embed(source = "../../../../audio/POC Audio/Letter Sounds/02-2_i_long.mp3")]
+		////private static var LetterSound_02_2_i_long:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/03_p_.mp3")]
+		//private static var LetterSound_03_p_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/04_r_.mp3")]
+		//private static var LetterSound_04_r_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/05_n_.mp3")]
+		//private static var LetterSound_05_n_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/06_d_.mp3")]
+		//private static var LetterSound_06_d_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/07_m_.mp3")]
+		//private static var LetterSound_07_m_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/08_f_.mp3")]
+		//private static var LetterSound_08_f_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/09_s_.mp3")]
+		//private static var LetterSound_09_s_:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/10-1_a_short.mp3")]
+		//private static var LetterSound_10_1_a_short:Class;
+		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/10-2_a_long.mp3")]
+		//private static var LetterSound_10_2_a_long:Class;
+		////public static var LetterAudioSound:Object = [null, LetterSound_01_t_, LetterSound_02_1_i_short, LetterSound_03_p_,
+			////LetterSound_04_r_, LetterSound_05_n_, LetterSound_06_d_, LetterSound_07_m_, LetterSound_08_f_, LetterSound_09_s_,
+			////LetterSound_10_1_a_short];
+		//public static var LetterAudioSound:Object = { _t:LetterSound_01_t_, _i:LetterSound_02_1_i_short, _p:LetterSound_03_p_,
+			//_r:LetterSound_04_r_, _n:LetterSound_05_n_, _d:LetterSound_06_d_, _m:LetterSound_07_m_, _f:LetterSound_08_f_,
+			//_s:LetterSound_09_s_, _a:LetterSound_10_1_a_short };
+		
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_a.mp3")]
+		private static var LetterSound_A:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_b.mp3")]
+		private static var LetterSound_B:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_c.mp3")]
+		private static var LetterSound_C:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_d.mp3")]
+		private static var LetterSound_D:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_e.mp3")]
+		private static var LetterSound_E:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_f.mp3")]
+		private static var LetterSound_F:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_g.mp3")]
+		private static var LetterSound_G:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_h.mp3")]
+		private static var LetterSound_H:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_i.mp3")]
+		private static var LetterSound_I:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_j.mp3")]
+		private static var LetterSound_J:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_k.mp3")]
+		private static var LetterSound_K:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_l.mp3")]
+		private static var LetterSound_L:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_m.mp3")]
+		private static var LetterSound_M:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_n.mp3")]
+		private static var LetterSound_N:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_o.mp3")]
+		private static var LetterSound_O:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_p.mp3")]
+		private static var LetterSound_P:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_q.mp3")]
+		private static var LetterSound_Q:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_r.mp3")]
+		private static var LetterSound_R:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_s.mp3")]
+		private static var LetterSound_S:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_t.mp3")]
+		private static var LetterSound_T:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_u.mp3")]
+		private static var LetterSound_U:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_v.mp3")]
+		private static var LetterSound_V:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_w.mp3")]
+		private static var LetterSound_W:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_x.mp3")]
+		private static var LetterSound_X:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_y.mp3")]
+		private static var LetterSound_Y:Class;
+		[Embed(source = "../../../../audio/POC Audio/Letter Sounds/letter_z.mp3")]
+		private static var LetterSound_Z:Class;
+		public static var LetterAudioSound:Object = { _a:LetterSound_A, _b:LetterSound_B, _c:LetterSound_C, _d:LetterSound_D,
+			_e:LetterSound_E, _f:LetterSound_F, _g:LetterSound_G, _h:LetterSound_H, _i:LetterSound_I, _j:LetterSound_J,
+			_k:LetterSound_K, _l:LetterSound_L, _m:LetterSound_M, _n:LetterSound_N, _o:LetterSound_O, _p:LetterSound_P,
+			_q:LetterSound_Q, _r:LetterSound_R, _s:LetterSound_S, _t:LetterSound_T, _u:LetterSound_U, _v:LetterSound_V,
+			_w:LetterSound_W, _x:LetterSound_X, _y:LetterSound_Y, _z:LetterSound_Z };
 		
 		[Embed(source = "../../../../audio/POC Audio/Other/choose_location.mp3")]
 		private static var Navigation_choose_location:Class;
@@ -680,14 +751,33 @@ package com.frimastudio.fj_curriculumassociates_edu
 		//private static var WordContent_31_2_a_ay:Class;
 		[Embed(source = "../../../../audio/POC Audio/Word_Content/31-3_a_uh.mp3")]
 		private static var WordContent_31_3_a_uh:Class;
-		public static var WordContentSound:Object = { _tip:WordContent_01_tip, _rip:WordContent_02_rip, _nip:WordContent_03_nip,
-			_dim:WordContent_04_dim, _fin:WordContent_05_fin, _sit:WordContent_06_sit, _pit:WordContent_07_pit,
-			_sip:WordContent_08_sip, _it:WordContent_09_it, _if:WordContent_10_if, _in:WordContent_11_in, _rid:WordContent_12_rid,
-			_to:WordContent_13_to, _did:WordContent_14_did, _look:WordContent_15_look, _at:WordContent_16_at,
-			_the:WordContent_17_the, _fat:WordContent_18_fat, _rat:WordContent_19_rat, _i:WordContent_20_i,
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/did.mp3")]
+		private static var WordContent_did:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/dip.mp3")]
+		private static var WordContent_dip:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/fan.mp3")]
+		private static var WordContent_fan:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/it.mp3")]
+		private static var WordContent_it:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/rat.mp3")]
+		private static var WordContent_rat:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/rip.mp3")]
+		private static var WordContent_rip:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/sip.mp3")]
+		private static var WordContent_sip:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/sit.mp3")]
+		private static var WordContent_sit:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/tip.mp3")]
+		private static var WordContent_tip:Class;
+		public static var WordContentSound:Object = { _tip:WordContent_tip, _rip:WordContent_rip, _nip:WordContent_03_nip,
+			_dim:WordContent_04_dim, _fin:WordContent_05_fin, _sit:WordContent_sit, _pit:WordContent_07_pit,
+			_sip:WordContent_sip, _it:WordContent_it, _if:WordContent_10_if, _in:WordContent_11_in, _rid:WordContent_12_rid,
+			_to:WordContent_13_to, _did:WordContent_did, _look:WordContent_15_look, _at:WordContent_16_at,
+			_the:WordContent_17_the, _fat:WordContent_18_fat, _rat:WordContent_rat, _i:WordContent_20_i,
 			_dont:WordContent_21_dont, _sing:WordContent_22_sing, _but:WordContent_23_but, _can:WordContent_24_can,
 			_rap:WordContent_25_rap, _fit:WordContent_26_fit, _mix:WordContent_27_mix, _up:WordContent_28_up,
-			_and:WordContent_29_and, _take:WordContent_30_take, _a:WordContent_31_3_a_uh };
+			_and:WordContent_29_and, _take:WordContent_30_take, _a:WordContent_31_3_a_uh,
+			_dip:WordContent_dip, _fan:WordContent_fan };
 		
 		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/02_its.mp3")]
 		private static var NewWord_02_its:Class;

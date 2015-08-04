@@ -43,9 +43,16 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 			var i:int, endi:int;
 			var j:int, endj:int;
 			var char:String;
+			//var needMoreWords:Boolean;
 			for (i = 0, endi = letterList.length; i < endi; ++i)
 			{
 				char = letterList.charAt(i);
+				if (char == "*")
+				{
+					wordSelection.push(wordList.splice(wordList.indexOf(Random.FromList(wordList)), 1));
+					handledLetterList += wordSelection[wordSelection.length - 1];
+				}
+				
 				if (handledLetterList.split(char).length < letterList.split(char).length)
 				{
 					indexList = new Vector.<int>();
@@ -61,8 +68,17 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 						wordSelection.push(wordList.splice(Random.FromList(indexList) as int, 1)[0]);
 						handledLetterList += wordSelection[wordSelection.length - 1];
 					}
+					else
+					{
+						//needMoreWords = true;
+						//wordSelection.push("_");
+					}
 				}
 			}
+			//if (needMoreWords)
+			//{
+				//wordSelection.unshift("+");
+			//}
 			return wordSelection;
 		}
 		

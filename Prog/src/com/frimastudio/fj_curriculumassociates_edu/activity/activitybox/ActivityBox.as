@@ -12,6 +12,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 	import com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling.WordUnscramblingTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
@@ -79,6 +80,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		
 		public function get StepTemplate():QuestStepTemplate	{ return mQuestStep; }
 		public function set StepTemplate(aValue:QuestStepTemplate):void	{ mQuestStep = aValue; }
+		
+		public function get SentenceVO():Class	{ return mSentenceVO; }
+		public function set SentenceVO(aValue:Class):void
+		{
+			mSentenceVO = aValue;
+			mMegaphoneBtn.BoxColor = (mSentenceVO ? Palette.GREAT_BTN : Palette.TOOL_BOX);
+		}
 		
 		public function get CurrentActivityCenter():Point
 		{
@@ -355,6 +363,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			}
 			
 			var expectedAmount:int = emptyWord.Answer.split(aChar).length - 1;
+			if (emptyWord.Answer.indexOf("*") > -1)
+			{
+				if (WordDictionary.Validate(emptyWord.Answer.split("*").join(aChar), 1))
+				{
+					++expectedAmount;
+				}
+			}
 			//var actualAmount:int = emptyWord.ChunkList.join("").split(aChar).length - 1;
 			var actualAmount:int = mActivityTray.AssembleWord().split(aChar).length - 1;
 			return actualAmount < expectedAmount;
@@ -407,10 +422,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			mMegaphoneBtn.x = 442;
 			//mMegaphoneBtn.y = -42;
 			mMegaphoneBtn.y = 0;
-			if (mSentenceVO)
-			{
-				mMegaphoneBtn.addEventListener(MouseEvent.CLICK, OnClickMegaphoneBtn);
-			}
+			mMegaphoneBtn.addEventListener(MouseEvent.CLICK, OnClickMegaphoneBtn);
 			addChild(mMegaphoneBtn);
 			
 			//mHintBtn = new CurvedBox(new Point(64, 64), Palette.TOOL_BOX,
@@ -1143,11 +1155,29 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		private function OnClickScrambledWordSubmitBtn(aEvent:MouseEvent):void
 		{
 			var scrambledWord:ScrambledWordTemplate = mWordTemplateList[mCurrentActivityIndex] as ScrambledWordTemplate;
-			if (mActivityTray.AssembleWord() == scrambledWord.Answer)
+			var answer:String = mActivityTray.AssembleWord();
+			var scrambledWordFusionTimer:Timer;
+			if (answer == scrambledWord.Answer)
 			{
-				var scrambledWordFusionTimer:Timer = new Timer(mActivityTray.BounceInSequence(), 1);
+				scrambledWordFusionTimer = new Timer(mActivityTray.BounceInSequence(), 1);
 				scrambledWordFusionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnScrambledWordFusionTimerComplete);
 				scrambledWordFusionTimer.start();
+			}
+			else if (WordDictionary.Validate(answer, 1))
+			{
+				var index:int = scrambledWord.Answer.indexOf("*");
+				var targetPart:String = scrambledWord.Answer.substring(0, index) + scrambledWord.Answer.substring(index + 1);
+				if ((index == 0 && answer.lastIndexOf(scrambledWord.Answer.substring(1)) == answer.length - targetPart.length) ||
+					(index == scrambledWord.Answer.length - 1 && answer.indexOf(targetPart) == 0))
+				{
+					scrambledWordFusionTimer = new Timer(mActivityTray.BounceInSequence(), 1);
+					scrambledWordFusionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnScrambledWordFusionTimerComplete);
+					scrambledWordFusionTimer.start();
+				}
+				else
+				{
+					mActivityTray.Fizzle();
+				}
 			}
 			else
 			{
@@ -1160,7 +1190,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnScrambledWordFusionTimerComplete);
 			
 			var scrambledWord:ScrambledWordTemplate = mWordTemplateList[mCurrentActivityIndex] as ScrambledWordTemplate;
-			scrambledWord.ChunkList = new <String>[scrambledWord.Answer];
+			//scrambledWord.ChunkList = new <String>[scrambledWord.Answer];
+			scrambledWord.ChunkList = new <String>[mActivityTray.AssembleWord()];
 			scrambledWord.ActivityToLaunch = ActivityType.NONE;
 			scrambledWord.ColorCode = ActivityType.NONE.ColorCode;
 			scrambledWord.ProgressDone = true;

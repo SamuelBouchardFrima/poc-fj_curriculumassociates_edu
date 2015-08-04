@@ -80,6 +80,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		private var mStoredCraftingTrayChunkList:Vector.<String>;
 		private var mCurrentLetterList:String;
 		private var mToolTrayBox:Box;
+		private var mShuffle:CurvedBox;
 		
 		public function WordCrafting(aTemplate:WordCraftingTemplate)
 		{
@@ -141,6 +142,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			InitializeMap();
 			InitializeWildLucu();
 			
+			mShuffle = new CurvedBox(new Point(64, 64), 0xFFFFFF, new BoxLabel("S", 48, Palette.DIALOG_CONTENT), 6);
+			mShuffle.x = mMap.x - (mMap.width / 2) - 15 - (mShuffle.width / 2);
+			mShuffle.y = 768 + 7.5 + (mShuffle.height / 2);
+			mShuffle.addEventListener(MouseEvent.CLICK, OnClickShuffle);
+			addChild(mShuffle);
+			TweenLite.to(mShuffle, 1.2, { ease:Elastic.easeOut, delay:0.2, y:(768 - 7.5 - (mShuffle.height / 2)) });
+			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Craft the missing word.", 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
@@ -164,8 +172,19 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			//craftingIcon.y = 643 - (craftingIcon.height / 2);
 			//addChild(craftingIcon);
 			
+			var needMoreWord:Boolean = false;
+			var wordSelection:Vector.<String> = Inventory.RequestWordSelection(mTemplate.Answer);
+			for (var i:int = wordSelection.length - 1, endi:int = 0; i >= endi; --i)
+			{
+				if (wordSelection[i] == "_")
+				{
+					needMoreWord = true;
+					wordSelection.splice(i, 1);
+				}
+			}
+			
 			//mToolTray = new PieceTray(false, mTemplate.WordList);
-			mToolTray = new PieceTray(false, Inventory.RequestWordSelection(mTemplate.Answer));
+			mToolTray = new PieceTray(false, wordSelection);
 			//mToolTray.x = 90;
 			mToolTray.x = playerPortrait.x + (playerPortrait.width / 2) + 15;
 			//mToolTray.y = 723;
@@ -175,6 +194,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			TweenLite.to(mToolTray, 1.2, { ease:Elastic.easeOut, delay:0.1, y:728 });
 			
 			// TODO:	if word selection is insufficient, ask the player to do a Wild Lucu Taming activity
+			if (needMoreWord)
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
 			
 			//mCraftingTray = new PieceTray(false);
 			//mCraftingTray.x = 90;
@@ -190,7 +213,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			//addChild(mSubmitBtn);
 			
 			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.RequestVO,
-				mTemplate.PhylacteryArrow, true, true, Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+				//mTemplate.PhylacteryArrow, true, true, Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+				mTemplate.PhylacteryArrow, true, true,
+				Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
 			mActivityBox.StepTemplate = mTemplate;
 			mActivityBox.UseActivityElement(mTemplate.ActivityWordList.indexOf(mTemplate.EmptyWord));
 			mActivityBox.x = 512;
@@ -232,9 +257,48 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			addEventListener(Event.ENTER_FRAME, OnEnterFrame);
 		}
 		
+		private function OnClickShuffle(aEvent:MouseEvent):void
+		{
+			var needMoreWord:Boolean = false;
+			var wordSelection:Vector.<String> = Inventory.RequestWordSelection(mTemplate.Answer);
+			for (var i:int = wordSelection.length - 1, endi:int = 0; i >= endi; --i)
+			{
+				if (wordSelection[i] == "_")
+				{
+					needMoreWord = true;
+					wordSelection.splice(i, 1);
+				}
+			}
+			
+			//mToolTray.Clear(Inventory.RequestWordSelection(mTemplate.Answer));
+			mToolTray.Clear(wordSelection);
+			
+			if (needMoreWord)
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
+		}
+		
 		override public function Refresh():void
 		{
-			mToolTray.Clear(Inventory.RequestWordSelection(mTemplate.Answer));
+			var needMoreWord:Boolean = false;
+			var wordSelection:Vector.<String> = Inventory.RequestWordSelection(mTemplate.Answer);
+			for (var i:int = wordSelection.length - 1, endi:int = 0; i >= endi; --i)
+			{
+				if (wordSelection[i] == "_")
+				{
+					needMoreWord = true;
+					wordSelection.splice(i, 1);
+				}
+			}
+			
+			//mToolTray.Clear(Inventory.RequestWordSelection(mTemplate.Answer));
+			mToolTray.Clear(wordSelection);
+			
+			if (needMoreWord)
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
 			
 			super.Refresh();
 		}
@@ -324,7 +388,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			SoundManager.PlayVO(Asset.GameHintSound[27]);
 			
 			TweenLite.to(mToolTrayBox, 0.3, { ease:Quad.easeIn, y:838 } );
-			TweenLite.to(mToolTray, 0.3, { ease:Quad.easeIn, delay:0.05, y:813 });
+			TweenLite.to(mToolTray, 0.3, { ease:Quad.easeIn, delay:0.05, y:813 } );
+			TweenLite.to(mShuffle, 0.3, { ease:Quad.easeIn, delay:0.05, y:(768 + 7.5 + (mShuffle.height / 2)) });
 		}
 		
 		private function OnLaunchActivity(aEvent:ActivityBoxEvent):void
@@ -341,6 +406,8 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		{
 			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
+			
+			mShuffle.removeEventListener(MouseEvent.CLICK, OnClickShuffle);
 			
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			
@@ -425,7 +492,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 		{
 			if (mCurrentLetterList.split(aChunk).length - 1 >= mTemplate.Answer.toLowerCase().split(aChunk).length - 1)
 			{
-				return false;
+				if (mTemplate.Answer.indexOf("*") == -1)
+				{
+					return false;
+				}
+				return WordDictionary.Validate(mTemplate.Answer.split("*").join(aChunk), 1);
 			}
 			return mActivityBox.IsCharacterRequired(aChunk);
 		}
@@ -1092,14 +1163,25 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			if (answer.length)
 			{
 				mAnswer = answer;
-				if (mAnswer == mTemplate.Answer)
+				var targetAnswer:String = mTemplate.Answer;
+				if (mAnswer == targetAnswer)
 				{
 					mResult = Result.GREAT;
 					mLearnedWordList[mAnswer] = mAnswer;
 				}
 				else if (WordDictionary.Validate(mAnswer, 1))
 				{
-					mResult = Result.VALID;
+					var index:int = targetAnswer.indexOf("*");
+					var targetPart:String = targetAnswer.substring(0, index) + targetAnswer.substring(index + 1);
+					if ((index == 0 && mAnswer.lastIndexOf(targetAnswer.substring(1)) == mAnswer.length - targetPart.length) ||
+						(index == targetAnswer.length - 1 && mAnswer.indexOf(targetPart) == 0))
+					{
+						mResult = Result.GREAT;
+					}
+					else
+					{
+						mResult = Result.VALID;
+					}
 					mLearnedWordList[mAnswer] = mAnswer;
 				}
 				else
@@ -1120,11 +1202,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				}
 				else
 				{
-					if (mResult == Result.GREAT)
+					//if (mResult == Result.GREAT)
+					if (Asset.WordContentSound["_" + mAnswer])
 					{
 						//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
 						//SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
-						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+						//SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
+						SoundManager.PlaySFX(Asset.WordContentSound["_" + mAnswer]);
 					}
 					
 					var bounceDuration:Number = mCraftingTray.BounceInSequence();

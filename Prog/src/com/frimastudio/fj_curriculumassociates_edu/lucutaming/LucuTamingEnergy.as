@@ -19,11 +19,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		public function get Charging():Boolean	{ return mCharging; }
 		public function set Charging(aValue:Boolean):void
 		{
-			if (mCharged)
-			{
-				trace("Warning: Trying to charge an already charged Lucu.");
-			}
-			else
+			if (!mCharged)
 			{
 				mCharging = aValue;
 				if (mCharging)
@@ -60,10 +56,6 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				mCharged = false;
 				
 				dispatchEvent(new LucuTamingEnergyEvent(LucuTamingEnergyEvent.DISCHARGED));
-			}
-			else
-			{
-				trace("Warning: Trying to discharge an uncharged Lucu.");
 			}
 		}
 		

@@ -1,10 +1,12 @@
 package com.frimastudio.fj_curriculumassociates_edu.level
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.ExplorableLevel;
 	import com.frimastudio.fj_curriculumassociates_edu.util.DisplayObjectUtil;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	public class Level extends Sprite
@@ -14,17 +16,22 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		
 		public static const NONE:Level = new Level(sI++, "NONE");
 		public static const THE_LAB:Level = new Level(sI++, "THE_LAB", Asset.TheLabBGBitmap,
-			new Point(89, 466), 0.47111, new Point(634, 505), 0.8, //new Point(409, 466), 0.47111,
+			//new Point(89, 466), 0.47111, new Point(634, 505), 0.8, //new Point(409, 466), 0.47111,
+			new Point(89, 466), 0.09422, new Point(634, 505), 0.8, //new Point(409, 466), 0.47111,
 			null, null, 1, Asset.ChairPropBitmap, new Point(256, 437), 0.55289);
 		public static const TOWN_SQUARE:Level = new Level(sI++, "TOWN_SQUARE", Asset.TownSquareBGBitmap,
-			new Point(149, 478), 0.4, new Point(864, 535), 0.5, //new Point(700, 498), 0.4,
+			//new Point(149, 478), 0.4, new Point(864, 535), 0.5, //new Point(700, 498), 0.4,
+			new Point(149, 478), 0.08, new Point(864, 535), 0.5, //new Point(700, 498), 0.4,
 			Asset.CopNPCBitmap, new Point(542, 487), 0.20667, Asset.RatPropBitmap, new Point(326, 467), 0.55556);
 		public static const GROCERY_STORE:Level = new Level(sI++, "GROCERY_STORE", Asset.GroceryStoreBGBitmap,
-			new Point(149, 466), 0.35333, new Point(335, 470), 0.53333, //new Point(640, 496), 0.45333,
-			Asset.ChefNPCBitmap, new Point(600, 370), 0.33333, Asset.RatPropBitmap, new Point(626, 467), 0.59259);
+			//new Point(149, 466), 0.35333, new Point(335, 470), 0.53333, //new Point(640, 496), 0.45333,
+			new Point(149, 466), 0.07067, new Point(335, 470), 0.53333, //new Point(640, 496), 0.45333,
+			Asset.ChefNPCBitmap, new Point(600, 370), 0.33333, Asset.FanPropBitmap, new Point(725, 420), 0.275);
 		public static const THEATER:Level = new Level(sI++, "THEATER", Asset.TheaterBGBitmap,
-			new Point(169, 431), 0.35333, new Point(844, 460), 0.6, //new Point(429, 431), 0.35333,
-			Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, Asset.RatPropBitmap, new Point(326, 467), 0.66667, true);
+			//new Point(169, 431), 0.35333, new Point(844, 460), 0.6, //new Point(429, 431), 0.35333,
+			new Point(169, 431), 0.07067, new Point(844, 460), 0.6, //new Point(429, 431), 0.35333,
+			//Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, Asset.RatPropBitmap, new Point(326, 467), 0.66667, true);
+			Asset.GlamStarNPCBitmap, new Point(532, 425), 0.43333, null, null, 1, true);
 		
 		private var mID:int;
 		private var mDescription:String;
@@ -42,6 +49,18 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 		//public function get WildLucu():Sprite	{ return mWildLucu; }
 		public function get NPC():Sprite	{ return mNPC; }
 		public function get Prop():Sprite	{ return mProp; }
+		
+		public function get ToExplorableLevel():ExplorableLevel
+		{
+			switch (this)
+			{
+				case Level.THE_LAB:			return ExplorableLevel.THE_LAB;
+				case Level.TOWN_SQUARE:		return ExplorableLevel.TOWN_SQUARE;
+				case Level.GROCERY_STORE:	return ExplorableLevel.GROCERY_STORE;
+				case Level.THEATER:			return ExplorableLevel.THEATER;
+				default:					return ExplorableLevel.NONE;
+			}
+		}
 		
 		public function Level(aID:int, aDescription:String, aBackgroundAsset:Class = null,
 			aLucuPosition:Point = null, aLucuScale:Number = 1, aMiniPosition:Point = null, aMiniScale:Number = 1,
@@ -82,7 +101,7 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 			{
 				mLucu = new Sprite();
 				DisplayObjectUtil.SetPosition(mLucu, aLucuPosition);
-				var lucuBitmap:Bitmap = new Asset.LucuDuoBitmap() as Bitmap;
+				var lucuBitmap:Bitmap = new Asset.PloryBitmap() as Bitmap;
 				lucuBitmap.smoothing = true;
 				lucuBitmap.x = -lucuBitmap.width / 2;
 				lucuBitmap.y = -lucuBitmap.height / 2;
@@ -150,12 +169,22 @@ package com.frimastudio.fj_curriculumassociates_edu.level
 					mProp.addChild(propBitmap);
 					mProp.scaleX = mProp.scaleY = aPropScale;
 					addChild(mProp);
+					
+					if (this != THE_LAB && this != NONE)
+					{
+						mProp.addEventListener(MouseEvent.CLICK, OnClickProp);
+					}
 				}
 				else
 				{
 					throw new Error("A position is required if the level has a prop.");
 				}
 			}
+		}
+		
+		private function OnClickProp(aEvent:MouseEvent):void
+		{
+			ToExplorableLevel.ActivateLevelProp();
 		}
 		
 		public function Reset():void

@@ -14,7 +14,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 		public function get VO():Class	{ return mVO; }
 		public function get UnlockedLevel():ExplorableLevel	{ return mUnlockedLevel; }
 		
-		public function LocationUnlockedTemplate(aLevel:Level, aTitle:String, aVO:Class, aUnlockedLevel:ExplorableLevel)
+		public function LocationUnlockedTemplate(aLevel:Level, aTitle:String, aVO:Class,
+			aUnlockedLevel:ExplorableLevel = null)
 		{
 			super(aLevel);
 			
@@ -22,7 +23,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.locationunlocked
 			
 			mTitle = aTitle;
 			mVO = aVO;
-			mUnlockedLevel = aUnlockedLevel;
+			mUnlockedLevel = (aUnlockedLevel ? aUnlockedLevel : ExplorableLevel.NONE);
 		}
 	}
 }

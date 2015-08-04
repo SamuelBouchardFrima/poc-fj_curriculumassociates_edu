@@ -50,6 +50,11 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 			}
 		}
 		
+		public function SkipStep():void
+		{
+			mStep.Skip();
+		}
+		
 		private function NextStep():void
 		{
 			if (mStep)

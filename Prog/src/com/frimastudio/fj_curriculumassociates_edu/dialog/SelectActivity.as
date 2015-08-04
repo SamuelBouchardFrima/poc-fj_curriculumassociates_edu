@@ -87,6 +87,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mActivityBox.addEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			
 			// TODO:	play "Click a colored box." VO
+			SoundManager.PlayVO(Asset.NewHintSound[4]);
 			
 			addChild(mActivityBox);
 		}
@@ -134,6 +135,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			else
 			{
 				// TODO:	play "Click a colored box." VO
+				SoundManager.PlayVO(Asset.NewHintSound[4]);
 			}
 		}
 		

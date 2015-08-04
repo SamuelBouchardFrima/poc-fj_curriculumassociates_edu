@@ -12,6 +12,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.UseItemTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.UseLevelPropTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.ExplorableLevel;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.navigation.NavigationTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.reward.RewardTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.reward.RewardType;
@@ -33,7 +34,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new KnownWordTemplate("I"), new EmptyWordTemplate("did"), new KnownWordTemplate("it!")]));
 			mStepList.push(new SelectActivityTemplate(Level.THEATER, Asset.WordContentSound["_it"],
 				new <WordTemplate>[new KnownWordTemplate("Look"), new KnownWordTemplate("at"), new KnownWordTemplate("you."),
-				new KnownWordTemplate("You"), new EmptyWordTemplate("did"), new EmptyWordTemplate("it"),
+				new KnownWordTemplate("You"), new KnownWordTemplate("did"), new EmptyWordTemplate("it"),
 				new KnownWordTemplate("too!")]));
 			mStepList.push(new SentenceUnscramblingTemplate(Level.THEATER, new <String>["for", "it!", "Go"],
 				"Go for it!", "", Asset.QuestFlowSound[25],
@@ -48,6 +49,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new WordTemplate(new <String>["I do it"], "", ActivityType.SENTENCE_UNSCRAMBLING, -1, false, "i_do_it")]));
 			mStepList.push(new DialogTemplate(Level.THEATER, new <String>["All right! I am a fan, man"],
 				new <Class>[Asset.QuestFlowSound[27]]));
+			mStepList.push(new ProgressLocationQuestTemplate(Level.THEATER, ExplorableLevel.THE_LAB));
 			
 			super();
 		}

@@ -19,6 +19,11 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 		
 		public static function Unlock(aLevel:ExplorableLevel):void
 		{
+			if (aLevel == ExplorableLevel.NONE)
+			{
+				return;
+			}
+			
 			if (sUnlockedLevelList.indexOf(aLevel) == -1)
 			{
 				sUnlockedLevelList.push(aLevel);

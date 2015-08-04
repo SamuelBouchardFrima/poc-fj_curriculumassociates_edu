@@ -25,6 +25,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	import com.frimastudio.fj_curriculumassociates_edu.util.MathUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.MouseUtil;
 	import com.frimastudio.fj_curriculumassociates_edu.util.Random;
+	import com.frimastudio.fj_curriculumassociates_edu.util.StringType;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Strong;
@@ -47,10 +48,13 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	
 	public class LucuTaming extends Activity
 	{
-		private static const TARGET_WORD_LIST:Vector.<String> = new <String>["tip", "rip", "nip", "dim", "fin", "sit", "pit", "sip", "rid", "did", "fit"];
+		private static const TARGET_WORD_LIST:Vector.<String> = new <String>["tip", "rip", "nip", "dim", "fin", "sit", "pit", "sip",
+			"rid", "did", "fit", "its", "pip", "mid", "nit", "sin", "din", "tin", "rim", "tim", "sid", "dip", "id", "it", "in"];
 		private static const TARGET_RHYME_LIST:Vector.<String> = new <String>["ip", "im", "in", "it", "id"];
 		//private static const TARGET_ALLITERATION_LIST:Vector.<String> = new <String>["ti", "ri", "ni", "di", "fi", "si", "pi"];
-		private static const TARGET_ALLITERATION_LIST:Vector.<String> = new <String>["ri", "ni", "di", "fi", "si", "pi"];
+		private static const TARGET_ALLITERATION_LIST:Vector.<String> = new <String>["ri", "di", "si", "pi", "ti"];
+		private static const EXAMPLE_PER_ALLITERATION:Object = { _ri:["rim", "rip", "rid"], _di:["did", "dim", "dip", "din"],
+			_si:["sit", "sip", "sin"], _pi:["pit", "pin", "pip"], _ti:["tin", "tim", "tip"] };
 		
 		private var mTemplate:LucuTamingTemplate;
 		private var mToolTrayBox:Box;
@@ -117,6 +121,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			mMouthPosition = new Point(512 - 10, 384 - 5);
 			
 			var instruction:String = "";
+			//var sound:Class;
 			switch (mStringType)
 			{
 				case StringType.WORD:
@@ -134,16 +139,22 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 							}
 						}
 					}
-					instruction = "Craft the requested words as fast as you can.";
+					//instruction = "Craft the requested words as fast as you can.";
+					instruction = "Make words.";
+					SoundManager.PlayVO(Asset.NewHintSound[5]);
 					break;
 				case StringType.RHYME:
 					//mTargetRhyme = Random.FromList(TARGET_RHYME_LIST);
 					mTargetRhyme = Random.FromList(Inventory.SelectedLetterPatternCardList);
-					instruction = "Craft words that rhyme with \"" + mTargetRhyme + "\" as fast as you can.";
+					//instruction = "Craft words that rhyme with \"" + mTargetRhyme + "\" as fast as you can.";
+					instruction = "Make words that rhyme.";
+					SoundManager.PlayVO(Asset.NewHintSound[6]);
 					break;
 				case StringType.ALLITERATION:
 					mTargetAlliteration = Random.FromList(TARGET_ALLITERATION_LIST);
-					instruction = "Craft words that start like \"" + mTargetAlliteration + "\" as fast as you can.";
+					//instruction = "Craft words that start like \"" + mTargetAlliteration + "\" as fast as you can.";
+					instruction = "Make words that start the same.";
+					SoundManager.PlayVO(Asset.NewHintSound[7]);
 					break;
 				default:
 					throw new Error("StringType " + mStringType.Description + " unhandled.");
@@ -162,11 +173,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			InitializeMap();
 			
 			mWildLucu = new Sprite();
-			SetWildLucu(Asset.WildLucuIdleBitmap);
+			SetWildLucu(Asset.YoopBitmap);
 			mWildLucu.x = 1024 - 10 - (mWildLucu.width / 2);
 			mWildLucu.y = mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2);
 			addChild(mWildLucu);
-			TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, x:512, y:(384 - 5), onComplete:OnTweenMoveLucuUp });
+			TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, onComplete:OnTweenMoveLucuUp, x:512, y:(384 - 5) });
 			
 			mActivityBox = new ActivityBox(new Vector.<WordTemplate>(), new Vector.<int>(), null, Direction.DOWN);
 			mActivityBox.x = 512;
@@ -365,9 +376,8 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			
 			var wildLucuBitmap:Bitmap = new aWildLucuAsset() as Bitmap;
 			wildLucuBitmap.smoothing = true;
-			wildLucuBitmap.scaleX = -0.5;
-			wildLucuBitmap.scaleY = 0.5;
-			wildLucuBitmap.x = wildLucuBitmap.width / 2;
+			wildLucuBitmap.scaleX = wildLucuBitmap.scaleY = 0.2;
+			wildLucuBitmap.x = -wildLucuBitmap.width / 2;
 			wildLucuBitmap.y = -wildLucuBitmap.height / 2;
 			mWildLucu.addChild(wildLucuBitmap);
 		}
@@ -474,8 +484,9 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				bubble.y = -bubble.height / 2;
 				mDraggedPiece.addChild(bubble);
 				
-				mDraggedPiece.StartDecay(30000);
 				mDraggedPiece.addEventListener(MouseEvent.CLICK, OnClickFloatPiece);
+				mDraggedPiece.addEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
+				mDraggedPiece.StartDecay(30000);
 				
 				mDraggedPiece.Position = MathUtil.MinMaxPoint(mDraggedPiece.Position, mFloatPieceArea);
 				mFloatPieceList.push(mDraggedPiece);
@@ -578,16 +589,91 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 							}
 							mTargetWord = Random.FromList(mTargetWordList);
 							mTargetWordList.splice(mTargetWordList.indexOf(mTargetWord), 1);
-							SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetWord]);
+							if (Asset.LetterAudioSound["_" + mTargetWord])
+							{
+								mActivityBox.SentenceVO = Asset.LetterAudioSound["_" + mTargetWord];
+								SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetWord]);
+							}
+							else if (Asset.NewChunkSound["_" + mTargetWord])
+							{
+								mActivityBox.SentenceVO = Asset.NewChunkSound["_" + mTargetWord];
+								SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetWord]);
+							}
+							else if (Asset.NewWordSound["_" + mTargetWord])
+							{
+								mActivityBox.SentenceVO = Asset.NewWordSound["_" + mTargetWord];
+								SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetWord]);
+							}
+							else if (Asset.WordContentSound["_" + mTargetWord])
+							{
+								mActivityBox.SentenceVO = Asset.WordContentSound["_" + mTargetWord];
+								SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetWord]);
+							}
 							mEarTargetWordTimer.reset();
 							mEarTargetWordTimer.start();
 						}
 						break;
 					case StringType.RHYME:
 						valid = (mSubmission.lastIndexOf(mTargetRhyme) == mSubmission.length - mTargetRhyme.length);
+						//SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetRhyme]);
+						if (valid)
+						{
+							if (Asset.LetterAudioSound["_" + mTargetRhyme])
+							{
+								SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetRhyme]);
+							}
+							else if (Asset.NewChunkSound["_" + mTargetRhyme])
+							{
+								SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetRhyme]);
+							}
+							else if (Asset.NewWordSound["_" + mTargetRhyme])
+							{
+								SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetRhyme]);
+							}
+							else if (Asset.WordContentSound["_" + mTargetRhyme])
+							{
+								SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetRhyme]);
+							}
+							mEarTargetWordTimer.reset();
+							mEarTargetWordTimer.start();
+						}
 						break;
 					case StringType.ALLITERATION:
 						valid = (mSubmission.indexOf(mTargetAlliteration) == 0);
+						//SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetAlliteration]);
+						if (valid)
+						{
+							if (Asset.LetterAudioSound["_" + mTargetAlliteration])
+							{
+								SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetAlliteration]);
+							}
+							else if (Asset.NewChunkSound["_" + mTargetAlliteration])
+							{
+								SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetAlliteration]);
+							}
+							else if (Asset.NewWordSound["_" + mTargetAlliteration])
+							{
+								SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetAlliteration]);
+							}
+							else if (Asset.WordContentSound["_" + mTargetAlliteration])
+							{
+								SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetAlliteration]);
+							}
+							else
+							{
+								var example:String = Random.FromList(EXAMPLE_PER_ALLITERATION["_" + mTargetAlliteration]);
+								if (Asset.NewWordSound["_" + example])
+								{
+									SoundManager.PlaySFX(Asset.NewWordSound["_" + example]);
+								}
+								else if (Asset.WordContentSound["_" + example])
+								{
+									SoundManager.PlaySFX(Asset.WordContentSound["_" + example]);
+								}
+							}
+							mEarTargetWordTimer.reset();
+							mEarTargetWordTimer.start();
+						}
 						break;
 					default:
 						throw new Error("StringType " + mStringType.Description + " unhandled.");
@@ -649,12 +735,12 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		
 		private function OnTweenMoveLucuUp():void
 		{
-			TweenLite.to(mWildLucu, 2, {ease: Quad.easeInOut, x: 512, y: (384 + 5), onComplete: OnTweenMoveLucuDown});
+			TweenLite.to(mWildLucu, 2, { ease:Quad.easeInOut, onComplete:OnTweenMoveLucuDown, x:512, y:(384 + 5) });
 		}
 		
 		private function OnTweenMoveLucuDown():void
 		{
-			TweenLite.to(mWildLucu, 2, {ease: Quad.easeInOut, x: 512, y: (384 - 5), onComplete: OnTweenMoveLucuUp});
+			TweenLite.to(mWildLucu, 2, { ease:Quad.easeInOut, onComplete:OnTweenMoveLucuUp, x:512, y:(384 - 5) });
 		}
 		
 		private function OnEarTargetWordTimer(aEvent:TimerEvent):void
@@ -698,7 +784,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnOpenMouthTimerComplete);
 			
-			SetWildLucu(Asset.WildLucuOpenBitmap);
+			//SetWildLucu(Asset.WildLucuOpenBitmap);
 		}
 		
 		private function OnTweenSendCard(aCard:CurvedBox):void
@@ -722,41 +808,83 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 					mTargetWord = Random.FromList(mTargetWordList);
 					mTargetWordList.splice(mTargetWordList.indexOf(mTargetWord), 1);
 					SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetWord]);
+					if (Asset.LetterAudioSound["_" + mTargetWord])
+					{
+						mActivityBox.SentenceVO = Asset.LetterAudioSound["_" + mTargetWord];
+						SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetWord]);
+					}
+					else if (Asset.NewChunkSound["_" + mTargetWord])
+					{
+						mActivityBox.SentenceVO = Asset.NewChunkSound["_" + mTargetWord];
+						SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetWord]);
+					}
+					else if (Asset.NewWordSound["_" + mTargetWord])
+					{
+						mActivityBox.SentenceVO = Asset.NewWordSound["_" + mTargetWord];
+						SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetWord]);
+					}
+					else if (Asset.WordContentSound["_" + mTargetWord])
+					{
+						mActivityBox.SentenceVO = Asset.WordContentSound["_" + mTargetWord];
+						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetWord]);
+					}
 					break;
 				case StringType.RHYME:
 					if (Asset.LetterAudioSound["_" + mTargetRhyme])
 					{
+						mActivityBox.SentenceVO = Asset.LetterAudioSound["_" + mTargetRhyme];
 						SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetRhyme]);
 					}
 					else if (Asset.NewChunkSound["_" + mTargetRhyme])
 					{
+						mActivityBox.SentenceVO = Asset.NewChunkSound["_" + mTargetRhyme];
 						SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetRhyme]);
 					}
 					else if (Asset.NewWordSound["_" + mTargetRhyme])
 					{
+						mActivityBox.SentenceVO = Asset.NewWordSound["_" + mTargetRhyme];
 						SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetRhyme]);
 					}
 					else if (Asset.WordContentSound["_" + mTargetRhyme])
 					{
+						mActivityBox.SentenceVO = Asset.WordContentSound["_" + mTargetRhyme];
 						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetRhyme]);
 					}
 					break;
 				case StringType.ALLITERATION:
 					if (Asset.LetterAudioSound["_" + mTargetAlliteration])
 					{
+						mActivityBox.SentenceVO = Asset.LetterAudioSound["_" + mTargetAlliteration];
 						SoundManager.PlaySFX(Asset.LetterAudioSound["_" + mTargetAlliteration]);
 					}
 					else if (Asset.NewChunkSound["_" + mTargetAlliteration])
 					{
+						mActivityBox.SentenceVO = Asset.NewChunkSound["_" + mTargetAlliteration];
 						SoundManager.PlaySFX(Asset.NewChunkSound["_" + mTargetAlliteration]);
 					}
 					else if (Asset.NewWordSound["_" + mTargetAlliteration])
 					{
+						mActivityBox.SentenceVO = Asset.NewWordSound["_" + mTargetAlliteration];
 						SoundManager.PlaySFX(Asset.NewWordSound["_" + mTargetAlliteration]);
 					}
 					else if (Asset.WordContentSound["_" + mTargetAlliteration])
 					{
+						mActivityBox.SentenceVO = Asset.WordContentSound["_" + mTargetAlliteration];
 						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTargetAlliteration]);
+					}
+					else
+					{
+						var example:String = Random.FromList(EXAMPLE_PER_ALLITERATION["_" + mTargetAlliteration]);
+						if (Asset.NewWordSound["_" + example])
+						{
+							mActivityBox.SentenceVO = Asset.NewWordSound["_" + example];
+							SoundManager.PlaySFX(Asset.NewWordSound["_" + example]);
+						}
+						else if (Asset.WordContentSound["_" + example])
+						{
+							mActivityBox.SentenceVO = Asset.WordContentSound["_" + example];
+							SoundManager.PlaySFX(Asset.WordContentSound["_" + example]);
+						}
 					}
 					break;
 				default:
@@ -774,11 +902,17 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		{
 			var soundLength:Number = SoundManager.PlaySFX(Asset.BurpSound);
 			
-			SetWildLucu(Asset.WildLucuBurpBitmap);
+			//SetWildLucu(Asset.WildLucuBurpBitmap);
 			
 			var closeMouthTimer:Timer = new Timer(soundLength, 1);
 			closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
 			closeMouthTimer.start();
+			
+			//if (mBurpTimer.currentCount == 1)
+			//{
+				//mDialogBox.Label = "Craft new words.";
+				//SoundManager.PlayVO(Asset.NewHintSound[3]);
+			//}
 			
 			var label:String;
 			var piece:Piece;
@@ -823,7 +957,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		{
 			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
 			
-			SetWildLucu(Asset.WildLucuIdleBitmap);
+			//SetWildLucu(Asset.WildLucuIdleBitmap);
 		}
 		
 		private function OnClickFloatPiece(aEvent:MouseEvent):void
@@ -870,7 +1004,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
 			}
 		}
 		
@@ -923,7 +1057,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
 			}
 		}
 		

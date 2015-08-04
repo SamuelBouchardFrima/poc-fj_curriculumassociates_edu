@@ -31,13 +31,14 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mStepList.push(new DialogTemplate(Level.GROCERY_STORE,
 				new <String>["Ah, I love a contest. Did you see me win on Chop Chef?", "But you need some words that begin like dim."],
 				new <Class>[Asset.QuestFlowSound[16], Asset.QuestFlowSound[17]]));
-			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_dip"],
-				new <WordTemplate>[new EmptyWordTemplate("dip")]));
-			mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Tasty! But you need a bit more . . . words!"],
-				new <Class>[Asset.QuestFlowSound[22]]));
-			mStepList.push(new UseLevelPropTemplate(Level.GROCERY_STORE));
-			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_fan"],
-				new <WordTemplate>[new ScrambledWordTemplate("fan", "nfa")]));
+			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, null/*Asset.WordContentSound["_dip"]*/,
+			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_dim"],
+				new <WordTemplate>[new EmptyWordTemplate("di*")]));
+			//mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Tasty! But you need a bit more . . . words!"],
+				//new <Class>[Asset.QuestFlowSound[22]]));
+			//mStepList.push(new UseLevelPropTemplate(Level.GROCERY_STORE, "Tap the fan."));
+			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_fan"],
+				//new <WordTemplate>[new ScrambledWordTemplate("fan", "nfa")]));
 			mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Delicious! Now go to the theater and write that song."],
 				new <Class>[Asset.QuestFlowSound[23]]));
 			mStepList.push(new LocationUnlockedTemplate(Level.GROCERY_STORE, "Theater Unlocked!", Asset.RewardSound[9],

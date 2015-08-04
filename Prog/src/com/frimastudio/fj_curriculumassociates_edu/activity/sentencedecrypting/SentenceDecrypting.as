@@ -158,8 +158,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 					}
 				}
 			}
+			
+			var needMoreWord:Boolean = false;
+			var wordSelection:Vector.<String> = Inventory.RequestWordSelection(letterList);
+			for (i = wordSelection.length - 1, endi = 0; i >= endi; --i)
+			{
+				if (wordSelection[i] == "_")
+				{
+					needMoreWord = true;
+					wordSelection.splice(i, 1);
+				}
+			}
+			
 			//mToolTray = new PieceTray(false, mTemplate.WordList);
-			mToolTray = new PieceTray(false, Inventory.RequestWordSelection(letterList));
+			mToolTray = new PieceTray(false, wordSelection);
 			//mToolTray.x = 90;
 			mToolTray.x = playerPortrait.x + (playerPortrait.width / 2) + 15;
 			//mToolTray.y = 723;
@@ -169,6 +181,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting
 			TweenLite.to(mToolTray, 1.2, { ease:Elastic.easeOut, delay:0.1, y:728 });
 			
 			// TODO:	if word selection is insufficient, ask the player to do a Wild Lucu Taming activity
+			if (needMoreWord)
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
 			
 			//mAnswer = mTemplate.Request;
 			mAnswer = "";
