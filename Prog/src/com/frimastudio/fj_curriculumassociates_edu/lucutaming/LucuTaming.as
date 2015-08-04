@@ -49,7 +49,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	public class LucuTaming extends Activity
 	{
 		private static const TARGET_WORD_LIST:Vector.<String> = new <String>["tip", "rip", "nip", "dim", "fin", "sit", "pit", "sip",
-			"rid", "did", "fit", "its", "pip", "mid", "nit", "sin", "din", "tin", "rim", "tim", "sid", "dip", "id", "it", "in"];
+			"rid", "did", "fit", "its", "pip", "mid", "nit", "sin", "din", "tin", "rim", "tim", "sid", "dip", "it", "in"];
 		private static const TARGET_RHYME_LIST:Vector.<String> = new <String>["ip", "im", "in", "it", "id"];
 		//private static const TARGET_ALLITERATION_LIST:Vector.<String> = new <String>["ti", "ri", "ni", "di", "fi", "si", "pi"];
 		private static const TARGET_ALLITERATION_LIST:Vector.<String> = new <String>["ri", "di", "si", "pi", "ti"];
