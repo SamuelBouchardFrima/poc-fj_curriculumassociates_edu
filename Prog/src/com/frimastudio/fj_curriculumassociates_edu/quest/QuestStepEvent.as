@@ -11,6 +11,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		public static const LEAVE:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent::LEAVE";
 		public static const COMPLETE:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent::COMPLETE";
 		public static const OPEN_MAP:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent::OPEN_MAP";
+		public static const RESET_POC:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent::RESET_POC";
 		
 		private var mActivityToLaunch:ActivityTemplate;
 		private var mWordList:Vector.<WordTemplate>;

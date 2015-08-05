@@ -49,8 +49,11 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 				char = letterList.charAt(i);
 				if (char == "*")
 				{
-					wordSelection.push(wordList.splice(wordList.indexOf(Random.FromList(wordList)), 1));
-					handledLetterList += wordSelection[wordSelection.length - 1];
+					if (wordList.length)
+					{
+						wordSelection.push(wordList.splice(wordList.indexOf(Random.FromList(wordList)), 1));
+						handledLetterList += wordSelection[wordSelection.length - 1];
+					}
 				}
 				
 				if (handledLetterList.split(char).length < letterList.split(char).length)

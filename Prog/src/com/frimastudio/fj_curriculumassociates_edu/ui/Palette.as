@@ -2,6 +2,8 @@ package com.frimastudio.fj_curriculumassociates_edu.ui
 {
 	public class Palette
 	{
+		public static const NONE:int = -1;
+		
 		public static const GENERIC_BTN:int = 0x000000;
 		public static const GREAT_BTN:int = 0x00CCCC;
 		public static const VALID_BTN:int = 0xFFCC66;

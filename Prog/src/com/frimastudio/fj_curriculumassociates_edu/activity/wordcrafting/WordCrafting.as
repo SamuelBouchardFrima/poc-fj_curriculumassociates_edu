@@ -142,7 +142,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			InitializeMap();
 			InitializeWildLucu();
 			
-			mShuffle = new CurvedBox(new Point(64, 64), 0xFFFFFF, new BoxLabel("S", 48, Palette.DIALOG_CONTENT), 6);
+			//mShuffle = new CurvedBox(new Point(64, 64), 0xFFFFFF, new BoxLabel("S", 48, Palette.DIALOG_CONTENT), 6);
+			mShuffle = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
+				new BoxIcon(Asset.IconShuffleBitmap, Palette.BTN_CONTENT), 6);
 			mShuffle.x = mMap.x - (mMap.width / 2) - 15 - (mShuffle.width / 2);
 			mShuffle.y = 768 + 7.5 + (mShuffle.height / 2);
 			mShuffle.addEventListener(MouseEvent.CLICK, OnClickShuffle);
@@ -496,7 +498,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				{
 					return false;
 				}
-				return WordDictionary.Validate(mTemplate.Answer.split("*").join(aChunk), 1);
+				if (!WordDictionary.Validate(mTemplate.Answer.split("*").join(aChunk), 1))
+				{
+					return false;
+				}
+				// TODO:	check if a character already takes the * place
 			}
 			return mActivityBox.IsCharacterRequired(aChunk);
 		}

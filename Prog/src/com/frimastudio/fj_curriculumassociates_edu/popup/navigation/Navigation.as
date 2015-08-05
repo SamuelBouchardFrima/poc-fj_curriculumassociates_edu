@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -61,7 +62,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 				//location = new CurvedBox(new Point(200, 200), (mTemplate.LocationUnlockList[i] ? 0xCCFF99 : 0xCCCCCC),
 				location = new CurvedBox(new Point(200, 200), 0xCCFF99,
 					//new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 6, null, null);
-					new BoxLabel(NavigationManager.UnlockedLevelList[i].Name, 30, Palette.DIALOG_CONTENT), 6);
+					//new BoxLabel(NavigationManager.UnlockedLevelList[i].Name, 30, Palette.DIALOG_CONTENT), 6);
+					new BoxIcon(NavigationManager.UnlockedLevelList[i].NavigationAsset));
 				offset += location.width / 2;
 				location.x = offset;
 				location.y = 0;
@@ -105,7 +107,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 					//location = new CurvedBox(new Point(200, 200), (mTemplate.LocationUnlockList[i] ? 0xCCFF99 : 0xCCCCCC),
 					location = new CurvedBox(new Point(200, 200), 0xCCFF99,
 						//new BoxLabel(mTemplate.LocationList[i], 30, Palette.DIALOG_CONTENT), 6, null, null);
-						new BoxLabel(NavigationManager.UnlockedLevelList[i].Name, 30, Palette.DIALOG_CONTENT), 6);
+						//new BoxLabel(NavigationManager.UnlockedLevelList[i].Name, 30, Palette.DIALOG_CONTENT), 6);
+						new BoxIcon(NavigationManager.UnlockedLevelList[i].NavigationAsset));
 					offset += location.width / 2;
 					location.x = offset;
 					location.y = 0;

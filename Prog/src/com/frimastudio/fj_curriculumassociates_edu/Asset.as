@@ -76,6 +76,19 @@ package com.frimastudio.fj_curriculumassociates_edu
 		public static var IconWrongBitmap:Class;
 		[Embed(source = "../../../../art/POC/IconEar.png")]
 		public static var IconEarBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconShuffle.png")]
+		public static var IconShuffleBitmap:Class;
+		[Embed(source = "../../../../art/POC/IconMap.png")]
+		public static var IconMapBitmap:Class;
+		
+		[Embed(source = "../../../../art/POC/navigation/TheLab.png")]
+		public static var NavigationTheLab:Class;
+		[Embed(source = "../../../../art/POC/navigation/TownSquare.png")]
+		public static var NavigationTownSquare:Class;
+		[Embed(source = "../../../../art/POC/navigation/GroceryStore.png")]
+		public static var NavigationGroceryStore:Class;
+		[Embed(source = "../../../../art/POC/navigation/Theater.png")]
+		public static var NavigationTheater:Class;
 		
 		[Embed(source = "../../../../art/POC/Bubble.png")]
 		public static var BubbleBitmap:Class;
@@ -462,7 +475,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/good_words.mp3")]
 		private static var QuestFlow_03:Class;
 		//[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/we_more_words.mp3")]
-		//private static var QuestFlow_04:Class;
+		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/we_more_words_44k.mp3")]
+		private static var QuestFlow_04:Class;
 		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/sit_on_chair.mp3")]
 		private static var QuestFlow_05:Class;
 		[Embed(source = "../../../../audio/POC Audio/QuestFlow/TheLab/great_job.mp3")]
@@ -516,7 +530,7 @@ package com.frimastudio.fj_curriculumassociates_edu
 		[Embed(source = "../../../../audio/POC Audio/QuestFlow/Theater/next_lesson.mp3")]
 		private static var QuestFlow_30:Class;
 		public static var QuestFlowSound:Object = [null,
-			QuestFlow_01, QuestFlow_02, QuestFlow_03, null, QuestFlow_05, QuestFlow_06, QuestFlow_07,
+			QuestFlow_01, QuestFlow_02, QuestFlow_03, QuestFlow_04, QuestFlow_05, QuestFlow_06, QuestFlow_07,
 			QuestFlow_08, QuestFlow_09, QuestFlow_10, QuestFlow_11, QuestFlow_12, QuestFlow_13, QuestFlow_14, QuestFlow_15,
 			QuestFlow_16, QuestFlow_17, QuestFlow_18, QuestFlow_19, QuestFlow_20, QuestFlow_21, QuestFlow_22, QuestFlow_23,
 			QuestFlow_24, QuestFlow_25, QuestFlow_26, QuestFlow_27, QuestFlow_28, QuestFlow_29, QuestFlow_30];

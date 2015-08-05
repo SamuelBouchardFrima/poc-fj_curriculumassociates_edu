@@ -1,5 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.navigation
 {
+	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.poc_game.FanQuest;
 	import com.frimastudio.fj_curriculumassociates_edu.poc_game.GroceryStoreQuest;
@@ -19,15 +21,37 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 		private static var sI:int = 0;
 		private static var sInitialized:Boolean = false;
 		
-		public static const NONE:ExplorableLevel = new ExplorableLevel(sI++, "NONE");
-		public static const THE_LAB:ExplorableLevel = new ExplorableLevel(sI++, "THE_LAB", "The Lab", new <Class>[TheLabQuest, TheLabQuest2], 1);
-		public static const TOWN_SQUARE:ExplorableLevel = new ExplorableLevel(sI++, "TOWN_SQUARE", "Town Square", new <Class>[TownSquareQuest], 2, RatQuest);
-		public static const GROCERY_STORE:ExplorableLevel = new ExplorableLevel(sI++, "GROCERY_STORE", "Grocery Store", new <Class>[GroceryStoreQuest], 3, FanQuest);
-		public static const THEATER:ExplorableLevel = new ExplorableLevel(sI++, "THEATER", "Theater", new <Class>[TheaterQuest], 4, null, true);
+		public static var NONE:ExplorableLevel = GenerateLevelNone();
+		public static var THE_LAB:ExplorableLevel = GenerateLevelTheLab();
+		public static var TOWN_SQUARE:ExplorableLevel = GenerateLevelTownSquare();
+		public static var GROCERY_STORE:ExplorableLevel = GenerateLevelGroceryStore();
+		public static var THEATER:ExplorableLevel = GenerateLevelTheater();
+		
+		private static function GenerateLevelNone():ExplorableLevel
+		{
+			return new ExplorableLevel(sI++, "NONE");
+		}
+		private static function GenerateLevelTheLab():ExplorableLevel
+		{
+			return new ExplorableLevel(sI++, "THE_LAB", "The Lab", Asset.NavigationTheLab, new <Class>[TheLabQuest, TheLabQuest2], 1);
+		}
+		private static function GenerateLevelTownSquare():ExplorableLevel
+		{
+			return new ExplorableLevel(sI++, "TOWN_SQUARE", "Town Square", Asset.NavigationTownSquare, new <Class>[TownSquareQuest], 2, RatQuest);
+		}
+		private static function GenerateLevelGroceryStore():ExplorableLevel
+		{
+			return new ExplorableLevel(sI++, "GROCERY_STORE", "Grocery Store", Asset.NavigationGroceryStore, new <Class>[GroceryStoreQuest], 3, FanQuest);
+		}
+		private static function GenerateLevelTheater():ExplorableLevel
+		{
+			return new ExplorableLevel(sI++, "THEATER", "Theater", Asset.NavigationTheater, new <Class>[TheaterQuest], 4, null, true);
+		}
 		
 		private var mID:int;
 		private var mDescription:String;
 		private var mName:String;
+		private var mNavigationAsset:Class;
 		private var mQuestClassList:Vector.<Class>;
 		private var mVO:int;
 		private var mQuest:Quest;
@@ -38,6 +62,7 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 		public function get ID():int	{ return mID; }
 		public function get Description():String	{ return mDescription; }
 		public function get Name():String	{ return mName; }
+		public function get NavigationAsset():Class	{ return mNavigationAsset; }
 		public function get MainQuest():Quest	{ return mQuest; }
 		public function get VO():int	{ return mVO; }
 		
@@ -53,7 +78,7 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			}
 		}
 		
-		public function ExplorableLevel(aID:int, aDescription:String, aName:String = "", aQuestList:Vector.<Class> = null,
+		public function ExplorableLevel(aID:int, aDescription:String, aName:String = "", aNavigationAsset:Class = null, aQuestList:Vector.<Class> = null,
 			aVO:int = -1, aLevelPropQuest:Class = null, aInitialized:Boolean = false)
 		{
 			if (sInitialized)
@@ -67,6 +92,7 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			mID = aID;
 			mDescription = aDescription;
 			mName = aName;
+			mNavigationAsset = aNavigationAsset;
 			mQuestClassList = aQuestList;
 			mVO = aVO;
 			mLevelPropQuestClass = aLevelPropQuest;
@@ -79,6 +105,26 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			//}
 		}
 		
+		public function Dispose():void
+		{
+			if (mLevelPropQuest)
+			{
+				mLevelPropQuest.removeEventListener(QuestEvent.COMPLETE, OnCompleteLevelPropQuest);
+				mLevelPropQuest.removeEventListener(QuestEvent.OPEN_MAP, OnOpenMap);
+				removeChild(mLevelPropQuest);
+			}
+			if (mQuest)
+			{
+				mQuest.removeEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
+				mQuest.removeEventListener(QuestEvent.OPEN_MAP, OnOpenMap);
+				mQuest.removeEventListener(QuestEvent.RESET_POC, OnResetPOC);
+				if (contains(mQuest))
+				{
+					removeChild(mQuest);
+				}
+			}
+		}
+		
 		public function Start():void
 		{
 			if (!mQuest)
@@ -87,6 +133,7 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 				mQuest = new quest() as Quest;
 				mQuest.addEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 				mQuest.addEventListener(QuestEvent.OPEN_MAP, OnOpenMap);
+				mQuest.addEventListener(QuestEvent.RESET_POC, OnResetPOC);
 				addChild(mQuest);
 			}
 		}
@@ -149,6 +196,7 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 		{
 			mQuest.removeEventListener(QuestEvent.COMPLETE, OnCompleteQuest);
 			mQuest.removeEventListener(QuestEvent.OPEN_MAP, OnOpenMap);
+			mQuest.removeEventListener(QuestEvent.RESET_POC, OnResetPOC);
 			removeChild(mQuest);
 			
 			if (mQuestClassList.length)
@@ -163,9 +211,12 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			}
 			
 			mQuest.addEventListener(QuestEvent.OPEN_MAP, OnOpenMap);
+			mQuest.addEventListener(QuestEvent.RESET_POC, OnResetPOC);
 			addChild(mQuest);
 			
-			OpenMap();
+			// TODO:	highlight map button
+			// TODO:	display bubble that says "Tap the map."
+			//OpenMap();
 			
 			//Inventory.Reset();
 			//
@@ -213,6 +264,30 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 				addChild(mQuest);
 				mQuest.Refresh();
 			}
+		}
+		
+		private function OnResetPOC(aEvent:QuestEvent):void
+		{
+			sI = 0;
+			sInitialized = false;
+			
+			NONE.Dispose();
+			THE_LAB.Dispose();
+			TOWN_SQUARE.Dispose();
+			GROCERY_STORE.Dispose();
+			THEATER.Dispose();
+			
+			NONE = GenerateLevelNone();
+			THE_LAB = GenerateLevelTheLab();
+			TOWN_SQUARE = GenerateLevelTownSquare();
+			GROCERY_STORE = GenerateLevelGroceryStore();
+			THEATER = GenerateLevelTheater();
+			
+			Inventory.Reset();
+			
+			NavigationManager.Reset();
+			NavigationManager.Navigate(ExplorableLevel.THE_LAB);
+			THE_LAB.Start();
 		}
 	}
 }

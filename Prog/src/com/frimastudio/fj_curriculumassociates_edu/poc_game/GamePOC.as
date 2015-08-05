@@ -17,7 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	
 	public class GamePOC extends Sprite
 	{
-		private static const VERSION:String = "v3.7";
+		private static const VERSION:String = "v3.8";
 		
 		public function GamePOC():void
 		{
@@ -50,7 +50,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			version.y = (version.height / 2) + 2;
 			addChild(version);
 			
-			NavigationManager.Unlock(ExplorableLevel.THE_LAB);
+			//NavigationManager.Unlock(ExplorableLevel.THE_LAB);
 			NavigationManager.Navigate(ExplorableLevel.THE_LAB);
 			ExplorableLevel.THE_LAB.Start();
 		}

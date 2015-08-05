@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingEnergy;
 	import com.frimastudio.fj_curriculumassociates_edu.lucutaming.LucuTamingEnergyEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.navigation.NavigationManager;
+	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -89,8 +90,10 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		{
 			aEnabled = (aEnabled && NavigationManager.UnlockedLevelList.length > 1);
 			
-			mMap = new CurvedBox(new Point(64, 64), (aEnabled ? 0xCCFF99 : 0xCCCCCC),
-				new BoxLabel("M", 48, Palette.DIALOG_CONTENT), 6);
+			//mMap = new CurvedBox(new Point(64, 64), (aEnabled ? 0xCCFF99 : 0xCCCCCC),
+			mMap = new CurvedBox(new Point(64, 64), (aEnabled ? Palette.GREAT_BTN : 0x999999),
+				//new BoxLabel("M", 48, Palette.DIALOG_CONTENT), 6);
+				new BoxIcon(Asset.IconMapBitmap, Palette.BTN_CONTENT), 6);
 			mMap.x = 1024 - 7.5 - (mMap.width / 2);
 			mMap.y = 768 - 7.5 - (mMap.height / 2);
 			addChild(mMap);

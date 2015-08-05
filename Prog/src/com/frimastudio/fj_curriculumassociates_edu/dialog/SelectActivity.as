@@ -121,9 +121,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				{
 					var bounceLength:Number = mActivityBox.BounceInSequence();
 					
-					var earQuestStepVOTimer:Timer = new Timer(bounceLength, 1);
-					earQuestStepVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
-					earQuestStepVOTimer.start();
+					//var earQuestStepVOTimer:Timer = new Timer(bounceLength, 1);
+					//earQuestStepVOTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
+					//earQuestStepVOTimer.start();
+					var earCrescendoSFXTimer:Timer = new Timer(bounceLength, 1);
+					earCrescendoSFXTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
+					earCrescendoSFXTimer.start();
 				}
 				else
 				{
@@ -139,18 +142,18 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			}
 		}
 		
-		private function OnEarQuestStepVOTimerComplete(aEvent:TimerEvent):void
-		{
-			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
-			
-			//var sound:Sound = new mTemplate.ActivityVO() as Sound;
-			//sound.play();
-			var soundLength:Number = SoundManager.PlayVO(mTemplate.ActivityVO);
-			
-			var earCrescendoSFXTimer:Timer = new Timer(soundLength, 1);
-			earCrescendoSFXTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
-			earCrescendoSFXTimer.start();
-		}
+		//private function OnEarQuestStepVOTimerComplete(aEvent:TimerEvent):void
+		//{
+			//(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarQuestStepVOTimerComplete);
+			//
+			////var sound:Sound = new mTemplate.ActivityVO() as Sound;
+			////sound.play();
+			//var soundLength:Number = SoundManager.PlayVO(mTemplate.ActivityVO);
+			//
+			//var earCrescendoSFXTimer:Timer = new Timer(soundLength, 1);
+			//earCrescendoSFXTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarCrescendoSFXTimerComplete);
+			//earCrescendoSFXTimer.start();
+		//}
 		
 		private function OnEarCrescendoSFXTimerComplete(aEvent:TimerEvent):void
 		{

@@ -10,7 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 		
 		public function BoxContent(aColor:int = -1)
 		{
-			mColor = (aColor == -1 ? Palette.BTN_CONTENT : aColor);
+			mColor = (aColor == -1 ? Palette.NONE : aColor);
 		}
 	}
 }

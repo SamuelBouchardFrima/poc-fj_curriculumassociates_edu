@@ -30,6 +30,11 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			}
 		}
 		
+		public static function Reset():void
+		{
+			sUnlockedLevelList = new <ExplorableLevel>[ExplorableLevel.THE_LAB];
+		}
+		
 		public function NavigationManager()
 		{
 			throw new Error("NavigationManager is static and not intended for instantiation.");

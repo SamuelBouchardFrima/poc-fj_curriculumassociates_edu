@@ -40,10 +40,6 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDefaultY = mLevel.Lucu.y;
 			mDefaultScale = mLevel.Lucu.scaleX;
 			
-			//TweenLite.to(mLevel.Lucu, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump,
-				//onCompleteParams:[0], y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
-			mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
-			
 			var playerPortrait:Sprite = new Sprite();
 			var playerPortraitBitmap:Bitmap = new Asset.PlayerPortrait() as Bitmap;
 			playerPortraitBitmap.smoothing = true;
@@ -77,12 +73,45 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			InitializeMap();
 			InitializeWildLucu();
 			
+			var direction:Direction;
+			switch (mTemplate.Speaker)
+			{
+				case SpeakerType.PLORY:
+					//TweenLite.to(mLevel.Lucu, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump,
+						//onCompleteParams:[0], y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
+					//mLevel.Lucu.addEventListener(MouseEvent.CLICK, OnClickLucu);
+					direction = Direction.UP_LEFT;
+					break;
+				case SpeakerType.NPC:
+					//mLevel.NPC.addEventListener(MouseEvent.CLICK, OnClickNPC);
+					direction = Direction.UP;
+					break;
+				default:
+					throw new Error("SpeakerType " + mTemplate.Speaker.Description + " not handled.");
+					break;
+			}
+			
 			mDialogBox = new CurvedBox(new Point(100, 100), Palette.DIALOG_BOX,
-				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT);
-			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
-			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+				new BoxLabel("!", 80, Palette.DIALOG_CONTENT), 6, direction);
+			//mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			//mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			mDialogBox.addEventListener(MouseEvent.CLICK, OnClickDialogBox);
 			addChild(mDialogBox);
+			
+			switch (mTemplate.Speaker)
+			{
+				case SpeakerType.PLORY:
+					mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+					mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+					break;
+				case SpeakerType.NPC:
+					mDialogBox.x = mLevel.NPC.x;
+					mDialogBox.y = mLevel.NPC.y + (mLevel.NPC.height / 2) + 10 + (mDialogBox.height / 2);
+					break;
+				default:
+					throw new Error("SpeakerType " + mTemplate.Speaker.Description + " not handled.");
+					break;
+			}
 			
 			mDialogBox.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
 			TweenLite.to(mDialogBox, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
@@ -95,7 +124,8 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			//mDisposing = true;
 			
-			mLevel.Lucu.removeEventListener(MouseEvent.CLICK, OnClickLucu);
+			//mLevel.Lucu.removeEventListener(MouseEvent.CLICK, OnClickLucu);
+			//mLevel.NPC.removeEventListener(MouseEvent.CLICK, OnClickNPC);
 			mDialogBox.removeEventListener(MouseEvent.CLICK, OnClickDialogBox);
 			
 			TweenLite.killTweensOf(mLevel.Lucu);
@@ -153,10 +183,15 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			//}
 		//}
 		
-		private function OnClickLucu(aEvent:MouseEvent):void
-		{
-			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
-		}
+		//private function OnClickLucu(aEvent:MouseEvent):void
+		//{
+			//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+		//}
+		//
+		//private function OnClickNPC(aEvent:MouseEvent):void
+		//{
+			//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+		//}
 		
 		private function OnClickDialogBox(aEvent:MouseEvent):void
 		{

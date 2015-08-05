@@ -362,17 +362,50 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 				return false;
 			}
 			
-			var expectedAmount:int = emptyWord.Answer.split(aChar).length - 1;
-			if (emptyWord.Answer.indexOf("*") > -1)
+			var requiredChar:String = emptyWord.Answer;
+			var chunkList:Vector.<String> = mActivityTray.AssembleChunkList();
+			var index:int;
+			for (var i:int = 0, endi:int = chunkList.length; i < endi; ++i)
 			{
-				if (WordDictionary.Validate(emptyWord.Answer.split("*").join(aChar), 1))
+				if (chunkList[i] != "_")
 				{
-					++expectedAmount;
+					index = requiredChar.indexOf(chunkList[i]);
+					if (index > -1)
+					{
+						requiredChar = requiredChar.substring(0, index) + requiredChar.substring(index + 1);
+						continue;
+					}
+					
+					index = requiredChar.indexOf("*");
+					if (index > -1)
+					{
+						requiredChar = requiredChar.substring(0, index) + requiredChar.substring(index + 1);
+					}
 				}
 			}
-			//var actualAmount:int = emptyWord.ChunkList.join("").split(aChar).length - 1;
-			var actualAmount:int = mActivityTray.AssembleWord().split(aChar).length - 1;
-			return actualAmount < expectedAmount;
+			
+			if (requiredChar.indexOf(aChar) > -1)
+			{
+				return true;
+			}
+			if (requiredChar.indexOf("*") > -1)
+			{
+				return WordDictionary.Validate(emptyWord.Answer.split("*").join(aChar), 1);
+			}
+			return false;
+			
+			//var expectedAmount:int = emptyWord.Answer.split(aChar).length - 1;
+			//if (emptyWord.Answer.indexOf("*") > -1)
+			//{
+				//if (WordDictionary.Validate(emptyWord.Answer.split("*").join(aChar), 1))
+				//{
+					//// TODO:	add exception if * is already occupied by another character
+					//++expectedAmount;
+				//}
+			//}
+			////var actualAmount:int = emptyWord.ChunkList.join("").split(aChar).length - 1;
+			//var actualAmount:int = mActivityTray.AssembleWord().split(aChar).length - 1;
+			//return actualAmount < expectedAmount;
 		}
 		
 		public function ActivityBox(aWordTemplateList:Vector.<WordTemplate>, aLineBreakList:Vector.<int>, aSentenceVO:Class, aPhylacteryArrow:Direction, aGhostContent:Boolean = false, aLaunchingActivity:Boolean = false, aHint:Class = null)

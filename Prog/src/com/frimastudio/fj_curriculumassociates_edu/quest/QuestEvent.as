@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 	{
 		public static const COMPLETE:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent::COMPLETE";
 		public static const OPEN_MAP:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent::OPEN_MAP";
+		public static const RESET_POC:String = "com.frimastudio.fj_curriculumassociates_edu.quest.QuestEvent::RESET_POC";
 		
 		public function QuestEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
 		{

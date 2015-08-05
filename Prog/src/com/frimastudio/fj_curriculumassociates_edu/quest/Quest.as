@@ -63,6 +63,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				mStep.removeEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 				mStep.removeEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
 				mStep.removeEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
+				mStep.removeEventListener(QuestStepEvent.RESET_POC, OnResetPOC);
 				mStep.Dispose();
 				if (contains(mStep))
 				{
@@ -78,6 +79,7 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 				mStep.addEventListener(QuestStepEvent.LAUNCH_LUCU_TAMING, OnLaunchLucuTaming);
 				mStep.addEventListener(QuestStepEvent.COMPLETE, OnCompleteStep);
 				mStep.addEventListener(QuestStepEvent.OPEN_MAP, OnOpenMap);
+				mStep.addEventListener(QuestStepEvent.RESET_POC, OnResetPOC);
 				addChild(mStep);
 			}
 			else
@@ -193,6 +195,11 @@ package com.frimastudio.fj_curriculumassociates_edu.quest
 		private function OnOpenMap(aEvent:QuestStepEvent):void
 		{
 			dispatchEvent(new QuestEvent(QuestEvent.OPEN_MAP));
+		}
+		
+		private function OnResetPOC(aEvent:QuestStepEvent):void
+		{
+			dispatchEvent(new QuestEvent(QuestEvent.RESET_POC));
 		}
 	}
 }

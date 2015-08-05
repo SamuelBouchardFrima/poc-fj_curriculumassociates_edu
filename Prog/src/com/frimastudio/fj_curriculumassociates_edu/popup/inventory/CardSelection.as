@@ -96,7 +96,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 			body.multiline = true;
 			body.autoSize = TextFieldAutoSize.CENTER;
 			//body.text = "Choose " + mTemplate.Slot + " cards";
-			body.text = "Select " + mTemplate.Slot + " letter pattern cards.";
+			body.text = "Select " + mTemplate.Slot + " lesson cards.";
 			body.setTextFormat(new TextFormat(Asset.SweaterSchoolSemiBoldFont.fontName, 48, Palette.DIALOG_CONTENT,
 				null, null, null, null, null, TextFormatAlign.CENTER));
 			body.x = 512 - (body.width / 2);

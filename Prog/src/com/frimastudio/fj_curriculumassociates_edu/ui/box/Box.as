@@ -307,10 +307,13 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.box
 				icon.height = Math.min(icon.height, mSize.height - (mMargin * 2));
 				icon.scaleX = icon.scaleY = Math.min(icon.scaleX, icon.scaleY);
 				icon.x = (-icon.width / 2);
-				icon.y = (-icon.height / 2);
-				var colorTransform:ColorTransform = new ColorTransform();
-				colorTransform.color = iconTemplate.ContentColor;
-				icon.transform.colorTransform = colorTransform;
+				icon.y = ( -icon.height / 2);
+				if (mContentTemplate.ContentColor != Palette.NONE)
+				{
+					var colorTransform:ColorTransform = new ColorTransform();
+					colorTransform.color = iconTemplate.ContentColor;
+					icon.transform.colorTransform = colorTransform;
+				}
 				mContent.addChild(icon);
 			}
 			else if (mContentTemplate is BoxTiledLabel)
