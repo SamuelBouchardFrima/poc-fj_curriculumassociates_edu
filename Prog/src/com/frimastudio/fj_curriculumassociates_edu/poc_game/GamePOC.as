@@ -17,7 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	
 	public class GamePOC extends Sprite
 	{
-		private static const VERSION:String = "v3.9";
+		private static const VERSION:String = "v4.0";
 		
 		public function GamePOC():void
 		{
