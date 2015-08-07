@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.ActivityBox;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
@@ -43,8 +44,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mDefaultY = mLevel.Prop.y;
 			mDefaultScale = mLevel.Prop.scaleX;
 			
+			//(new mTemplate.InstructionVO() as Sound).play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.InstructionVO);
+			
 			mLevel.Prop.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
-			TweenLite.to(mLevel.Prop, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter:{ alpha:1.5 } });
+			TweenLite.to(mLevel.Prop, 1, { ease:Quad.easeInOut, delay:(soundLength / 1000),
+				onComplete:OnTweenGlowStrong, glowFilter:{ alpha:1.5 } });
 			//TweenLite.to(mLevel.Prop, 0.1, { ease:Quad.easeOut, delay:2, onComplete:OnTweenAttentionJump,
 				//onCompleteParams:[0], y:(mDefaultY - 25), scaleX:(mDefaultScale * 0.9), scaleY:(mDefaultScale * 1.1) });
 			mLevel.Prop.addEventListener(MouseEvent.CLICK, OnClickProp);
@@ -99,9 +104,6 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 				addChild(mActivityBox);
 			}
-			
-			//(new mTemplate.InstructionVO() as Sound).play();
-			SoundManager.PlayVO(mTemplate.InstructionVO);
 		}
 		
 		override public function Dispose():void
@@ -123,6 +125,21 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			}
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void
+		{
+			if (mLevel && mLevel != Level.NONE)
+			{
+				var soundLength:Number = SoundManager.PlayVO(mTemplate.InstructionVO);
+				
+				TweenLite.killTweensOf(mLevel.Prop);
+				mLevel.Prop.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH)];
+				TweenLite.to(mLevel.Prop, 1, { ease:Quad.easeInOut, delay:(soundLength / 1000),
+					onComplete:OnTweenGlowStrong, glowFilter:{ alpha:1.5 } });
+			}
+			
+			super.Refresh();
 		}
 		
 		private function OnTweenGlowStrong():void

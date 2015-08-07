@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
@@ -35,6 +36,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 	import flash.filters.GlowFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.media.Sound;
@@ -162,7 +164,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			//addChild(mSubmitBtn);
 			
 			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.RequestVO,
-				mTemplate.PhylacteryArrow, true, true, Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+				mTemplate.PhylacteryArrow, true, true, Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
 			mActivityBox.StepTemplate = mTemplate;
 			mActivityBox.UseActivityElement(mTemplate.ActivityWordList.indexOf(mTemplate.ScrambledWord));
 			mActivityBox.x = 512;
@@ -194,7 +196,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			
 			//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
 			//SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
-			SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+			SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
 		}
 		
 		private function OnLaunchActivity(aEvent:ActivityBoxEvent):void
@@ -226,6 +228,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			mCraftingTray.Dispose();
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void
+		{
+			if (mLevel && mLevel != Level.NONE)
+			{
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
+			}
+			
+			super.Refresh();
 		}
 		
 		private function UpdateAnswer():void
@@ -473,7 +485,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 					{
 						//(new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound).play();
 						//SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
-						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+						SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
 					}
 					
 					var bounceDuration:Number = mCraftingTray.BounceInSequence();
@@ -547,6 +559,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 				mSubmissionHighlight.x = mSubmitedWord.x;
 				mSubmissionHighlight.y = mSubmitedWord.y;
 				mSubmissionHighlight.addEventListener(Event.ENTER_FRAME, OnEnterFrameSubmissionHighlight);
+				var colorTransform:ColorTransform = new ColorTransform();
+				colorTransform.color = 0xFFFFBB;
+				mSubmissionHighlight.transform.colorTransform = colorTransform;
 				var highlightBitmap:Bitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
 				highlightBitmap.smoothing = true;
 				highlightBitmap.x = -highlightBitmap.width / 2;

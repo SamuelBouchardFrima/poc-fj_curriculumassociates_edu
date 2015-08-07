@@ -52,6 +52,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				null, Direction.DOWN));
 			mStepList.push(new DialogTemplate(Level.THEATER, new <String>["All right! I am a fan, man"],
 				new <Class>[Asset.QuestFlowSound[27]], SpeakerType.NPC));
+			//mStepList.push(new DialogTemplate(Level.THEATER, new <String>["Go back to the Lab."],
+				//new <Class>[Asset.GameHintSound[16]], SpeakerType.PLORY));
 			mStepList.push(new ProgressLocationQuestTemplate(Level.THEATER, ExplorableLevel.THE_LAB));
 			
 			super();

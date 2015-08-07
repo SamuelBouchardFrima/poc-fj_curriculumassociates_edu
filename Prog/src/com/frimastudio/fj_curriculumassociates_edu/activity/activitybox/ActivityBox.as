@@ -159,6 +159,10 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 					mSubmitBtn = new CurvedBox(new Point(64, 64), Palette.GREAT_BTN,
 						new BoxIcon(Asset.IconOKBitmap, Palette.BTN_CONTENT), 6);
 					var contentWidth:Number = mActivityTray.Bounds.width + 20 + mSubmitBtn.width;
+					if (mDraggedPiece)
+					{
+						contentWidth += mDraggedPiece.width + 15;
+					}
 					mSubmitBtn.x = (contentWidth / 2) - (mSubmitBtn.width / 2);
 					mSubmitBtn.y = 0;
 					mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickScrambledWordSubmitBtn);
@@ -742,6 +746,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			//var colorTransform:ColorTransform;
 			//var size:Point;
 			var highlight:Sprite;
+			var colorTransform:ColorTransform;
 			var highlightBitmap:Bitmap;
 			
 			for (i = 0, endi = mWordTemplateList.length; i < endi; ++i)
@@ -792,6 +797,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 								highlight.y = chunk.y + word.y + mContent.y;
 								highlight.scaleX = highlight.scaleY = 0.01;
 								highlight.alpha = 0;
+								colorTransform = new ColorTransform();
+								colorTransform.color = 0xFFFFBB;
+								highlight.transform.colorTransform = colorTransform;
 								highlightBitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
 								highlightBitmap.smoothing = true;
 								highlightBitmap.x = -highlightBitmap.width / 2;
@@ -856,6 +864,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 						highlight.y = chunk.y + word.y + mContent.y;
 						highlight.scaleX = highlight.scaleY = 0.01;
 						highlight.alpha = 0;
+						colorTransform = new ColorTransform();
+						colorTransform.color = 0xFFFFBB;
+						highlight.transform.colorTransform = colorTransform;
 						highlightBitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
 						highlightBitmap.smoothing = true;
 						highlightBitmap.x = -highlightBitmap.width / 2;
@@ -1091,6 +1102,20 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 		
 		private function OnPieceFreedActivityTray(aEvent:PieceTrayEvent):void
 		{
+			if (mDraggedPiece)
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
+				
+				mActivityTray.addEventListener(PieceTrayEvent.PIECE_CAPTURED, OnPieceCapturedActivityTray);
+				var position:Point = null;
+				position = DisplayObjectUtil.GetPosition(mDraggedPiece);
+				position = position.subtract(DisplayObjectUtil.GetPosition(mContent));
+				position = position.subtract(DisplayObjectUtil.GetPosition(mActivityElement));
+				position = position.subtract(DisplayObjectUtil.GetPosition(mActivityTray));
+				mActivityTray.Insert(mDraggedPiece, mPreviousPosition, position);
+			}
+			
 			mPreviousPosition = aEvent.EventPiece.NextPiece;
 			
 			mDraggedPiece = new Piece(null, null, aEvent.EventPiece.Label, MouseUtil.PositionRelativeTo(this),

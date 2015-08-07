@@ -129,6 +129,11 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			mDecayTimer.start();
 		}
 		
+		public function StopDecay():void
+		{
+			mDecayTimer.reset();
+		}
+		
 		private function OnMouseDown(aEvent:MouseEvent):void
 		{
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);

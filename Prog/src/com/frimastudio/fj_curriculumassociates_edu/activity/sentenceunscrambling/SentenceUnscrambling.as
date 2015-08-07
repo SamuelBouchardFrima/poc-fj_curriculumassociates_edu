@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 	import com.frimastudio.fj_curriculumassociates_edu.activity.Result;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
@@ -279,6 +280,16 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.sentenceunscramblin
 			mTutorialTimer.reset();
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void
+		{
+			if (mLevel && mLevel != Level.NONE)
+			{
+				SoundManager.PlayVO(mTemplate.RequestVO);
+			}
+			
+			super.Refresh();
 		}
 		
 		private function OnEnterFrame(aEvent:Event):void

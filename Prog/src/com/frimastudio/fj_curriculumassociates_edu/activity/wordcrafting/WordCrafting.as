@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 	import com.frimastudio.fj_curriculumassociates_edu.dictionary.WordDictionary;
 	import com.frimastudio.fj_curriculumassociates_edu.FontList;
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.Box;
@@ -41,6 +42,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 	import flash.filters.GlowFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.media.Sound;
@@ -297,9 +299,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			//mToolTray.Clear(Inventory.RequestWordSelection(mTemplate.Answer));
 			mToolTray.Clear(wordSelection);
 			
-			if (needMoreWord)
+			/*if (needMoreWord)
 			{
 				SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
+			else*/ if (mLevel && mLevel != Level.NONE)
+			{
+				SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()])
 			}
 			
 			super.Refresh();
@@ -312,7 +318,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			//var sound:Sound = new Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]() as Sound;
 			//sound.play();
 			//var soundLength:Number = SoundManager.PlayVO(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
-			var soundLength:Number = SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.toLowerCase()]);
+			var soundLength:Number = SoundManager.PlaySFX(Asset.WordContentSound["_" + mTemplate.Answer.split("*").join("").toLowerCase()]);
 			
 			var earInstructionTimer:Timer = new Timer(soundLength, 1);
 			earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
@@ -1288,6 +1294,9 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 				mSubmissionHighlight.x = mSubmitedWord.x;
 				mSubmissionHighlight.y = mSubmitedWord.y;
 				mSubmissionHighlight.addEventListener(Event.ENTER_FRAME, OnEnterFrameSubmissionHighlight);
+				var colorTransform:ColorTransform = new ColorTransform();
+				colorTransform.color = 0xFFFFBB;
+				mSubmissionHighlight.transform.colorTransform = colorTransform;
 				var highlightBitmap:Bitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
 				highlightBitmap.smoothing = true;
 				highlightBitmap.x = -highlightBitmap.width / 2;

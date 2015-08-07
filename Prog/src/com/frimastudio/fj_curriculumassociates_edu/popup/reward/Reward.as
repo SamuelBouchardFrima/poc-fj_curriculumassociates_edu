@@ -187,7 +187,12 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 			{
 				//var sound:Sound;
 				var sound:Class;
-				if (Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]])
+				if (Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]])
+				{
+					//sound = new Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
+					sound = Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]];
+				}
+				else if (Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]])
 				{
 					//sound = new Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
 					sound = Asset.WordContentSound["_" + mTemplate.RewardList[mCurrentReward]];
@@ -196,11 +201,6 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.reward
 				{
 					//sound = new Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
 					sound = Asset.NewWordSound["_" + mTemplate.RewardList[mCurrentReward]];
-				}
-				else if (Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]])
-				{
-					//sound = new Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]]() as Sound;
-					sound = Asset.NewChunkSound["_" + mTemplate.RewardList[mCurrentReward]];
 				}
 				else
 				{

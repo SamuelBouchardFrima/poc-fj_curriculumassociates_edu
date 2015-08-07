@@ -2,6 +2,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 {
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.ActivityBox;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
@@ -118,8 +119,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 					break;
 			}
 			
+			//(new mTemplate.DialogAudioList[mStep]() as Sound).play();
+			var soundLength:Number = SoundManager.PlayVO(mTemplate.DialogAudioList[mStep]);
+			
 			mDialogBox.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
-			TweenLite.to(mDialogBox, 1, { ease:Quad.easeInOut, delay:2, onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
+			TweenLite.to(mDialogBox, 1, { ease:Quad.easeInOut, delay:(soundLength / 1000),
+				onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
 			
 			if (mTemplate.ActivityWordList)
 			{
@@ -129,9 +134,6 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				mActivityBox.y = ((mTemplate.LineBreakList.length + 1) * 40) + 30;
 				addChild(mActivityBox);
 			}
-			
-			//(new mTemplate.DialogAudioList[mStep]() as Sound).play();
-			SoundManager.PlayVO(mTemplate.DialogAudioList[mStep]);
 		}
 		
 		override public function Dispose():void
@@ -155,6 +157,21 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			}
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void
+		{
+			if (mLevel && mLevel != Level.NONE)
+			{
+				var soundLength:Number = SoundManager.PlayVO(mTemplate.DialogAudioList[mStep]);
+				
+				TweenLite.killTweensOf(mDialogBox);
+				mDialogBox.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
+				TweenLite.to(mDialogBox, 1, { ease:Quad.easeInOut, delay:(soundLength / 1000),
+					onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
+			}
+			
+			super.Refresh();
 		}
 		
 		private function OnTweenGlowStrong():void
@@ -229,7 +246,12 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 				}
 				
 				//(new mTemplate.DialogAudioList[mStep]() as Sound).play();
-				SoundManager.PlayVO(mTemplate.DialogAudioList[mStep]);
+				var soundLength:Number = SoundManager.PlayVO(mTemplate.DialogAudioList[mStep]);
+				
+				TweenLite.killTweensOf(mDialogBox);
+				mDialogBox.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 2, BitmapFilterQuality.HIGH, true)];
+				TweenLite.to(mDialogBox, 1, { ease:Quad.easeInOut, delay:(soundLength / 1000),
+					onComplete:OnTweenGlowStrong, glowFilter: { alpha:1.5 } });
 			}
 			else
 			{

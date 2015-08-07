@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.ActivityType;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.level.Level;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
@@ -102,6 +103,16 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mActivityBox.Dispose();
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void
+		{
+			if (mLevel && mLevel != Level.NONE)
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[4]);
+			}
+			
+			super.Refresh();
 		}
 		
 		public function CompleteCurrentActivity(aNewWordList:Vector.<WordTemplate>):void

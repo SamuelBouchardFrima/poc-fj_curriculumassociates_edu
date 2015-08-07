@@ -13,12 +13,16 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import flash.utils.Timer;
 	
 	public class Navigation extends Popup
 	{
@@ -26,6 +30,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 		private var mLocationList:Vector.<CurvedBox>;
 		private var mLocationContainer:Sprite;
 		private var mBackground:CurvedBox;
+		private var mTargetLevel:ExplorableLevel;
 		
 		public function Navigation(aTemplate:NavigationTemplate)
 		{
@@ -71,6 +76,15 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 				mLocationContainer.addChild(location);
 				mLocationList.push(location);
 				offset += 10 + (location.width / 2);
+				
+				if (NavigationManager.UnlockedLevelList[i] == NavigationManager.TargetLevel)
+				{
+					location.filters = [new GlowFilter(Palette.GREAT_BTN, 0.75, 16, 16, 2, BitmapFilterQuality.HIGH)];
+				}
+				else
+				{
+					location.filters = [];
+				}
 			}
 			mLocationContainer.x = 512 - (mLocationContainer.width / 2);
 			addChild(mLocationContainer);
@@ -116,6 +130,15 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 					mLocationContainer.addChild(location);
 					mLocationList.push(location);
 					offset += (location.width / 2) + 10;
+					
+					if (NavigationManager.UnlockedLevelList[i] == NavigationManager.TargetLevel)
+					{
+						location.filters = [new GlowFilter(Palette.GREAT_BTN, 0.75, 16, 16, 2, BitmapFilterQuality.HIGH)];
+					}
+					else
+					{
+						location.filters = [];
+					}
 				}
 				mLocationContainer.x = 512 - (mLocationContainer.width / 2);
 				
@@ -128,19 +151,38 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.navigation
 		private function OnClickLocation(aEvent:MouseEvent):void
 		{
 			var location:CurvedBox = aEvent.currentTarget as CurvedBox;
-			var level:ExplorableLevel = NavigationManager.UnlockedLevelList[mLocationList.indexOf(location)];
+			mTargetLevel = NavigationManager.UnlockedLevelList[mLocationList.indexOf(location)];
 			
 			//var vo:int = mTemplate.LocationVOList[mLocationList.indexOf(location)];
 			//(new Asset.NavigationSound[vo]() as Sound).play();
-			SoundManager.PlayVO(Asset.NavigationSound[level.VO]);
+			var locationSoundLength:Number = SoundManager.PlayVO(Asset.NavigationSound[mTargetLevel.VO]);
 			
 			//if (mTemplate.LocationUnlockList[mLocationList.indexOf(aEvent.currentTarget as CurvedBox)])
 			//{
 				//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 			//}
 			
-			NavigationManager.Navigate(level);
-			level.Start();
+			for (var i:int = 0, endi:int = mLocationList.length; i < endi; ++i)
+			{
+				mLocationList[i].removeEventListener(MouseEvent.CLICK, OnClickLocation);
+			}
+			
+			var navigateTimer:Timer = new Timer(locationSoundLength, 1);
+			navigateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnNavigateTimerComplete);
+			navigateTimer.start();
+			
+			//NavigationManager.Navigate(level);
+			//level.Start();
+			//
+			//dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
+		}
+		
+		private function OnNavigateTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnNavigateTimerComplete);
+			
+			NavigationManager.Navigate(mTargetLevel);
+			mTargetLevel.Start();
 			
 			dispatchEvent(new QuestStepEvent(QuestStepEvent.COMPLETE));
 		}

@@ -257,12 +257,12 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			if (mLevelPropQuest)
 			{
 				addChild(mLevelPropQuest);
-				mLevelPropQuest.Refresh();
+				//mLevelPropQuest.Refresh();
 			}
 			else
 			{
 				addChild(mQuest);
-				mQuest.Refresh();
+				//mQuest.Refresh();
 			}
 		}
 		

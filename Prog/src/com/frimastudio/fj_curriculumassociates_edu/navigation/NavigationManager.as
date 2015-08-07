@@ -3,8 +3,12 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 	public class NavigationManager
 	{
 		private static var sUnlockedLevelList:Vector.<ExplorableLevel> = new <ExplorableLevel>[ExplorableLevel.THE_LAB];
+		private static var sTargetLevel:ExplorableLevel = ExplorableLevel.THE_LAB;
 		
 		public static function get UnlockedLevelList():Vector.<ExplorableLevel>	{ return sUnlockedLevelList; }
+		
+		public static function get TargetLevel():ExplorableLevel	{ return sTargetLevel; }
+		public static function set TargetLevel(aValue:ExplorableLevel):void	{ sTargetLevel = aValue; }
 		
 		public static function Navigate(aLevel:ExplorableLevel):void
 		{
@@ -28,6 +32,8 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 			{
 				sUnlockedLevelList.push(aLevel);
 			}
+			
+			NavigationManager.TargetLevel = aLevel;
 		}
 		
 		public static function Reset():void

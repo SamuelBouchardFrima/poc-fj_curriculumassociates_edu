@@ -147,14 +147,18 @@ package com.frimastudio.fj_curriculumassociates_edu.ui.piecetray
 			throw new Error("No empty slot in the tray.");
 		}
 		
-		public function get MoreThanOne():Boolean
+		public function get MoreThanOne():Boolean	{ return mFirstPiece != mLastPiece; }
+		public function get Empty():Boolean	{ return !mFirstPiece; }
+		public function get Amount():int
 		{
-			return mFirstPiece != mLastPiece;
-		}
-		
-		public function get Empty():Boolean
-		{
-			return !mFirstPiece;
+			var amount:int = 0;
+			var piece:Piece = mFirstPiece;
+			while (piece)
+			{
+				++amount;
+				piece = piece.NextPiece;
+			}
+			return amount;
 		}
 		
 		public function get BoxColor():int	{ return (mFirstPiece ? mFirstPiece.BoxColor : 0xFFFFFF); }

@@ -549,8 +549,12 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var NewHint_06:Class;
 		[Embed(source = "../../../../audio/POC Audio/Game Hints/make_words_start_same.mp3")]
 		private static var NewHint_07:Class;
+		[Embed(source = "../../../../audio/POC Audio/Game Hints/select_words.mp3")]
+		private static var NewHint_08:Class;
+		[Embed(source = "../../../../audio/POC Audio/Game Hints/tap_map.mp3")]
+		private static var NewHint_09:Class;
 		public static var NewHintSound:Object = [null, NewHint_01, NewHint_02, NewHint_03, NewHint_04, NewHint_05,
-			NewHint_06, NewHint_07];
+			NewHint_06, NewHint_07, NewHint_08, NewHint_09];
 		
 		//[Embed(source = "../../../../audio/POC Audio/Letter Sounds/01_t_.mp3")]
 		//private static var LetterSound_01_t_:Class;
@@ -674,9 +678,13 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Reward_09_theater_unlocked:Class;
 		[Embed(source = "../../../../audio/POC Audio/Rewards/10_unlocked_karaoke.mp3")]
 		private static var Reward_10_unlocked_karaoke:Class;
+		[Embed(source = "../../../../audio/POC Audio/Rewards/11_challenge_reward.mp3")]
+		private static var Reward_11_challenge_reward:Class;
+		[Embed(source = "../../../../audio/POC Audio/Rewards/12_better_luck_next_time.mp3")]
+		private static var Reward_12_better_luck_next_time:Class;
 		public static var RewardSound:Object = [null, Reward_01_did_lesson_13, Reward_02_lesson_reward, Reward_03_quest_reward,
 			Reward_04_pattern_cards, Reward_05_words, Reward_06_have_fliers, Reward_07_grocery_unlocked, Reward_08_square_unlocked,
-			Reward_09_theater_unlocked, Reward_10_unlocked_karaoke];
+			Reward_09_theater_unlocked, Reward_10_unlocked_karaoke, Reward_11_challenge_reward, Reward_12_better_luck_next_time];
 		
 		[Embed(source = "../../../../audio/POC Audio/Sentence_Content_Target/01_print_fliers.mp3")]
 		private static var SentenceContentTarget_01_print_fliers:Class;
@@ -783,6 +791,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var WordContent_sit:Class;
 		[Embed(source = "../../../../audio/POC Audio/Word_Content/tip.mp3")]
 		private static var WordContent_tip:Class;
+		[Embed(source = "../../../../audio/POC Audio/Word_Content/pin.mp3")]
+		private static var WordContent_pin:Class;
 		public static var WordContentSound:Object = { _tip:WordContent_tip, _rip:WordContent_rip, _nip:WordContent_03_nip,
 			_dim:WordContent_04_dim, _fin:WordContent_05_fin, _sit:WordContent_sit, _pit:WordContent_07_pit,
 			_sip:WordContent_sip, _it:WordContent_it, _if:WordContent_10_if, _in:WordContent_11_in, _rid:WordContent_12_rid,
@@ -790,8 +800,8 @@ package com.frimastudio.fj_curriculumassociates_edu
 			_the:WordContent_17_the, _fat:WordContent_18_fat, _rat:WordContent_rat, _i:WordContent_20_i,
 			_dont:WordContent_21_dont, _sing:WordContent_22_sing, _but:WordContent_23_but, _can:WordContent_24_can,
 			_rap:WordContent_25_rap, _fit:WordContent_26_fit, _mix:WordContent_27_mix, _up:WordContent_28_up,
-			_and:WordContent_29_and, _take:WordContent_30_take, _a:WordContent_31_3_a_uh,
-			_dip:WordContent_dip, _fan:WordContent_fan };
+			_and:WordContent_29_and, _take:WordContent_30_take, _a:WordContent_31_3_a_uh, _dip:WordContent_dip,
+			_fan:WordContent_fan, _pin:WordContent_pin, _ip:WordContent_tip, _di:WordContent_04_dim };
 		
 		[Embed(source = "../../../../audio/POC Audio/New Words and Chunks/02_its.mp3")]
 		private static var NewWord_02_its:Class;

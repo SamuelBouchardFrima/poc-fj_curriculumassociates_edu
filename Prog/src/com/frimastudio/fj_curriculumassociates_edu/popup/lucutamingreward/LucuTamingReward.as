@@ -4,6 +4,7 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward
 	import com.frimastudio.fj_curriculumassociates_edu.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.popup.Popup;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxIcon;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
@@ -11,11 +12,13 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward
 	import com.frimastudio.fj_curriculumassociates_edu.util.Axis;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import flash.utils.Timer;
 	
 	public class LucuTamingReward extends Popup
 	{
@@ -55,6 +58,8 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward
 				body.x = 512 - (body.width / 2);
 				body.y = 384 - (body.height / 2);
 				addChild(body);
+				
+				SoundManager.PlayVO(Asset.RewardSound[12]);
 				
 				addEventListener(MouseEvent.CLICK, OnClick);
 				return;
@@ -126,6 +131,11 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward
 			mSubmitBtn.x = 512 + (background.width / 2) - 10 - (mSubmitBtn.width / 2);
 			mSubmitBtn.y = rewardContainer.y + offset.y;
 			addChild(mSubmitBtn);
+			
+			var soundLength:Number = SoundManager.PlayVO(Asset.RewardSound[11]);
+			var earInstructionTimer:Timer = new Timer(soundLength, 1);
+			earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			earInstructionTimer.start();
 		}
 		
 		override public function Dispose():void
@@ -146,6 +156,13 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.lucutamingreward
 			}
 			
 			super.Dispose();
+		}
+		
+		private function OnEarInstructionTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			
+			SoundManager.PlayVO(Asset.NewHintSound[8]);
 		}
 		
 		private function OnClick(aEvent:MouseEvent):void

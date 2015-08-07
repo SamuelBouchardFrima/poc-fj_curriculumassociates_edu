@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
+	import com.frimastudio.fj_curriculumassociates_edu.navigation.NavigationManager;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStepTemplate;
@@ -17,6 +18,8 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mTemplate = aTemplate;
 			
 			mTemplate.ProgressingLevel.ProgressQuest();
+			
+			NavigationManager.TargetLevel = mTemplate.ProgressingLevel;
 			
 			var completeStepTimer:Timer = new Timer(30, 1);
 			completeStepTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCompleteStepTimerComplete);

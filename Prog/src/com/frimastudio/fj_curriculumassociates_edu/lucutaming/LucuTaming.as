@@ -38,6 +38,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 	import flash.events.TimerEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.GlowFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
@@ -81,14 +82,19 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		private var mDraggedPiece:Piece;
 		private var mBurpDone:Boolean;
 		private var mStringType:StringType;
+		private var mSubmissionStart:Number;
+		private var mSubmissionDuration:Number;
+		private var mSubmissionActive:Boolean;
+		private var mSubmissionDelayIndex:int;
 		
 		public function LucuTaming(aTemplate:LucuTamingTemplate)
 		{
 			super(aTemplate);
 			
-			mSubmission = "";
-			
 			mTemplate = aTemplate;
+			
+			mSubmission = "";
+			mSubmissionDelayIndex = 0;
 			
 			mStringType = StringType.RandomType;
 			
@@ -350,6 +356,9 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			highlight.y = 70;
 			highlight.scaleX = highlight.scaleY = 0.01;
 			highlight.alpha = 0;
+			var colorTransform:ColorTransform = new ColorTransform();
+			colorTransform.color = 0xFFFFBB;
+			highlight.transform.colorTransform = colorTransform;
 			var highlightBitmap:Bitmap = new Asset.SubmissionHighlightBitmap() as Bitmap;
 			highlightBitmap.smoothing = true;
 			highlightBitmap.x = -highlightBitmap.width / 2;
@@ -508,23 +517,57 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		
 		private function OnClickSubmitBtn(aEvent:MouseEvent):void
 		{
+			if (mCraftingTray.Empty)
+			{
+				return;
+			}
+			
 			mSubmitBtn.removeEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			
 			mSubmission = mCraftingTray.AssembleWord();
+			mSubmissionStart = new Date().getTime();
+			mSubmissionActive = true;
 			
 			if (WordDictionary.Validate(mSubmission, 1))
 			{
-				var duration:Number = mCraftingTray.BounceInSequence();
-				var fusionTimer:Timer = new Timer(duration * 1000, 1);
+				mSubmissionDuration = mCraftingTray.BounceInSequence() * 1000;
+				var fusionTimer:Timer = new Timer(mSubmissionDuration, 1);
 				fusionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnFusionTimerComplete);
 				fusionTimer.start();
 			}
 			else
 			{
-				duration = mCraftingTray.FizzleAndExplode();
-				var explosionTimer:Timer = new Timer(duration * 1000, 1)
+				mSubmissionDuration = mCraftingTray.FizzleAndExplode() * 1000;
+				var explosionTimer:Timer = new Timer(mSubmissionDuration, 1)
 				explosionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnExplosionTimerComplete);
 				explosionTimer.start();
+			}
+			
+			mSubmissionDuration += 30;
+			
+			var submissionTimer:Timer = new Timer(mSubmissionDuration, 1);
+			submissionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnSubmissionTimerComplete);
+			submissionTimer.start();
+		}
+		
+		private function OnSubmissionTimerComplete(aEvent:TimerEvent):void
+		{
+			(aEvent.currentTarget as Timer).removeEventListener(TimerEvent.TIMER_COMPLETE, OnSubmissionTimerComplete);
+			
+			mSubmissionActive = false;
+			mSubmissionStart = 0;
+			mSubmissionDuration = 0;
+			mSubmissionDelayIndex = 0;
+			
+			if (!mSubmissionActive && !mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
+			{
+				var closeMouthTimer:Timer = new Timer(300, 1);
+				closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
+				closeMouthTimer.start();
+				
+				TweenLite.killTweensOf(mWildLucu);
+				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
 			}
 		}
 		
@@ -541,6 +584,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			//addChild(assembledWord);
 			//TweenLite.to(assembledWord, 1, { ease:Strong.easeOut
 			mToolTray.InsertLast(mSubmission, new Point(mCraftingTray.Center, mCraftingTray.y));
+			if (mToolTray.Amount > 8)
+			{
+				mToolTray.RemoveFirst();
+			}
+			
 			mToolTray.BoxColor = ActivityType.WORD_CRAFTING.ColorCode;
 			
 			var valid:Boolean = false;
@@ -721,7 +769,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			mCraftingTray.Clear();
 			mSubmitBtn.addEventListener(MouseEvent.CLICK, OnClickSubmitBtn);
 			
-			if (!mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
+			if (!mSubmissionActive && !mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
 			{
 				var closeMouthTimer:Timer = new Timer(300, 1);
 				closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
@@ -962,6 +1010,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		
 		private function OnClickFloatPiece(aEvent:MouseEvent):void
 		{
+			if (mCraftingTray.Amount >= 5)
+			{
+				return;
+			}
+			
 			var piece:Piece = aEvent.currentTarget as Piece;
 			piece.removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
 			piece.removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
@@ -973,6 +1026,25 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			addChild(bubbleSplash);
 			TweenLite.to(bubbleSplash, 1, { ease:Strong.easeOut, onComplete:OnTweenHideBubbleSplash,
 				onCompleteParams:[bubbleSplash], alpha:0 });
+			
+			//if (new Date().getTime() - mSubmissionStart >= mSubmissionDuration)
+			if (mSubmissionActive)
+			//if (new Date().getTime() - mSubmissionStart >= mSubmissionDuration)
+			{
+				//DelaySendFloatPiece(piece);
+				//var delaySendFloatPieceTimer:Timer = new Timer(new Date().getTime() - mSubmissionStart + 30);
+				//delaySendFloatPieceTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnDelaySendFloatPieceTimerComplete);
+				//delaySendFloatPieceTimer.start();
+				
+				piece.StopDecay();
+				
+				++mSubmissionDelayIndex;
+				
+				TweenLite.to(this, (mSubmissionStart + mSubmissionDuration - new Date().getTime() + (30 * mSubmissionDelayIndex))
+					/ 1000, { onComplete:OnTweenDelaySendFloatPiece, onCompleteParams:[piece] });
+				
+				return;
+			}
 			
 			mSubmission += piece.Label;
 			
@@ -996,7 +1068,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			removeChild(piece);
 			mFloatPieceList.splice(mFloatPieceList.indexOf(piece), 1);
 			
-			if (!mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
+			if (!mSubmissionActive && !mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
 			{
 				var closeMouthTimer:Timer = new Timer(300, 1);
 				closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
@@ -1004,9 +1076,50 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1024 - 10 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
 			}
 		}
+		
+		private function OnTweenDelaySendFloatPiece(aPiece:Piece):void
+		{
+			mSubmission += aPiece.Label;
+			
+			//var target:Point = DisplayObjectUtil.GetPosition(mCraftingTray);
+			var target:Point = DisplayObjectUtil.GetPosition(mCraftingTray);
+			//target.x = mCraftingTray.NextSlotPosition + (aPiece.width / 2);
+			target.x = mCraftingTray.NextSlotPosition;
+			if (mCraftingTray.Empty)
+			{
+				target.x -= 15;
+			}
+			target.x += (aPiece.width / 2);
+			//target.x = mCraftingTray.NextSlotPosition + 20;
+			//TweenLite.to(aPiece, 0.5, { ease:Strong.easeOut, onComplete:OnTweenSendFloatPiece, onCompleteParams:[aPiece],
+			//x:target.x, y:target.y });
+			//aPiece.Position = target;
+			//TweenLite.to(this, 0.8, {onComplete: OnTweenSendFloatPiece, onCompleteParams:[aPiece] });
+			mCraftingTray.InsertLast(aPiece.Label, aPiece.Position.subtract(DisplayObjectUtil.GetPosition(mCraftingTray)));
+			mCraftingTray.BoxColor = ActivityType.WORD_CRAFTING.ColorCode;
+			aPiece.Dispose();
+			removeChild(aPiece);
+			mFloatPieceList.splice(mFloatPieceList.indexOf(aPiece), 1);
+			
+			if (!mSubmissionActive && !mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
+			{
+				var closeMouthTimer:Timer = new Timer(300, 1);
+				closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
+				closeMouthTimer.start();
+				
+				TweenLite.killTweensOf(mWildLucu);
+				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
+			}
+		}
+		
+		//private function DelaySendFloatPiece(aPiece:Piece):void
+		//{
+			//
+		//}
 		
 		//private function OnTweenSendFloatPiece(aPiece:Piece):void
 		//{
@@ -1057,7 +1170,7 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				
 				TweenLite.killTweensOf(mWildLucu);
 				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-					x:(1024 - 10 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+					x:(1024 - 10 - (mWildLucu.width / 2)), y:(mMap.y - (mMap.height / 2) - 10 - (mWildLucu.height / 2)) });
 			}
 		}
 		

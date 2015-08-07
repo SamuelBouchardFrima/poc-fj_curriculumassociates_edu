@@ -2,6 +2,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 {
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.quest.QuestStep;
+	import com.frimastudio.fj_curriculumassociates_edu.sound.SoundManager;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.BoxLabel;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.box.CurvedBox;
 	import com.frimastudio.fj_curriculumassociates_edu.ui.Palette;
@@ -47,7 +48,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
 			addChild(mDialogBox);
 			
-			// TODO:	play "tap the map" audio
+			SoundManager.PlayVO(Asset.NewHintSound[9]);
 			
 			mMap.filters = [new GlowFilter(Palette.GREAT_BTN, 0, 16, 16, 4, BitmapFilterQuality.HIGH)];
 			TweenLite.to(mMap, 2, { ease:Quad.easeOut, onComplete:OnTweenMapGlowStrong, glowFilter:{ alpha:0.75 } });
@@ -59,6 +60,13 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mMap.filters = [];
 			
 			super.Dispose();
+		}
+		
+		override public function Refresh():void 
+		{
+			SoundManager.PlayVO(Asset.NewHintSound[9]);
+			
+			super.Refresh();
 		}
 		
 		private function OnTweenMapGlowStrong():void
