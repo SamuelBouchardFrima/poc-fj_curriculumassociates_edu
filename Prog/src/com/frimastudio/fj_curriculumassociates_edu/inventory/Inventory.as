@@ -78,6 +78,14 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 					}
 				}
 			}
+			
+			var index:int;
+			for (i = 0, endi = Math.min(wordList.length, 3); i < endi; ++i)
+			{
+				index = Random.RangeInt(0, wordList.length - 1);
+				wordSelection.push(wordList.splice(index, 1)[0]);
+			}
+			
 			//if (needMoreWords)
 			//{
 				//wordSelection.unshift("+");

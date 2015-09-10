@@ -35,7 +35,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "LESSON REWARD", Asset.RewardSound[2], RewardType.LETTER_PATTERN_CARD,
 				new <String>["id", "it", "ip", "in", "im"]));
 			mStepList.push(new RewardTemplate(Level.THE_LAB, "LESSON REWARD", Asset.RewardSound[2], RewardType.WORD,
-				new <String>["tip", "dim", "fin"]));
+				new <String>["tip", "dim", "fin", "rid"]));
 			
 			mStepList.push(new ActivateQuestTemplate(Level.THE_LAB, SpeakerType.PLORY));
 			mStepList.push(new DialogTemplate(Level.THE_LAB,

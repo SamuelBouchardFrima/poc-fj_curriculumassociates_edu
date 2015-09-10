@@ -100,9 +100,14 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			// TODO:	play VO for "Craft the missing word."
 			
 			//var earAnswerTimer:Timer = new Timer(sound.length, 1);
-			var earAnswerTimer:Timer = new Timer(1000, 1);
-			earAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
-			earAnswerTimer.start();
+			//var earAnswerTimer:Timer = new Timer(1000, 1);
+			//earAnswerTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarAnswerTimerComplete);
+			//earAnswerTimer.start();
+			
+			//var earInstructionTimer:Timer = new Timer(soundLength, 1);
+			var earInstructionTimer:Timer = new Timer(1000, 1);
+			earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			earInstructionTimer.start();
 			
 			mToolTrayBox = new Box(new Point(1024, 130), Palette.TOOL_BOX);
 			mToolTrayBox.x = 512;

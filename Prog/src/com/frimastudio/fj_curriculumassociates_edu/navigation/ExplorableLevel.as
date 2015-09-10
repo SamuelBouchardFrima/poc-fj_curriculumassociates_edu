@@ -37,11 +37,11 @@ package com.frimastudio.fj_curriculumassociates_edu.navigation
 		}
 		private static function GenerateLevelTownSquare():ExplorableLevel
 		{
-			return new ExplorableLevel(sI++, "TOWN_SQUARE", "Town Square", Asset.NavigationTownSquare, new <Class>[TownSquareQuest], 2, RatQuest);
+			return new ExplorableLevel(sI++, "TOWN_SQUARE", "Town Square", Asset.NavigationTownSquare, new <Class>[TownSquareQuest], 2/*, RatQuest*/);
 		}
 		private static function GenerateLevelGroceryStore():ExplorableLevel
 		{
-			return new ExplorableLevel(sI++, "GROCERY_STORE", "Grocery Store", Asset.NavigationGroceryStore, new <Class>[GroceryStoreQuest], 3, FanQuest);
+			return new ExplorableLevel(sI++, "GROCERY_STORE", "Grocery Store", Asset.NavigationGroceryStore, new <Class>[GroceryStoreQuest], 3/*, FanQuest*/);
 		}
 		private static function GenerateLevelTheater():ExplorableLevel
 		{

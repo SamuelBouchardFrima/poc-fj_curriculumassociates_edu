@@ -36,11 +36,11 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_dim"],
 			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.QuestFlowSound[20],
 				new <WordTemplate>[new EmptyWordTemplate("di*")], null, Direction.NONE));
-			//mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Tasty! But you need a bit more . . . words!"],
-				//new <Class>[Asset.QuestFlowSound[22]]));
-			//mStepList.push(new UseLevelPropTemplate(Level.GROCERY_STORE, "Tap the fan."));
-			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_fan"],
-				//new <WordTemplate>[new ScrambledWordTemplate("fan", "nfa")]));
+			mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Tasty! But you need a bit more . . . words!"],
+				new <Class>[Asset.QuestFlowSound[22]], SpeakerType.NPC));
+			mStepList.push(new UseLevelPropTemplate(Level.GROCERY_STORE, "Tap the fan."));
+			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_fan"],
+				new <WordTemplate>[new ScrambledWordTemplate("fan", "nfa")]));
 			mStepList.push(new DialogTemplate(Level.GROCERY_STORE,
 				new <String>["Delicious! Now go to the theater and write that song."],
 				new <Class>[Asset.QuestFlowSound[23]], SpeakerType.NPC));

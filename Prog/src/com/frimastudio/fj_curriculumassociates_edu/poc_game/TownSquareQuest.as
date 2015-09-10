@@ -29,18 +29,18 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 			
 			mStepList.push(new ActivateQuestTemplate(Level.TOWN_SQUARE, SpeakerType.NPC));
 			mStepList.push(new DialogTemplate(Level.TOWN_SQUARE,
-				new <String>["Here's a tip, kid don't let the orange guy sing!", "But do make a word that rhymes with tip."],
+				new <String>["Here's a tip. Kid, don't let the orange guy sing!", "But do make a word that rhymes with tip."],
 				new <Class>[Asset.QuestFlowSound[8], Asset.QuestFlowSound[9]], SpeakerType.NPC));
 			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, null/*Asset.WordContentSound["_sip"]*/,
 			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.WordContentSound["_tip"],
 			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.QuestFlowSound[12],
 				//new <WordTemplate>[new EmptyWordTemplate("sip")]));
 				new <WordTemplate>[new EmptyWordTemplate("*ip")], null, Direction.NONE));
-			//mStepList.push(new DialogTemplate(Level.TOWN_SQUARE, new <String>["You need more words!"],
-				//new <Class>[Asset.QuestFlowSound[14]]));
-			//mStepList.push(new UseLevelPropTemplate(Level.TOWN_SQUARE, "Tap the rat."));
-			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.WordContentSound["_rat"],
-				//new <WordTemplate>[new ScrambledWordTemplate("rat", "tar")]));
+			mStepList.push(new DialogTemplate(Level.TOWN_SQUARE, new <String>["You need more words!"],
+				new <Class>[Asset.QuestFlowSound[14]], SpeakerType.NPC));
+			mStepList.push(new UseLevelPropTemplate(Level.TOWN_SQUARE, "Tap the rat."));
+			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.WordContentSound["_rat"],
+				new <WordTemplate>[new ScrambledWordTemplate("rat", "tar")]));
 			mStepList.push(new DialogTemplate(Level.TOWN_SQUARE, new <String>["You did it, kid. Don't forget my tip."],
 				new <Class>[Asset.QuestFlowSound[15]], SpeakerType.NPC));
 			mStepList.push(new LocationUnlockedTemplate(Level.TOWN_SQUARE, "Grocery Store Unlocked!", Asset.RewardSound[7],

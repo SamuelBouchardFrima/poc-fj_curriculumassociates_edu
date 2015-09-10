@@ -175,7 +175,13 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 		{
 			var card:CurvedBox = aEvent.currentTarget as CurvedBox;
 			
-			if (Asset.WordContentSound["_" + card.Label])
+			if (Asset.NewChunkSound["_" + card.Label])
+			{
+				//(new Asset.NewChunkSound["_" + card.Label]() as Sound).play();
+				//SoundManager.PlayVO(Asset.NewChunkSound["_" + card.Label]);
+				SoundManager.PlaySFX(Asset.NewChunkSound["_" + card.Label]);
+			}
+			else if (Asset.WordContentSound["_" + card.Label])
 			{
 				//(new Asset.WordContentSound["_" + card.Label]() as Sound).play();
 				//SoundManager.PlayVO(Asset.WordContentSound["_" + card.Label]);
@@ -186,12 +192,6 @@ package com.frimastudio.fj_curriculumassociates_edu.popup.inventory
 				//(new Asset.NewWordSound["_" + card.Label]() as Sound).play();
 				//SoundManager.PlayVO(Asset.NewWordSound["_" + card.Label]);
 				SoundManager.PlaySFX(Asset.NewWordSound["_" + card.Label]);
-			}
-			else if (Asset.NewChunkSound["_" + card.Label])
-			{
-				//(new Asset.NewChunkSound["_" + card.Label]() as Sound).play();
-				//SoundManager.PlayVO(Asset.NewChunkSound["_" + card.Label]);
-				SoundManager.PlaySFX(Asset.NewChunkSound["_" + card.Label]);
 			}
 			else
 			{

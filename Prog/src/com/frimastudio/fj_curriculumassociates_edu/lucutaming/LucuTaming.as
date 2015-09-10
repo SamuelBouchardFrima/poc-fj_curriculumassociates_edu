@@ -86,6 +86,8 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		private var mSubmissionDuration:Number;
 		private var mSubmissionActive:Boolean;
 		private var mSubmissionDelayIndex:int;
+		private var mVacuumTimer:Timer;
+		private var mShakeYoopTimer:Timer;
 		
 		public function LucuTaming(aTemplate:LucuTamingTemplate)
 		{
@@ -315,6 +317,18 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
 			mActivityBox.Dispose();
+			
+			if (mShakeYoopTimer)
+			{
+				mShakeYoopTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnShakeYoopTimerComplete);
+				mShakeYoopTimer.reset();
+			}
+			
+			if (mVacuumTimer)
+			{
+				mVacuumTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnVacuumTimerComplete);
+				mVacuumTimer.reset();
+			}
 			
 			mBurpTimer.removeEventListener(TimerEvent.TIMER, OnBurpTimer);
 			mBurpTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnBurpTimerComplete);
@@ -558,6 +572,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			mSubmissionStart = 0;
 			mSubmissionDuration = 0;
 			mSubmissionDelayIndex = 0;
+			
+			if (mFloatPieceList.length <= 9)
+			{
+				mBurpTimer.start();
+			}
 			
 			if (!mSubmissionActive && !mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
 			{
@@ -991,6 +1010,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 				TweenLite.to(piece, 2, {ease: Quad.easeOut, delay: (i * 0.1), x: target.x, y: target.y});
 				TweenLite.to(piece, 0.5, {ease: Strong.easeOut, delay: (i * 0.1), onComplete: OnTweenShowFloatPiece, onCompleteParams: [piece], alpha: 1, scaleX: 1, scaleY: 1});
 			}
+			
+			if (mFloatPieceList.length + 3 + mCraftingTray.Amount > 9)
+			{
+				mBurpTimer.stop();
+			}
 		}
 		
 		private function OnTweenShowFloatPiece(aPiece:Piece):void
@@ -1162,6 +1186,11 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 			TweenLite.to(piece, 0.5, {ease: Strong.easeOut, onComplete: OnTweenHideFloatPiece, onCompleteParams: [piece], alpha: 0});
 			mFloatPieceList.splice(mFloatPieceList.indexOf(piece), 1);
 			
+			if (mFloatPieceList.length + mCraftingTray.Amount <= 9)
+			{
+				mBurpTimer.start();
+			}
+			
 			if (!mFloatPieceList.length && mCraftingTray.Empty && mBurpDone)
 			{
 				var closeMouthTimer:Timer = new Timer(300, 1);
@@ -1183,72 +1212,100 @@ package com.frimastudio.fj_curriculumassociates_edu.lucutaming
 		
 		private function OnBurpTimerComplete(aEvent:TimerEvent):void
 		{
-			//var vacuumTimer:Timer = new Timer(35000, 1);
-			//vacuumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnVacuumTimerComplete);
-			//vacuumTimer.start();
+			mBurpTimer.removeEventListener(TimerEvent.TIMER, OnBurpTimer);
+			mBurpTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnBurpTimerComplete);
+			mBurpTimer.reset();
+			
+			mShakeYoopTimer = new Timer(10000, 1);
+			mShakeYoopTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnShakeYoopTimerComplete);
+			mShakeYoopTimer.start();
+			
+			mVacuumTimer = new Timer(15000, 1);
+			mVacuumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnVacuumTimerComplete);
+			mVacuumTimer.start();
 			
 			mBurpDone = true;
 		}
 		
-		//private function OnVacuumTimerComplete(aEvent:TimerEvent):void
-		//{
-		//if (mFloatPieceList.length)
-		//{
-		//// TODO:	vacuum sound
-		//
-		//SetWildLucu(Asset.WildLucuVacuumBitmap);
-		//
-		//removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
-		//
-		//var distance:Number;
-		//var target:Point = mMouthPosition.add(new Point(-20, -15));
-		//for (var i:int = 0, endi:int = mFloatPieceList.length; i < endi; ++i)
-		//{
-		//distance = target.subtract(DisplayObjectUtil.GetPosition(mFloatPieceList[i])).length;
-		//mFloatPieceList[i].removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
-		//TweenLite.to(mFloatPieceList[i], 2, { ease:Strong.easeIn, delay:(distance / 400),
-		//onComplete:OnTweenVacuumFloatPiece, onCompleteParams:[mFloatPieceList[i]],
-		//x:target.x, y:target.y });
-		//}
-		//}
-		////else
-		////{
-		////var closeMouthTimer:Timer = new Timer(300, 1);
-		////closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
-		////closeMouthTimer.start();
-		////
-		////TweenLite.killTweensOf(mWildLucu);
-		////TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-		////x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
-		////}
-		//}
+		private function OnShakeYoopTimerComplete(aEvent:TimerEvent):void
+		{
+			mShakeYoopTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnShakeYoopTimerComplete);
+			
+			TweenLite.killTweensOf(mWildLucu);
+			TweenLite.to(mWildLucu, 0.05, { ease:Quad.easeInOut, onComplete:OnTweenShakeYoopRight, x:(512 + 2), y:384 });
+		}
 		
-		//private function OnTweenVacuumFloatPiece(aPiece:Piece):void
-		//{
-		//TweenLite.to(aPiece, 0.4, { ease:Strong.easeOut, onComplete:OnTweenSwallowFloatPiece,
-		//onCompleteParams:[aPiece], alpha:0, scaleX:0.01, scaleY:0.01 });
-		//}
+		private function OnTweenShakeYoopRight():void
+		{
+			TweenLite.to(mWildLucu, 0.05, { ease:Quad.easeInOut, onComplete:OnTweenShakeYoopLeft, x:(512 - 2), y:384 });
+		}
 		
-		//private function OnTweenSwallowFloatPiece(aPiece:Piece):void
-		//{
-		//aPiece.removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
-		//aPiece.removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
-		//TweenLite.killTweensOf(aPiece);
-		//aPiece.Dispose();
-		//removeChild(aPiece);
-		//mFloatPieceList.splice(mFloatPieceList.indexOf(aPiece), 1);
-		//
-		//if (!mFloatPieceList.length)
-		//{
-		//var closeMouthTimer:Timer = new Timer(300, 1);
-		//closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
-		//closeMouthTimer.start();
-		//
-		//TweenLite.killTweensOf(mWildLucu);
-		//TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
-		//x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
-		//}
-		//}
+		private function OnTweenShakeYoopLeft():void
+		{
+			TweenLite.to(mWildLucu, 0.05, { ease:Quad.easeInOut, onComplete:OnTweenShakeYoopRight, x:(512 + 2), y:384 });
+		}
+		
+		private function OnVacuumTimerComplete(aEvent:TimerEvent):void
+		{
+			mVacuumTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnVacuumTimerComplete);
+			
+			if (mFloatPieceList.length)
+			{
+				// TODO:	vacuum sound
+				
+				//SetWildLucu(Asset.WildLucuVacuumBitmap);
+				
+				removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
+				
+				var distance:Number;
+				var target:Point = mMouthPosition.add(new Point(-20, -15));
+				for (var i:int = 0, endi:int = mFloatPieceList.length; i < endi; ++i)
+				{
+					distance = target.subtract(DisplayObjectUtil.GetPosition(mFloatPieceList[i])).length;
+					mFloatPieceList[i].removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
+					TweenLite.to(mFloatPieceList[i], 2, { ease:Strong.easeIn, delay:(distance / 400),
+					onComplete:OnTweenVacuumFloatPiece, onCompleteParams:[mFloatPieceList[i]],
+						x:target.x, y:target.y });
+				}
+			}
+			//else
+			//{
+			//var closeMouthTimer:Timer = new Timer(300, 1);
+			//closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
+			//closeMouthTimer.start();
+			//
+			//TweenLite.killTweensOf(mWildLucu);
+			//TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
+			//x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+			//}
+		}
+		
+		private function OnTweenVacuumFloatPiece(aPiece:Piece):void
+		{
+			TweenLite.to(aPiece, 0.4, { ease:Strong.easeOut, onComplete:OnTweenSwallowFloatPiece,
+			onCompleteParams:[aPiece], alpha:0, scaleX:0.01, scaleY:0.01 });
+		}
+		
+		private function OnTweenSwallowFloatPiece(aPiece:Piece):void
+		{
+			aPiece.removeEventListener(MouseEvent.CLICK, OnClickFloatPiece);
+			aPiece.removeEventListener(PieceEvent.REMOVE, OnRemoveFloatPiece);
+			TweenLite.killTweensOf(aPiece);
+			aPiece.Dispose();
+			removeChild(aPiece);
+			mFloatPieceList.splice(mFloatPieceList.indexOf(aPiece), 1);
+			
+			if (!mFloatPieceList.length)
+			{
+				var closeMouthTimer:Timer = new Timer(300, 1);
+				closeMouthTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnCloseMouthTimerComplete);
+				closeMouthTimer.start();
+				
+				TweenLite.killTweensOf(mWildLucu);
+				TweenLite.to(mWildLucu, 1, { ease:Strong.easeInOut, delay:0.3, onComplete:OnTweenSendLucuBack,
+					x:(1014 - (mWildLucu.width / 2)), y:(758 - (mWildLucu.height / 2)) });
+			}
+		}
 		
 		private function OnTweenSendLucuBack():void
 		{

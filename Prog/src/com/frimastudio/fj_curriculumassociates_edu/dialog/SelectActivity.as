@@ -34,6 +34,7 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 		private var mTemplate:SelectActivityTemplate;
 		private var mDialogBox:CurvedBox;
 		private var mActivityBox:ActivityBox;
+		private var mEarInstructionTimer:Timer;
 		
 		public function SelectActivity(aTemplate:SelectActivityTemplate)
 		{
@@ -74,11 +75,11 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			InitializeMap();
 			InitializeWildLucu();
 			
-			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
-				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
-			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
-			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
-			addChild(mDialogBox);
+			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
+				//Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+			//mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			//mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+			//addChild(mDialogBox);
 			
 			mActivityBox = new ActivityBox(mTemplate.ActivityWordList, mTemplate.LineBreakList, mTemplate.ActivityVO,
 				mTemplate.PhylacteryArrow, false, true);
@@ -88,13 +89,70 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			mActivityBox.addEventListener(ActivityBoxEvent.LAUNCH_ACTIVITY, OnLaunchActivity);
 			
 			// TODO:	play "Click a colored box." VO
-			SoundManager.PlayVO(Asset.NewHintSound[4]);
+			//SoundManager.PlayVO(Asset.NewHintSound[4]);
+			var soundLength:Number = 0;
+			var vo:Class;
+			for (var i:int = 0, endi:int = mTemplate.ActivityWordList.length; i < endi && !soundLength; ++i)
+			{
+				switch (mTemplate.ActivityWordList[i].ActivityToLaunch)
+				{
+					case ActivityType.WORD_UNSCRAMBLING:
+					case ActivityType.WORD_CRAFTING:
+						vo = Asset.WordContentSound["_" + mTemplate.ActivityWordList[i].VO.split("*").join("")];
+						if (!vo)
+						{
+							vo = Asset.NewWordSound["_" + mTemplate.ActivityWordList[i].VO.split("*").join("")];
+						}
+						if (vo)
+						{
+							soundLength = SoundManager.PlayVO(vo);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+			if (soundLength)
+			{
+				mEarInstructionTimer = new Timer(soundLength, 1);
+				mEarInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+				mEarInstructionTimer.start();
+			}
+			else
+			{
+				SoundManager.PlayVO(Asset.NewHintSound[4]);
+				
+				mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
+					Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+				mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+				mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+				addChild(mDialogBox);
+			}
 			
 			addChild(mActivityBox);
 		}
 		
+		private function OnEarInstructionTimerComplete(aEvent:TimerEvent):void
+		{
+			mEarInstructionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+			
+			SoundManager.PlayVO(Asset.NewHintSound[4]);
+			
+			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Click a colored box.", 45,
+				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
+			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
+			mDialogBox.y = mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2);
+			addChild(mDialogBox);
+		}
+		
 		override public function Dispose():void
 		{
+			if (mEarInstructionTimer)
+			{
+				mEarInstructionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+				mEarInstructionTimer.reset();
+			}
+			
 			//mWildLucuChallengeBtn.removeEventListener(MouseEvent.CLICK, OnClickWildLucuChallengeBtn);
 			mWildLucu.removeEventListener(MouseEvent.CLICK, OnClickWildLucu);
 			
@@ -126,7 +184,10 @@ package com.frimastudio.fj_curriculumassociates_edu.dialog
 			
 			if (mActivityBox.IsComplete)
 			{
-				removeChild(mDialogBox);
+				if (mDialogBox)
+				{
+					removeChild(mDialogBox);
+				}
 				
 				if (mActivityBox.SentenceDecrypted && !mActivityBox.SentenceScrambled)
 				{

@@ -14,6 +14,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling
 			super(aScrambledWord, aPunctuation, ActivityType.WORD_UNSCRAMBLING);
 			
 			mAnswer = aWord;
+			mVO = mAnswer;
 		}
 	}
 }

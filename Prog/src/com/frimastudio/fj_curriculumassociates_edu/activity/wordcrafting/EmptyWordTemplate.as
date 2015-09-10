@@ -20,6 +20,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			super(emptyWord, aPunctuation, ActivityType.WORD_CRAFTING);
 			
 			mAnswer = aWord;
+			mVO = mAnswer;
 		}
 	}
 }
