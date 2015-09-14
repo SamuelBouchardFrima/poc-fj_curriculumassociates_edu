@@ -678,9 +678,9 @@ package com.frimastudio.fj_curriculumassociates_edu
 		private static var Reward_09_theater_unlocked:Class;
 		[Embed(source = "../../../../audio/POC Audio/Rewards/10_unlocked_karaoke.mp3")]
 		private static var Reward_10_unlocked_karaoke:Class;
-		[Embed(source = "../../../../audio/POC Audio/Rewards/11_challenge_reward.mp3")]
+		[Embed(source = "../../../../audio/POC Audio/Neutral_Andi/challenge_reward.mp3")]
 		private static var Reward_11_challenge_reward:Class;
-		[Embed(source = "../../../../audio/POC Audio/Rewards/12_better_luck_next_time.mp3")]
+		[Embed(source = "../../../../audio/POC Audio/Neutral_Andi/better_luck.mp3")]
 		private static var Reward_12_better_luck_next_time:Class;
 		public static var RewardSound:Object = [null, Reward_01_did_lesson_13, Reward_02_lesson_reward, Reward_03_quest_reward,
 			Reward_04_pattern_cards, Reward_05_words, Reward_06_have_fliers, Reward_07_grocery_unlocked, Reward_08_square_unlocked,

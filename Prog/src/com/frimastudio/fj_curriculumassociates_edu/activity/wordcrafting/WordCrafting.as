@@ -105,9 +105,6 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			//earAnswerTimer.start();
 			
 			//var earInstructionTimer:Timer = new Timer(soundLength, 1);
-			var earInstructionTimer:Timer = new Timer(1000, 1);
-			earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
-			earInstructionTimer.start();
 			
 			mToolTrayBox = new Box(new Point(1024, 130), Palette.TOOL_BOX);
 			mToolTrayBox.x = 512;
@@ -159,11 +156,13 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			TweenLite.to(mShuffle, 1.2, { ease:Elastic.easeOut, delay:0.2, y:(768 - 7.5 - (mShuffle.height / 2)) });
 			
 			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Give a word to the Mini.", 45,
+			//mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Craft the missing word.", 45,
 			mDialogBox = new CurvedBox(new Point(800, 60), Palette.DIALOG_BOX, new BoxLabel("Craft the missing word.", 45,
 				Palette.DIALOG_CONTENT), 6, Direction.UP_LEFT, Axis.BOTH);
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
+			mDialogBox.visible = false;
 			addChild(mDialogBox);
 			
 			//var craftingTrayBox:Box = new Box(new Point(1024, 90), Palette.CRAFTING_BOX);
@@ -202,10 +201,30 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			addChild(mToolTray);
 			TweenLite.to(mToolTray, 1.2, { ease:Elastic.easeOut, delay:0.1, y:728 });
 			
+			var soundLength:Number = 0;
 			// TODO:	if word selection is insufficient, ask the player to do a Wild Lucu Taming activity
 			if (needMoreWord)
 			{
-				SoundManager.PlayVO(Asset.NewHintSound[1]);
+				soundLength = SoundManager.PlayVO(Asset.NewHintSound[1]);
+			}
+			else
+			{
+				if (mTemplate.Answer.indexOf("*") == 0)
+				{
+					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[13]);
+				}
+				else if (mTemplate.Answer.indexOf("*") > 0)
+				{
+					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[17]);
+				}
+				else
+				{
+					
+				}
+				
+				var earInstructionTimer:Timer = new Timer(soundLength, 1);
+				earInstructionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnEarInstructionTimerComplete);
+				earInstructionTimer.start();
 			}
 			
 			//mCraftingTray = new PieceTray(false);
@@ -341,6 +360,7 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			mDialogBox.x = mLevel.Lucu.x - (mLevel.Lucu.width / 2) + (mDialogBox.width / 2);
 			mDialogBox.y = Math.min(mLevel.Lucu.y + (mLevel.Lucu.height / 2) + 10 + (mDialogBox.height / 2),
 				668 - (mDialogBox.height / 2));
+			mDialogBox.visible = true;
 		}
 		
 		private function OnEnterFrame(aEvent:Event):void

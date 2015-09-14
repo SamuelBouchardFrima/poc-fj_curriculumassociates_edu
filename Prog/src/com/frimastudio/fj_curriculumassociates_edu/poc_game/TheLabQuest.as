@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.KnownWordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.activitybox.WordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.sentencedecrypting.EncryptedWordTemplate;
+	import com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting.EmptyWordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.activity.wordunscrambling.ScrambledWordTemplate;
 	import com.frimastudio.fj_curriculumassociates_edu.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.dialog.ActivateQuestTemplate;
