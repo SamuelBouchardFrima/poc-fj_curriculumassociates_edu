@@ -33,7 +33,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new <Class>[Asset.QuestFlowSound[8], Asset.QuestFlowSound[9]], SpeakerType.NPC));
 			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, null/*Asset.WordContentSound["_sip"]*/,
 			//mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.WordContentSound["_tip"],
-			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.QuestFlowSound[12],
+			mStepList.push(new SelectActivityTemplate(Level.TOWN_SQUARE, Asset.QuestFlowSound[13],
 				//new <WordTemplate>[new EmptyWordTemplate("sip")]));
 				new <WordTemplate>[new EmptyWordTemplate("*ip")], null, Direction.NONE));
 			mStepList.push(new DialogTemplate(Level.TOWN_SQUARE, new <String>["You need more words!"],

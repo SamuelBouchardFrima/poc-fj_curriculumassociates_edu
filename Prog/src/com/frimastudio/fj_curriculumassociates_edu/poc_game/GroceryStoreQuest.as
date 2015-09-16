@@ -34,7 +34,7 @@ package com.frimastudio.fj_curriculumassociates_edu.poc_game
 				new <Class>[Asset.QuestFlowSound[16], Asset.QuestFlowSound[17]], SpeakerType.NPC));
 			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, null/*Asset.WordContentSound["_dip"]*/,
 			//mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.WordContentSound["_dim"],
-			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.QuestFlowSound[20],
+			mStepList.push(new SelectActivityTemplate(Level.GROCERY_STORE, Asset.QuestFlowSound[21],
 				new <WordTemplate>[new EmptyWordTemplate("di*")], null, Direction.NONE));
 			mStepList.push(new DialogTemplate(Level.GROCERY_STORE, new <String>["Tasty! But you need a bit more . . . words!"],
 				new <Class>[Asset.QuestFlowSound[22]], SpeakerType.NPC));

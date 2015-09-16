@@ -211,11 +211,11 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.wordcrafting
 			{
 				if (mTemplate.Answer.indexOf("*") == 0)
 				{
-					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[13]);
+					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[12]);
 				}
 				else if (mTemplate.Answer.indexOf("*") > 0)
 				{
-					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[17]);
+					soundLength = SoundManager.PlayVO(Asset.QuestFlowSound[20]);
 				}
 				else
 				{

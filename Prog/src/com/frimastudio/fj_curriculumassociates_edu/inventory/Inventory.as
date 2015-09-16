@@ -21,15 +21,15 @@ package com.frimastudio.fj_curriculumassociates_edu.inventory
 		
 		public static function RemoveWord(aWord:String):void
 		{
-			var i:int, endi:int;
-			for (i = 0, endi = sWordList.length; i < endi; ++i)
-			{
-				if (sWordList[i] == aWord)
-				{
-					sWordList.splice(i, 1);
-					return;
-				}
-			}
+			//var i:int, endi:int;
+			//for (i = 0, endi = sWordList.length; i < endi; ++i)
+			//{
+				//if (sWordList[i] == aWord)
+				//{
+					//sWordList.splice(i, 1);
+					//return;
+				//}
+			//}
 		}
 		
 		public static function RequestWordSelection(aLetterList:String):Vector.<String>
