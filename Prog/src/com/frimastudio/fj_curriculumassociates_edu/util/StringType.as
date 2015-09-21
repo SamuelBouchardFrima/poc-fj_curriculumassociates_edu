@@ -10,7 +10,7 @@ package com.frimastudio.fj_curriculumassociates_edu.util {
 		public static const NONE:StringType = new StringType(sI++, "NONE", false);
 		public static const WORD:StringType = new StringType(sI++, "WORD", true);
 		public static const RHYME:StringType = new StringType(sI++, "RHYME", true);
-		public static const ALLITERATION:StringType = new StringType(sI++, "ALLITERATION", true, true);
+		public static const ALLITERATION:StringType = new StringType(sI++, "ALLITERATION", false, true);
 		
 		public static function get RandomType():StringType
 		{
