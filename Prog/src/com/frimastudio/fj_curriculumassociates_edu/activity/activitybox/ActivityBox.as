@@ -1126,12 +1126,12 @@ package com.frimastudio.fj_curriculumassociates_edu.activity.activitybox
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, OnMouseMoveStage);
 			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUpStage);
 			
-			if (Asset.LetterAudioSound["_" + aEvent.EventPiece.Label])
-			{
-				//(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
-				//SoundManager.PlayVO(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
-				SoundManager.PlaySFX(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
-			}
+			//if (Asset.LetterAudioSound["_" + aEvent.EventPiece.Label])
+			//{
+				////(new Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]() as Sound).play();
+				////SoundManager.PlayVO(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
+				//SoundManager.PlaySFX(Asset.LetterAudioSound["_" + aEvent.EventPiece.Label]);
+			//}
 			
 			mActivityTray.Remove(aEvent.EventPiece);
 		}
